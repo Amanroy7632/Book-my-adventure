@@ -1,0 +1,21 @@
+.left{
+    user-select: none;
+ }
+ .left ul li{
+     border-bottom: 2px solid white;
+     padding: 15px 0px;
+     cursor: pointer;
+     font-size: 1.2rem;
+ }
+ .left li i{
+     margin-right: 10px;
+ }
+ .left_filters ul{
+     list-style: none;
+ }
+ .first-section{
+     display: flex;
+     justify-content: flex-start;
+     column-gap: 10px;
+     align-items: center;
+ }

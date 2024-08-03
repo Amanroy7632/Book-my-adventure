@@ -1,0 +1,97 @@
+
+  
+  .security-container > div {
+    color: rgb(62, 62, 82);
+    font-size: 13px;
+    font-weight: bold;
+  }
+  
+  .main-container {
+    width: 100%;
+    height: 50px;
+    margin-top: 10px;
+    padding: 10px 0 0;
+    color: #4a4a4a;
+    font-size: 14px;
+    font-weight: 400;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  
+  .main-container > div {
+    height: 100%;
+  }
+  
+  .main-container1 {
+    width: 25%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .main-container1 > div:nth-child(1) {
+    font-size: 14px;
+    font-weight: bold;
+    color: #4a4a4a;
+  }
+  
+  .main-container1 > div:nth-child(2) {
+    color: #3e3e52;
+    font-weight: 700;
+    font-size: 12px;
+  }
+  
+  .main-container2 {
+    width: 10%;
+    color: #3e3e52;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+  
+  .main-container3 {
+    width: 10%;
+    color: #3e3e52;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+  
+  .main-container4 {
+    width: 14%;
+    color: #3e3e52;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+  
+  .main-container5 {
+    width: 10%;
+    color: #3e3e52;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+  
+  .main-container6 {
+    width: 15%;
+    color: #3e3e52;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+  
+  .main-container7 {
+    width: 15%;
+    color: #3e3e52;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
