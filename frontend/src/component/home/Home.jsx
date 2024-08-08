@@ -1,12 +1,18 @@
 import React, { useEffect, useRef, useState } from "react";
 import OfferCard from "../offerCard/OfferCard";
 import { images } from "../../assets/index.js";
-import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { FaBus, FaWalking, FaCalendarDay, FaExchangeAlt } from "react-icons/fa";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import Example from "./Example.jsx";
 import CityModel from "./model/CityModel.jsx";
+import useFetch from "../../hooks/index.js";
+import Loader from "../loader/Loader.jsx";
+import { Button, Input } from "../commonUi/index.js";
+import { useForm } from "react-hook-form";
+import Pagination from "../pagination/Pagination.jsx";
+import axiosInstance from "../../utils/axiosInstance.js";
+import { useCurrentUser } from "../../context/userContext.jsx";
 const offerCardDetails = [
   {
     id: 1,
@@ -45,63 +51,63 @@ const offerCardDetails = [
     className: "bg-gradient-to-r from-sky-800 to-sky-500",
   },
 ];
-const frequentlyAskedQuestions = [
-  {
-    id: 1,
-    question: "Can I track the location of my booked bus online?",
-    answer: `Yes, you can track your <strong>bus online</strong> by using our bus tracking app feature called
-                      <a class="text-blue-500">Track My Bus</a>. This feature allows passengers and their families to
-                      track the live bus tracking location. You may follow your bus on a map and use the information
-                      to plan your trip to the boarding point and to get off at the correct stop. Family and friends
-                      may also check the bus position to plan pick-ups and ensure your safety.`,
-  },
-  {
-    id: 2,
-    question: "Why book bus tickets online on tedbus?",
-    answer: `Yes, you can track your <strong>bus online</strong> by using our bus tracking app feature called
-                      <a class="text-blue-500">Track My Bus</a>. This feature allows passengers and their families to
-                      track the live bus tracking location. You may follow your bus on a map and use the information
-                      to plan your trip to the boarding point and to get off at the correct stop. Family and friends
-                      may also check the bus position to plan pick-ups and ensure your safety.`,
-  },
-  {
-    id: 3,
-    question:
-      "Do I need to create an account on the tedbus site to book my bus ticket?",
-    answer: `Yes, you can track your <strong>bus online</strong> by using our bus tracking app feature called
-                      <a class="text-blue-500">Track My Bus</a>. This feature allows passengers and their families to
-                      track the live bus tracking location. You may follow your bus on a map and use the information
-                      to plan your trip to the boarding point and to get off at the correct stop. Family and friends
-                      may also check the bus position to plan pick-ups and ensure your safety.`,
-  },
-  {
-    id: 4,
-    question: "Does bus booking online cost me more?",
-    answer: `Yes, you can track your <strong>bus online</strong> by using our bus tracking app feature called
-                      <a class="text-blue-500">Track My Bus</a>. This feature allows passengers and their families to
-                      track the live bus tracking location. You may follow your bus on a map and use the information
-                      to plan your trip to the boarding point and to get off at the correct stop. Family and friends
-                      may also check the bus position to plan pick-ups and ensure your safety.`,
-  },
-  {
-    id: 5,
-    question: "How can I get the discounts on the bus booking?",
-    answer: `Yes, you can track your <strong>bus online</strong> by using our bus tracking app feature called
-                      <a class="text-blue-500">Track My Bus</a>. This feature allows passengers and their families to
-                      track the live bus tracking location. You may follow your bus on a map and use the information
-                      to plan your trip to the boarding point and to get off at the correct stop. Family and friends
-                      may also check the bus position to plan pick-ups and ensure your safety.`,
-  },
-  {
-    id: 6,
-    question: "Can I book a Government bus ticket on tedbus?",
-    answer: `Yes, you can track your <strong>bus online</strong> by using our bus tracking app feature called
-                      <a class="text-blue-500">Track My Bus</a>. This feature allows passengers and their families to
-                      track the live bus tracking location. You may follow your bus on a map and use the information
-                      to plan your trip to the boarding point and to get off at the correct stop. Family and friends
-                      may also check the bus position to plan pick-ups and ensure your safety.`,
-  },
-];
+// const frequentlyAskedQuestions = [
+//   {
+//     id: 1,
+//     question: "Can I track the location of my booked bus online?",
+//     answer: `Yes, you can track your <strong>bus online</strong> by using our bus tracking app feature called
+//                       <a class="text-blue-500">Track My Bus</a>. This feature allows passengers and their families to
+//                       track the live bus tracking location. You may follow your bus on a map and use the information
+//                       to plan your trip to the boarding point and to get off at the correct stop. Family and friends
+//                       may also check the bus position to plan pick-ups and ensure your safety.`,
+//   },
+//   {
+//     id: 2,
+//     question: "Why book bus tickets online on tedbus?",
+//     answer: `Yes, you can track your <strong>bus online</strong> by using our bus tracking app feature called
+//                       <a class="text-blue-500">Track My Bus</a>. This feature allows passengers and their families to
+//                       track the live bus tracking location. You may follow your bus on a map and use the information
+//                       to plan your trip to the boarding point and to get off at the correct stop. Family and friends
+//                       may also check the bus position to plan pick-ups and ensure your safety.`,
+//   },
+//   {
+//     id: 3,
+//     question:
+//       "Do I need to create an account on the tedbus site to book my bus ticket?",
+//     answer: `Yes, you can track your <strong>bus online</strong> by using our bus tracking app feature called
+//                       <a class="text-blue-500">Track My Bus</a>. This feature allows passengers and their families to
+//                       track the live bus tracking location. You may follow your bus on a map and use the information
+//                       to plan your trip to the boarding point and to get off at the correct stop. Family and friends
+//                       may also check the bus position to plan pick-ups and ensure your safety.`,
+//   },
+//   {
+//     id: 4,
+//     question: "Does bus booking online cost me more?",
+//     answer: `Yes, you can track your <strong>bus online</strong> by using our bus tracking app feature called
+//                       <a class="text-blue-500">Track My Bus</a>. This feature allows passengers and their families to
+//                       track the live bus tracking location. You may follow your bus on a map and use the information
+//                       to plan your trip to the boarding point and to get off at the correct stop. Family and friends
+//                       may also check the bus position to plan pick-ups and ensure your safety.`,
+//   },
+//   {
+//     id: 5,
+//     question: "How can I get the discounts on the bus booking?",
+//     answer: `Yes, you can track your <strong>bus online</strong> by using our bus tracking app feature called
+//                       <a class="text-blue-500">Track My Bus</a>. This feature allows passengers and their families to
+//                       track the live bus tracking location. You may follow your bus on a map and use the information
+//                       to plan your trip to the boarding point and to get off at the correct stop. Family and friends
+//                       may also check the bus position to plan pick-ups and ensure your safety.`,
+//   },
+//   {
+//     id: 6,
+//     question: "Can I book a Government bus ticket on tedbus?",
+//     answer: `Yes, you can track your <strong>bus online</strong> by using our bus tracking app feature called
+//                       <a class="text-blue-500">Track My Bus</a>. This feature allows passengers and their families to
+//                       track the live bus tracking location. You may follow your bus on a map and use the information
+//                       to plan your trip to the boarding point and to get off at the correct stop. Family and friends
+//                       may also check the bus position to plan pick-ups and ensure your safety.`,
+//   },
+// ];
 const from = ["Delhi", "Mumbai", "Banglore", "Kolkata", "Patna", "Chennai"];
 const to = [...from];
 const Home = () => {
@@ -110,71 +116,149 @@ const Home = () => {
   const [toLocation, setToLocation] = useState("");
   // const [modelType,setmodelType] = useState<"from"|"to"|"">("")
   const [modelType, setModelType] = useState("from");
-  const modalRef = useRef(null)
   const fromModalRef = useRef(null);
   const toModalRef = useRef(null);
   const [openLocationModel, setOpenLocationModel] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isSubmitting,setIsSubmitting]=useState(false)
+  const { handleSubmit, register, reset } = useForm();
+  
+  const navigate = useNavigate();
   const handleFromLocation = (city) => {
-    setOpenLocationModel(false)
-    setFromLocation(city)
-    fromModalRef.current=null
+    setOpenLocationModel(false);
+    setFromLocation(city);
+    fromModalRef.current = null;
   };
   const handleToLocation = (city) => {
-    setOpenLocationModel(false)
-    setToLocation(city)
-    // modalRef.current=null
-    toModalRef.current=null
+    setOpenLocationModel(false);
+    setToLocation(city);
+   
+    toModalRef.current = null;
   };
   const handleClickOutside = (event) => {
-    if ((fromModalRef.current && !fromModalRef.current.contains(event.target))||(toModalRef.current && !toModalRef.current.contains(event.target))) {
-      setOpenLocationModel(false)
-      setModelType("")
-      fromModalRef.current=null
-      toModalRef.current=null
-      // console.log("Hello Aman");
+    if (
+      (fromModalRef.current && !fromModalRef.current.contains(event.target)) ||
+      (toModalRef.current && !toModalRef.current.contains(event.target))
+    ) {
+      setOpenLocationModel(false);
+      setModelType("");
+      fromModalRef.current = null;
+      toModalRef.current = null;
     }
   };
-  function exchangeLocation(){
-    console.log('Working exchange location');
+  function exchangeLocation() {
+    console.log("Working exchange location");
     console.log(`Locatiom Model :${openLocationModel}`);
-    setOpenLocationModel(false)
-    setFromLocation(toLocation)
-    setToLocation(fromLocation)
+    setOpenLocationModel(false);
+    setFromLocation(toLocation);
+    setToLocation(fromLocation);
   }
-  function handleSearchRequest(){
-    if (!fromLocation|| !toLocation) {
-      alert("Please select from location and to location")
-      return 
+  function handleSearchRequest() {
+    if (!fromLocation || !toLocation) {
+      alert("Please select from location and to location");
+      return;
     }
-    if (fromLocation===toLocation) {
-      alert("Please select a different location")
-      return
+    if (fromLocation === toLocation) {
+      alert("Please select a different location");
+      return;
     }
-    if (!from.includes(fromLocation)|| !to.includes(toLocation)) {
-      alert("Please select a given location")
-      return
+    if (!from.includes(fromLocation) || !to.includes(toLocation)) {
+      alert("Please select a given location");
+      return;
     }
-    console.log(`From : ${fromLocation} To : ${toLocation} Date : ${startDate}`)
-    setFromLocation("")
-    setToLocation("")
-    setStartDate("")
-    
+    const day = String(startDate.getDate()).padStart(2, "0");
+    const month = String(startDate.getMonth() + 1).padStart(2, "0");
+    const year = startDate.getFullYear();
+    const date = `${day}-${month}-${year}`;
+    console.log(`From : ${fromLocation} To : ${toLocation} Date : ${date}`);
+
+    navigate(
+      `/select-bus?departure=${fromLocation}&arrival=${toLocation}&date=${date}`
+    );
+    setFromLocation("");
+    setToLocation("");
+    setStartDate("");
   }
-  useEffect(()=>{
-      if (openLocationModel) {
-        window.addEventListener('click', handleClickOutside);
-      }else{
-        window.removeEventListener('click', handleClickOutside);
-      }
-      return () => {
-        // Cleanup event listener on component unmount
-        window.removeEventListener('click', handleClickOutside);
-      };
-  },[openLocationModel])
-  // const params = useParams()
+  const handleQuestionSubmit = (data) => {
+    setIsSubmitting(true)
+    if (!data) {
+      alert("Please enter your query..");
+      return;
+    }
+    const quesData = {
+      ...data,
+      userId: "66abb3763fd47cf79fe498d2",
+    };
+    try {
+      fetch("http://localhost:8000/api/v1/question-answer/register", {
+        method: "POST",
+        body: JSON.stringify(quesData),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((res) => {
+          console.log(res.status);
+
+          if (!res.ok) {
+            alert("Internet Connection is required");
+            return;
+          }
+          return res.json();
+        })
+        .then((data) => {
+          console.log(data);
+
+          if (data.success) {
+            alert("Your Query has been submitted successfully");
+            return;
+          } else {
+            alert(
+              "Something went wrong" + data.successCode + "\nPlease try again"
+            );
+          }
+        })
+        .catch((err) => {
+          alert(`Error: ${err.message}`);
+
+        });
+    } catch (error) {
+      alert("No Internet Connection\n" + error.message);
+      console.log(error);
+    } finally {
+      setTimeout(() => {
+        setIsSubmitting(false)
+      }, 1000);
+      reset();
+    }
+  };
+  const {currentUser,setCurrentUser,alertMessage,setAlertMessage} =useCurrentUser()
+  useEffect(() => {
+    if (openLocationModel) {
+      window.addEventListener("click", handleClickOutside);
+    } else {
+      window.removeEventListener("click", handleClickOutside);
+    }
+    return () => {
+      // Cleanup event listener on component unmount
+      window.removeEventListener("click", handleClickOutside);
+    };
+  }, [openLocationModel]); 
+  const { loading, data, errorMessage } = useFetch(
+    `http://localhost:8000/api/v1/question-answer/?limit=5&page=${currentPage}`,
+    {
+      method: "GET",
+      "Content-Type": "application/json",
+    }
+  );
+  // console.log(data);
+  
+  const frequentlyAskedQuestions = data?.data?.questionAnswer;
+  console.log(frequentlyAskedQuestions);
+
   return (
     <>
-
+      
       <section className="h-[32rem] bg-main-color bg-[url('assets/hero-img.png')] bg-center  bg-no-repeat bg-cover flex justify-center">
         <div className="flex flex-col items-center w-full max-w-[1400px]">
           <h1 className="text-2xl mx-4 md:text-[2rem] text-white font-bold mt-16 mb-4 text-center">
@@ -183,7 +267,10 @@ const Home = () => {
           <div className=" font-sans select-none font-[600] w-[90%] sm:w-[80%] lg:h-24 mt-4 bg-white cursor-pointer relative bottom-7 sm:bottom-0 flex flex-col lg:flex-row rounded-3xl overflow-x-clip ">
             <div className="h-full flex flex-col sm:flex-row items-center justify-center lg:w-1/2">
               <div className="h-full border-b sm:border-r border-gray-300 w-full md:w-[50%] sm:w-auto">
-                <div className=" relative px-7 py-8 flex items-center h-full gap-3 overflow-visible" ref={fromModalRef}>
+                <div
+                  className=" relative px-7 py-8 flex items-center h-full gap-3 overflow-visible"
+                  ref={fromModalRef}
+                >
                   <FaBus className=" text-2xl text-gray-400" />
                   <input
                     className="outline-none w-full"
@@ -192,20 +279,33 @@ const Home = () => {
                     id=""
                     value={fromLocation}
                     placeholder="From"
-                    onClick={() => {setOpenLocationModel(!openLocationModel); setModelType("from")}}
+                    onClick={() => {
+                      setOpenLocationModel(!openLocationModel);
+                      setModelType("from");
+                    }}
                     onChange={(e) => setFromLocation(e.target.value)}
                   />
-                  {openLocationModel && modelType==="from" &&(
-                    <CityModel location={fromLocation} cityInfo={from} handleLocation={handleFromLocation} />
+                  {openLocationModel && modelType === "from" && (
+                    <CityModel
+                      location={fromLocation}
+                      cityInfo={from}
+                      handleLocation={handleFromLocation}
+                    />
                   )}
                 </div>
               </div>
-              <div onClick={exchangeLocation} className="w-10 h-10 bg-white rounded-full  grid place-content-center absolute border border-gray-300">
+              <div
+                onClick={exchangeLocation}
+                className="w-10 h-10 bg-white rounded-full  grid place-content-center absolute border border-gray-300"
+              >
                 <FaExchangeAlt className=" text-2xl text-gray-900" />
               </div>
               <div className="h-full border-b sm:border-r border-gray-300 w-full md:w-[50%] sm:w-auto">
-                <div className=" relative px-7 py-8 flex items-center h-full gap-3" ref={toModalRef}>
-                  <FaWalking className=" text-2xl font-semibold text-gray-400"/>
+                <div
+                  className=" relative px-7 py-8 flex items-center h-full gap-3"
+                  ref={toModalRef}
+                >
+                  <FaWalking className=" text-2xl font-semibold text-gray-400" />
                   <input
                     className="outline-none w-full"
                     type="text"
@@ -213,17 +313,21 @@ const Home = () => {
                     id=""
                     value={toLocation}
                     placeholder="To"
-                    onClick={()=>{setOpenLocationModel(!openLocationModel); setModelType("to")
+                    onClick={() => {
+                      setOpenLocationModel(!openLocationModel);
+                      setModelType("to");
                       console.log("Hello to is to working");
                       console.log(openLocationModel);
                       console.log(modelType);
-                      
-                      
-                      
                     }}
                     onChange={(e) => setToLocation(e.target.value)}
                   />
-                   {openLocationModel && modelType==="to" &&(<CityModel location={toLocation} cityInfo={from} handleLocation={handleToLocation} />
+                  {openLocationModel && modelType === "to" && (
+                    <CityModel
+                      location={toLocation}
+                      cityInfo={from}
+                      handleLocation={handleToLocation}
+                    />
                   )}
                 </div>
               </div>
@@ -246,7 +350,10 @@ const Home = () => {
                   />
                 </div>
               </div>
-              <button onClick={handleSearchRequest} className=" px-7 py-8 flex items-center justify-center bg-red-400 whitespace-nowrap text-white font-bold w-full sm:w-1/2 text-center rounded-r-3xl">
+              <button
+                onClick={handleSearchRequest}
+                className=" px-7 py-8 flex items-center justify-center bg-red-400 whitespace-nowrap text-white font-bold w-full sm:w-1/2 text-center rounded-r-3xl"
+              >
                 SEARCH BUSES
               </button>
             </div>
@@ -272,95 +379,117 @@ const Home = () => {
           </div>
         </div>
       </section>
-      <section class="flex justify-center  my-20 md:my-40">
-        <div class="flex flex-col w-full px-6 md:px-0 md:w-[80%] max-w-[1300px]">
-          <h1 class="text-gray-700 text-2xl md:text-[2.5rem] mb-6 md:mb-12">
+     
+      <section
+        className={`  flex justify-center py-3 bg-gradient-to-r from-red-500 to-red-800  max-md:my-40 overflow-y-scroll scroll-smooth  ${
+          frequentlyAskedQuestions && frequentlyAskedQuestions.length > 0
+            ? "h-[80vh]"
+            : "h-[50vh]"
+        }`}
+      >
+        <div className=" relative flex flex-col w-full px-6 md:px-0 md:w-[80%] max-w-[1300px]">
+          <h1 className=" sticky top-0 z-10 backdrop-blur-md text-white text-2xl md:text-[2.5rem] mb-6 md:mb-12">
             FREQUENTY ASKED QUESTIONS
           </h1>
 
-          <div class="flex gap-6 text-sm md:text-base lg:text-lg">
+          <div className=" sticky backdrop-blur-md top-10 z-10 flex gap-6 text-sm md:text-base lg:text-lg">
             <a
-              class="py-2 px-2 border-b-[3px] border-main-color text-main-color"
+              className="py-2 px-2 border-b-[3px] border-main-color text-main-color"
               href=""
             >
               General
             </a>
-            <a class="py-2 px-2 hover:border-b-[3px] border-gray-300" href="">
+            <a
+              className="py-2 px-2 hover:border-b-[3px] border-gray-300"
+              href=""
+            >
               Ticket-related
             </a>
             <a
               href=""
-              class=" leading-none flex justify-center items-center gap-3 py-2 px-2 hover:border-b-[3px] border-gray-300 sm:hidden"
+              className=" leading-none flex justify-center items-center gap-3 py-2 px-2 hover:border-b-[3px] border-gray-300 sm:hidden"
             >
               More
-              <i class="fa-solid fa-chevron-right"></i>
+              <i className="fa-solid fa-chevron-right"></i>
             </a>
             <a
-              class="hidden sm:inline-block py-2 px-2 hover:border-b-[3px] border-gray-300"
+              className="hidden sm:inline-block py-2 px-2 hover:border-b-[3px] border-gray-300"
               href=""
             >
               Payment
             </a>
             <a
-              class="hidden sm:inline-block py-2 px-2 hover:border-b-[3px] border-gray-300"
+              className="hidden sm:inline-block py-2 px-2 hover:border-b-[3px] border-gray-300"
               href=""
             >
               Cancellation & Refund
             </a>
             <a
-              class="hidden sm:inline-block py-2 px-2 hover:border-b-[3px] border-gray-300"
+              className="hidden sm:inline-block py-2 px-2 hover:border-b-[3px] border-gray-300"
               href=""
             >
               Insurance
             </a>
           </div>
 
-          <div class="flex flex-col gap-6 md:gap-10 mt-11">
-            {frequentlyAskedQuestions.map((question) => {
-              return (
-                <div
-                  key={question.id}
-                  class="p-4 md:p-7 cursor-pointer bg-white group hover:bg-slate-100 rounded-2xl border border-gray-100"
-                >
-                  <div class="flex md:text-base text-sm justify-between items-center font-semibold gap-2">
-                    <h3>{question.question}</h3>
-                    <i class="fa-solid fa-plus inline-block group-hover:hidden">
-                      ➕
-                    </i>
-                    <i class="fa-solid fa-minus hidden group-hover:inline-block">
-                      ➖
-                    </i>
-                  </div>
+          <div className="flex flex-col gap-3 max-md:gap-10 mt-11 duration-300 scroll-smooth">
+            {loading ? (
+              <div className=" flex justify-center">
+                <Loader />
+              </div>
+            ) : frequentlyAskedQuestions ? (
+              frequentlyAskedQuestions.map((question) => {
+                return (
+                  <div
+                    key={question._id}
+                    class="p-4 md:p-7 cursor-pointer bg-white group hover:bg-slate-100 rounded-2xl border border-gray-100"
+                  >
+                    <div className="flex md:text-base text-sm justify-between items-center font-semibold gap-2 duration-300">
+                      <h3>{question.question}</h3>
+                      <i className="fa-solid fa-plus inline-block duration-300 group-hover:hidden">
+                        ➕
+                      </i>
+                      <i className="fa-solid fa-minus hidden duration-300 group-hover:inline-block">
+                        ➖
+                      </i>
+                    </div>
 
-                  <div class="text-xs md:text-sm mt-6 hidden group-hover:inline-block">
-                    <p>
-                      Yes, you can track your <strong>bus online</strong> by
-                      using our bus tracking app feature called
-                      <a class="text-blue-500">Track My Bus</a>. This feature
-                      allows passengers and their families to track the live bus
-                      tracking location. You may follow your bus on a map and
-                      use the information to plan your trip to the boarding
-                      point and to get off at the correct stop. Family and
-                      friends may also check the bus position to plan pick-ups
-                      and ensure your safety.
-                    </p>
+                    <div className="text-xs md:text-sm mt-6 hidden duration-300  group-hover:inline-block">
+                      {/* <p>
+                        Yes, you can track your <strong>bus online</strong> by
+                        using our bus tracking app feature called
+                        <a className="text-blue-500">Track My Bus</a>. This feature
+                        allows passengers and their families to track the live bus
+                        tracking location. You may follow your bus on a map and
+                        use the information to plan your trip to the boarding
+                        point and to get off at the correct stop. Family and
+                        friends may also check the bus position to plan pick-ups
+                        and ensure your safety.
+                      </p> */}
+                      <p>{question.answer?.text}</p>
+                    </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })
+            ) : (
+              <div className=" text-red-400 flex justify-center text-xl">
+                Oops..Something went wrong while loading the Frequently asked
+                question.
+              </div>
+            )}
 
-            <div class="p-4 md:p-7  cursor-pointer bg-white group hover:bg-slate-100 rounded-2xl border border-gray-100">
-              <div class="flex md:text-base text-sm justify-between items-center font-semibold gap-2">
+            {/* <div className="p-4 md:p-7  cursor-pointer bg-white group hover:bg-slate-100 rounded-2xl border border-gray-100">
+              <div className="flex md:text-base text-sm justify-between items-center font-semibold gap-2">
                 <h3>Why book bus tickets online on tedbus?</h3>
-                <i class="fa-solid fa-plus inline-block group-hover:hidden"></i>
-                <i class="fa-solid fa-minus hidden group-hover:inline-block"></i>
+                <i className="fa-solid fa-plus inline-block group-hover:hidden"></i>
+                <i className="fa-solid fa-minus hidden group-hover:inline-block"></i>
               </div>
 
-              <div class="text-xs md:text-sm mt-6 hidden group-hover:inline-block">
+              <div className="text-xs md:text-sm mt-6 hidden group-hover:inline-block">
                 <p>
                   Yes, you can track your <strong>bus online</strong> by using
                   our bus tracking app feature called
-                  <a class="text-blue-500">Track My Bus</a>. This feature allows
+                  <a className="text-blue-500">Track My Bus</a>. This feature allows
                   passengers and their families to track the live bus tracking
                   location. You may follow your bus on a map and use the
                   information to plan your trip to the boarding point and to get
@@ -369,18 +498,18 @@ const Home = () => {
                 </p>
               </div>
             </div>
-            <div class="p-4 md:p-7  cursor-pointer bg-white group hover:bg-slate-100 rounded-2xl border border-gray-100">
-              <div class="flex md:text-base text-sm justify-between items-center font-semibold gap-2">
+            <div className="p-4 md:p-7  cursor-pointer bg-white group hover:bg-slate-100 rounded-2xl border border-gray-100">
+              <div className="flex md:text-base text-sm justify-between items-center font-semibold gap-2">
                 <h3>Can I book a Government bus ticket on tedbus?</h3>
-                <i class="fa-solid fa-plus inline-block group-hover:hidden"></i>
-                <i class="fa-solid fa-minus hidden group-hover:inline-block"></i>
+                <i className="fa-solid fa-plus inline-block group-hover:hidden"></i>
+                <i className="fa-solid fa-minus hidden group-hover:inline-block"></i>
               </div>
 
-              <div class="text-xs md:text-sm mt-6 hidden group-hover:inline-block">
+              <div className="text-xs md:text-sm mt-6 hidden group-hover:inline-block">
                 <p>
                   Yes, you can track your <strong>bus online</strong> by using
                   our bus tracking app feature called
-                  <a class="text-blue-500">Track My Bus</a>. This feature allows
+                  <a className="text-blue-500">Track My Bus</a>. This feature allows
                   passengers and their families to track the live bus tracking
                   location. You may follow your bus on a map and use the
                   information to plan your trip to the boarding point and to get
@@ -388,12 +517,41 @@ const Home = () => {
                   bus position to plan pick-ups and ensure your safety.
                 </p>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </section>
-      <Example />
-      {/* <ShadowDiv/> */}
+      <section className=" flex justify-center items-center">
+           <Pagination currentPage={currentPage} totalPages={data?.data.totalPages} onPageChange={setCurrentPage} className="z-40"/>
+          </section>
+      <section className=" relative flex justify-center flex-col items-center border my-20">
+        <div className=" bg-gradient-to-r from-gray-800 to-gray-500 absolute flex flex-col justify-center lg:w-[70%] max-md:w-[90%] rounded-xl drop-shadow-md z-10 p-5">
+          <h1 className=" text-2xl font-semibold text-white pl-4 m-auto">
+            Ask a Question ?
+          </h1>
+          <form
+            onSubmit={handleSubmit(handleQuestionSubmit)}
+            className=" lg:w-[70%] max-md:w-full p-4 flex max-sm:flex-col max-sm:gap-3 m-auto "
+          >
+            <Input
+              placeholder="Enter your Question .."
+              className=" lg:rounded-r-none max-sm:rounded-md"
+              {...register("question", {
+                required: true,
+                message: "Fill the field with your question",
+              })}
+              required
+            />
+            <Button
+              type="submit"
+              className=" lg:rounded-l-none bg-orange-500 font-semibold"
+              disabled={isSubmitting}
+            >
+              {isSubmitting?"Submitting":"Submit"}
+            </Button>
+          </form>
+        </div>
+      </section>
     </>
   );
 };

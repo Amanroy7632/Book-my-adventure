@@ -3,12 +3,13 @@ import SortingBar from './sorting-bar/SortingBar'
 import BusBox from './bus-box/BusBox'
 import BusBottom from './bus-book/BusBottom'
 
-const Right = () => {
+const Right = ({children}) => {
   return (
     <div>
-      <SortingBar/>
+      {children}
+      {/* <SortingBar/>
       <BusBox/>
-      <BusBottom/>
+      <BusBottom/> */}
     </div>
   )
 }

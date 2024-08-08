@@ -3,24 +3,22 @@ import logo from "../../assets/red-bus-with-word-bus-it_600323-482.avif"
 import { Link,NavLink } from "react-router-dom";
 import {MdOutlineTextRotationAngledown} from "react-icons/md"
 import { FaAngleDown,FaUser,FaHeadset  } from "react-icons/fa"
+import { useCurrentUser } from "../../context/userContext";
+import Logo from "../logo/Logo";
+import {GrLogin} from "react-icons/gr"
 const Header = () => {
-  const [user,setUser] =useState(false)
-  const setUserHandler =()=>{
-    setUser(!user)
+  const [userNav,setUserNav] =useState(false)
+  const {currentUser,logoutCurrentUser} =useCurrentUser()
+  const setUserNavHandler =()=>{
+    setUserNav(!userNav)
   }
   return (
     <nav className="px-4 md:px-14 py-1 md:py-3 flex text-xs md:text-base font-normal items-center justify-between sticky top-0 bg-white z-20 drop-shadow-xl">
       <div className="flex gap-2 md:gap-16 items-center w-full justify-between md:w-auto md:justify-start">
-        <div className="grid place-content-center">
-          <img
-            className="md:w-[4.5rem] md:h-auto w-12 h-10"
-            src={logo}
-            alt="Tedbus Logo"
-          />
-        </div>
+        <Logo/>
         <div className="h-6 w-[1px] bg-gray-200"></div>
         <div className="flex gap-3">
-          <Link className="flex flex-col items-center text-center gap-1 px-2 py-3 rounded-lg group hover:bg-gray-100 bg-main-color sm:bg-transparent">
+          <Link    className="flex flex-col items-center text-center gap-1 px-2 py-3 rounded-lg group hover:bg-gray-100 bg-main-color sm:bg-transparent">
             <svg
               className="group-hover:fill-main-color fill-white sm:fill-black"
               width="29"
@@ -80,17 +78,19 @@ const Header = () => {
             <FaHeadset/>
             <p>Help</p>
         </Link>
-        <button onClick={setUserHandler} className=" flex flex-col justify-center items-center">
-            <FaUser/>
-            <p>Account</p>
-            <FaAngleDown/>
-        </button>
-        {user&&<div className=" flex px-3 gap-3 absolute flex-col  backdrop-blur-xl  right-1 ">
-            <button>My Trips</button>
-            <button>Wallet/Cards</button>
-            <button >My Profile</button>
-            <button>Wallet</button>
-            <button >Sign Out</button>
+        {
+          currentUser&& currentUser._id?<button onClick={setUserNavHandler} className=" flex flex-col justify-center items-center">
+          <FaUser className=" text-blue-950"/>
+          <p>{currentUser?.fullname}</p>
+          <FaAngleDown/>
+      </button>:<Link to={"/login"} className=" flex items-center gap-1 hover:bg-gray-200 rounded-md p-1"> <GrLogin /> Login</Link>
+        }
+        {currentUser?.fullname&&userNav&&<div className=" flex px-3 gap-3 absolute flex-col  backdrop-blur-xl  right-1 cursor-pointer">
+            <button onClick={setUserNavHandler}>My Trips</button>
+            <button onClick={setUserNavHandler}>Wallet/Cards</button>
+            <Link to={"/profile"} onClick={setUserNavHandler} >My Profile</Link>
+            <Link onClick={setUserNavHandler}>Wallet</Link>
+            <Link to={"/"} onClick={logoutCurrentUser}>Log Out</Link>
         </div>}
      </div>
     </nav>

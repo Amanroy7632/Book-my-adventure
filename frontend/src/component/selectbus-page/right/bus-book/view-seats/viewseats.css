@@ -1,0 +1,44 @@
+
+.mainContainer22 > div,
+.mainContainer23 > div {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+.mainContainer24 {
+    height: 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .mainContainer24 > div {
+    font-size: 14px;
+    color: #4a4a4a;
+    font-weight: 700;
+  }
+  
+  .mainContainer24 > div:nth-child(1) {
+    font-size: 16px;
+  }
+  
+  .mainContainer25 {
+    margin-top: 13px;
+    font-size: 16px;
+    color: #4a4a4a;
+    font-weight: 700;
+  }
+  
+  .mainContainer26 {
+    margin-top: 13px;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .mainContainer26 > div:nth-child(2) {
+    font-weight: 700;
+    font-size: 14px;
+    text-align: right;
+    color: #3e3e52;
+  }
