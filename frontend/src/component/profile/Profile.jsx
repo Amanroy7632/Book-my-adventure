@@ -352,7 +352,7 @@ const Profile = () => {
     setIsModalOpen(false);
   };
   const viewImage = () => {
-    window.open(user.avatar, "_blank");
+    window.open(currentUser?.avatar, "_blank");
     closeModal();
   };
 

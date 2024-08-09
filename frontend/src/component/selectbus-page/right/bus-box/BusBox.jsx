@@ -17,7 +17,7 @@ import Loader from "../../../loader/Loader";
 const amenities = ["Charging point", "Movies", "Lights", "Bus Stopage"];
 const BusBox = ({ loading, data, errorMessage }) => {
   const [popUpVisible, setPopUpVisible] = useState(null);
-  const [filledSeats, setFilledSeats] = useState([31, 12, 3, 4]);
+  const [filledSeats, setFilledSeats] = useState([1, 11, 21, 31]);
   const [selectedbus, setSelectedBus] = useState(null);
   const [busDetails, setBusDetails] = useState({});
   useEffect(() => {

@@ -13,6 +13,8 @@ import { useForm } from "react-hook-form";
 import Pagination from "../pagination/Pagination.jsx";
 import axiosInstance from "../../utils/axiosInstance.js";
 import { useCurrentUser } from "../../context/userContext.jsx";
+import Alert from "../CustomAlert/Alert.jsx";
+import LoadingAnimation from "./Animation/LandingPageAnimation.jsx";
 const offerCardDetails = [
   {
     id: 1,
@@ -108,7 +110,8 @@ const offerCardDetails = [
 //                       may also check the bus position to plan pick-ups and ensure your safety.`,
 //   },
 // ];
-const from = ["Delhi", "Mumbai", "Banglore", "Kolkata", "Patna", "Chennai"];
+const from = ["delhi", "mumbai", "banglore", "kolkata", "patna", "chennai"];
+
 const to = [...from];
 const Home = () => {
   const [startDate, setStartDate] = useState(new Date());
@@ -120,19 +123,21 @@ const Home = () => {
   const toModalRef = useRef(null);
   const [openLocationModel, setOpenLocationModel] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [isSubmitting,setIsSubmitting]=useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { handleSubmit, register, reset } = useForm();
-  
+
   const navigate = useNavigate();
   const handleFromLocation = (city) => {
+    setModelType("")
     setOpenLocationModel(false);
     setFromLocation(city);
     fromModalRef.current = null;
   };
   const handleToLocation = (city) => {
+    setModelType("")
     setOpenLocationModel(false);
     setToLocation(city);
-   
+
     toModalRef.current = null;
   };
   const handleClickOutside = (event) => {
@@ -162,7 +167,7 @@ const Home = () => {
       alert("Please select a different location");
       return;
     }
-    if (!from.includes(fromLocation) || !to.includes(toLocation)) {
+    if (!from.includes(fromLocation.toLowerCase()) || !to.includes(toLocation.toLowerCase())) {
       alert("Please select a given location");
       return;
     }
@@ -179,60 +184,47 @@ const Home = () => {
     setToLocation("");
     setStartDate("");
   }
-  const handleQuestionSubmit = (data) => {
-    setIsSubmitting(true)
+  const handleQuestionSubmit = async (data) => {
+    // setIsSubmitting(true)
+    console.log(currentUser);
+
+    if (!currentUser) {
+      setAlertMessage("Please Login for any Query");
+      navigate("/login");
+      return;
+    }
     if (!data) {
       alert("Please enter your query..");
       return;
     }
     const quesData = {
       ...data,
-      userId: "66abb3763fd47cf79fe498d2",
+      userId: currentUser?._id,
     };
     try {
-      fetch("http://localhost:8000/api/v1/question-answer/register", {
-        method: "POST",
-        body: JSON.stringify(quesData),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-        .then((res) => {
-          console.log(res.status);
-
-          if (!res.ok) {
-            alert("Internet Connection is required");
-            return;
-          }
-          return res.json();
-        })
-        .then((data) => {
-          console.log(data);
-
-          if (data.success) {
-            alert("Your Query has been submitted successfully");
-            return;
-          } else {
-            alert(
-              "Something went wrong" + data.successCode + "\nPlease try again"
-            );
-          }
-        })
-        .catch((err) => {
-          alert(`Error: ${err.message}`);
-
-        });
+      setIsSubmitting(true);
+      const response = await axiosInstance.post(
+        "/question-answer/register",
+        quesData
+      );
+      console.log(response);
+      if (response.status === 201) {
+        setAlertMessage("Your Query has been submitted successfully");
+        reset();
+      }
     } catch (error) {
-      alert("No Internet Connection\n" + error.message);
-      console.log(error);
+      // alert("Something went wrong: " + error.message)
+      setAlertMessage("Something went wrong " + error.message);
+
+      console.log("Error" + error.message);
     } finally {
       setTimeout(() => {
-        setIsSubmitting(false)
-      }, 1000);
-      reset();
+        setIsSubmitting(false);
+      }, 500);
     }
   };
-  const {currentUser,setCurrentUser,alertMessage,setAlertMessage} =useCurrentUser()
+  const { currentUser, setCurrentUser, alertMessage, setAlertMessage } =
+    useCurrentUser();
   useEffect(() => {
     if (openLocationModel) {
       window.addEventListener("click", handleClickOutside);
@@ -243,7 +235,7 @@ const Home = () => {
       // Cleanup event listener on component unmount
       window.removeEventListener("click", handleClickOutside);
     };
-  }, [openLocationModel]); 
+  }, [openLocationModel]);
   const { loading, data, errorMessage } = useFetch(
     `http://localhost:8000/api/v1/question-answer/?limit=5&page=${currentPage}`,
     {
@@ -252,13 +244,17 @@ const Home = () => {
     }
   );
   // console.log(data);
-  
+
   const frequentlyAskedQuestions = data?.data?.questionAnswer;
   console.log(frequentlyAskedQuestions);
-
+  useEffect(() => {
+    const timeDur = setTimeout(() => {
+      return <LoadingAnimation />;
+    }, 2000);
+    return () => clearTimeout(timeDur);
+  }, []);
   return (
     <>
-      
       <section className="h-[32rem] bg-main-color bg-[url('assets/hero-img.png')] bg-center  bg-no-repeat bg-cover flex justify-center">
         <div className="flex flex-col items-center w-full max-w-[1400px]">
           <h1 className="text-2xl mx-4 md:text-[2rem] text-white font-bold mt-16 mb-4 text-center">
@@ -279,16 +275,21 @@ const Home = () => {
                     id=""
                     value={fromLocation}
                     placeholder="From"
-                    onClick={() => {
-                      setOpenLocationModel(!openLocationModel);
+                    onFocus={() => {
+                      setOpenLocationModel(true);
                       setModelType("from");
                     }}
+                    // onBlur={() => {
+                    //   setOpenLocationModel(false);
+                    //   setModelType("");
+                    // }}
                     onChange={(e) => setFromLocation(e.target.value)}
                   />
                   {openLocationModel && modelType === "from" && (
                     <CityModel
                       location={fromLocation}
                       cityInfo={from}
+                      onBlur={()=>setModelType("")}
                       handleLocation={handleFromLocation}
                     />
                   )}
@@ -313,19 +314,24 @@ const Home = () => {
                     id=""
                     value={toLocation}
                     placeholder="To"
-                    onClick={() => {
-                      setOpenLocationModel(!openLocationModel);
+                    onFocus={() => {
+                      setOpenLocationModel(true);
                       setModelType("to");
                       console.log("Hello to is to working");
                       console.log(openLocationModel);
                       console.log(modelType);
                     }}
+                    // onBlur={() => {
+                    //   setOpenLocationModel(false);
+                    //   setModelType("");
+                    // }}
                     onChange={(e) => setToLocation(e.target.value)}
                   />
                   {openLocationModel && modelType === "to" && (
                     <CityModel
                       location={toLocation}
                       cityInfo={from}
+                      onBlur={()=>setModelType("")}
                       handleLocation={handleToLocation}
                     />
                   )}
@@ -379,7 +385,7 @@ const Home = () => {
           </div>
         </div>
       </section>
-     
+
       <section
         className={`  flex justify-center py-3 bg-gradient-to-r from-red-500 to-red-800  max-md:my-40 overflow-y-scroll scroll-smooth  ${
           frequentlyAskedQuestions && frequentlyAskedQuestions.length > 0
@@ -522,8 +528,13 @@ const Home = () => {
         </div>
       </section>
       <section className=" flex justify-center items-center">
-           <Pagination currentPage={currentPage} totalPages={data?.data.totalPages} onPageChange={setCurrentPage} className="z-40"/>
-          </section>
+        <Pagination
+          currentPage={currentPage}
+          totalPages={data?.data.totalPages}
+          onPageChange={setCurrentPage}
+          className="z-40"
+        />
+      </section>
       <section className=" relative flex justify-center flex-col items-center border my-20">
         <div className=" bg-gradient-to-r from-gray-800 to-gray-500 absolute flex flex-col justify-center lg:w-[70%] max-md:w-[90%] rounded-xl drop-shadow-md z-10 p-5">
           <h1 className=" text-2xl font-semibold text-white pl-4 m-auto">
@@ -545,12 +556,15 @@ const Home = () => {
             <Button
               type="submit"
               className=" lg:rounded-l-none bg-orange-500 font-semibold"
-              disabled={isSubmitting}
+              disabled={isSubmitting || !currentPage}
             >
-              {isSubmitting?"Submitting":"Submit"}
+              {isSubmitting ? "Submitting" : "Submit"}
             </Button>
           </form>
         </div>
+        {alertMessage && (
+          <Alert message={alertMessage} onClose={() => setAlertMessage("")} />
+        )}
       </section>
     </>
   );
