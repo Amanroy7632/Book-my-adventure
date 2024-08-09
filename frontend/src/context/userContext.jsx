@@ -28,7 +28,6 @@ export const UserProvider = ({children})=>{
               const response = await axiosInstance.get("/users/profile")
               console.log(response.data);
               setCurrentUser(response.data?.data)
-              
             } catch (error) {
               console.error('Error fetching user data:', error);
             }

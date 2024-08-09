@@ -21,29 +21,33 @@ const BusBox = ({ loading, data, errorMessage }) => {
   const [selectedbus, setSelectedBus] = useState(null);
   const [busDetails, setBusDetails] = useState({});
   useEffect(() => {
-    console.log("Selected Bus: " + selectedbus);
-    const fetchBusDetails = async () => {
-      try {
-        const response = await fetch(
-          `http://localhost:8000/api/v1/bus/${
-            data?.data[selectedbus - 1]?.busId
-          }`,
-          {
-            method: "GET",
-            "Content-Type": "application/json",
-          }
-        );
-        const result = await response.json();
-        console.log(result?.data);
-        
-        setBusDetails(result?.data)
-      } catch (error) {
-        console.error(error)
+    const debouncer = setTimeout(()=>{
+
+      console.log("Selected Bus: " + selectedbus);
+      const fetchBusDetails = async () => {
+        try {
+          const response = await fetch(
+            `http://localhost:8000/api/v1/bus/${
+              data?.data[selectedbus - 1]?.busId
+            }`,
+            {
+              method: "GET",
+              "Content-Type": "application/json",
+            }
+          );
+          const result = await response.json();
+          console.log(result?.data);
+          
+          setBusDetails(result?.data)
+        } catch (error) {
+          console.error(error)
+        }
+      };
+      if (selectedbus) {
+        fetchBusDetails()
       }
-    };
-    if (selectedbus) {
-      fetchBusDetails()
-    }
+    },800)
+    return ()=>clearTimeout(debouncer)
   }, [selectedbus]);
   if (loading) {
     return (
@@ -182,7 +186,7 @@ const BusBox = ({ loading, data, errorMessage }) => {
         </div>
       </div>
       <div class="busBoxSection3">
-        <BusBottom filledSeats={filledSeats} setFilledSeats={setFilledSeats} busDetails={busDetails} />
+        {selectedbus &&<BusBottom filledSeats={filledSeats} setFilledSeats={setFilledSeats} busDetails={busDetails} />}
         {/* <app-bottom-tab [busid]='busid' [filledseats]="filledseats" [seatprice]="seatprice"
         [routedetails]="routedetails" [busarrivaltime]="busarrivaltime" [busdeparturetime]="busdeparturetime"
             [operatorname]="operatorname"></app-bottom-tab> */}
