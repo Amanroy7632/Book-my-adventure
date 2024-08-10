@@ -1,0 +1,24 @@
+{
+    "routes":[
+        {
+            "src":"/",
+            "dest":"/"
+        },
+        {
+            "src":"/profile",
+            "dest":"/"
+        },
+        {
+            "src":"/select-bus",
+            "dest":"/"
+        },
+        {
+            "src":"/login",
+            "dest":"/"
+        },
+        {
+            "src":"/register",
+            "dest":"/"
+        }
+    ]
+}
