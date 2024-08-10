@@ -1,15 +1,9 @@
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken"
+import uniqueValidator from "mongoose-unique-validator"
+import bcrypt from "bcrypt"
 const userSchema = new mongoose.Schema({
-    username:{
-        type:String,
-        required:true,
-        unique:true,
-        lowercase:true,
-        trim:true,
-        index:true
-    },
-    email:{
+      email:{
         type:String,
         required:true,
         unique:true,
@@ -21,6 +15,17 @@ const userSchema = new mongoose.Schema({
         required:true,
         trim:true,
         index:true
+      },
+      phone:{
+        type:String,
+        required:true,
+        unique:true,
+        validate:{
+            validator:function (v){
+                return /^\d{10}$/.test(v);
+            },
+            message:"Invalid phone number"
+        }
       },
       avatar:{
         type:String,//Cloudinary url
@@ -34,12 +39,13 @@ const userSchema = new mongoose.Schema({
         type:String
       }
 },{timestamps:true})
+userSchema.plugin(uniqueValidator)
 userSchema.pre("save",async function (next){
     if (!this.isModified("password")) {
         return next()
     }
-    // this.password = await bcrypt.hash(this.password,this.password)
-    // next()
+    this.password = await bcrypt.hash(this.password,10)
+    next()
 })
 userSchema.methods.isPasswordCorrect = async function (password){
     return await bcrypt.compare(password,this.password)
@@ -49,7 +55,7 @@ userSchema.methods.generateAccessToken=async function (){
         {
             _id:this._id,
             email:this.email,
-            username:this.username,
+            phone:this.phone,
             fullname:this.fullname
         },
         process.env.ACCESS_TOKEN_SECRET,
@@ -63,7 +69,7 @@ userSchema.methods.generateRefreshToken= async function (){
         {
             _id:this._id,
             email:this.email,
-            username:this.username,
+            phone:this.phone,
             fullname:this.fullname
         },
     process.env.REFRESH_TOKEN_SECRET,
@@ -71,4 +77,14 @@ userSchema.methods.generateRefreshToken= async function (){
     expiresIn:process.env.REFRESH_TOKEN_EXPIRY
 })
 }
+
 export const User = mongoose.model("User",userSchema)
+// Ensure indexes are synchronized
+User.syncIndexes()
+.then(() => {
+    console.log("Indexes synchronized");
+})
+.catch((err) => {
+    console.error("Error synchronizing indexes", err);
+});
+
