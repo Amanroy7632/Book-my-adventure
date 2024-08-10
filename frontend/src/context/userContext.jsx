@@ -26,14 +26,14 @@ export const UserProvider = ({children})=>{
         const fetchUserData =async ()=>{
             try {
               const response = await axiosInstance.get("/users/profile")
-              console.log(response.data);
+            //   console.log(response.data);
               setCurrentUser(response.data?.data)
             } catch (error) {
               console.error('Error fetching user data:', error);
             }
           }
           fetchUserData()
-          console.log(currentUser);
+        //   console.log(currentUser);
     },[])
     return <UserContext.Provider value={{currentUser,setCurrentUser,logoutCurrentUser,alertMessage,setAlertMessage,onCloseHandler}}>
         {children}

@@ -108,9 +108,7 @@ const ReviewPage = ({ busDetails }) => {
         },
       ]);
 
-      console.log(reviews);
-
-      // setNewReview({ name: '', review: '', rating: 0 }); // Clear the form
+      // console.log(reviews);
     }
   };
 
@@ -120,7 +118,7 @@ const ReviewPage = ({ busDetails }) => {
         `http://localhost:8000/api/v1/feedback?page=${page}&limit=5`
       );
       const data = await response.json();
-      console.log(data);
+      // console.log(data);
       setReviews((prev) => [...prev, ...data.data]); // Append new reviews
       if (data.data.length === 0 || data.data.length < 5) {
         setHasMore(false); // No more data available
@@ -133,7 +131,7 @@ const ReviewPage = ({ busDetails }) => {
   useEffect(() => {
     const interval = setTimeout(() => {
       fetchFeedback(page);
-    }, [3000]);
+    }, [1500]);
     return () => clearTimeout(interval);
   }, [page]);
 
@@ -146,13 +144,13 @@ const ReviewPage = ({ busDetails }) => {
     ) {
       setPage((prevPage) => prevPage + 1);
     }
-    console.log("Top Scroll: " + reviewSection.scrollTop);
-    console.log("Client height: " + reviewSection.clientHeight);
-    console.log("Scroll height: " + reviewSection.scrollHeigh);
-    console.log(
-      reviewSection.scrollTop + reviewSection.clientHeight,
-      reviewSection.scrollHeight
-    );
+    // console.log("Top Scroll: " + reviewSection.scrollTop);
+    // console.log("Client height: " + reviewSection.clientHeight);
+    // console.log("Scroll height: " + reviewSection.scrollHeigh);
+    // console.log(
+    //   reviewSection.scrollTop + reviewSection.clientHeight,
+    //   reviewSection.scrollHeight
+    // );
   };
 
   useEffect(() => {

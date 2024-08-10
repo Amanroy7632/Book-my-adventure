@@ -18,9 +18,11 @@ import {
 } from "react-icons/md";
 import { BiWater } from "react-icons/bi";
 import ReviewPage from "./view-seats/Review/ReviewPage";
-const BusBottom = ({ filledSeats, setFilledSeats, busDetails }) => {
+import { useBusContext } from "../../../../context/busContext";
+const BusBottom = ({ filledSeats, setFilledSeats }) => {
   const [isVisibleDisplayArea, setIsVisibleDisplayArea] = useState(false);
   const [displayIndex, setdisplayIndex] = useState(null);
+  const {busDetails} =useBusContext()
   const displayClickHandler = (index) => {
     setIsVisibleDisplayArea(true);
     setdisplayIndex(index);
@@ -28,7 +30,7 @@ const BusBottom = ({ filledSeats, setFilledSeats, busDetails }) => {
 
   return (
     <div>
-      <div class="mainBar">
+      <div className="mainBar">
         <div onClick={() => displayClickHandler(0)}>Amenities</div>
         <div>|</div>
         <div onClick={() => displayClickHandler(1)}>
@@ -42,7 +44,7 @@ const BusBottom = ({ filledSeats, setFilledSeats, busDetails }) => {
         <div onClick={() => displayClickHandler(4)}>VIEW SEATS</div>
       </div>
       {isVisibleDisplayArea && displayIndex === 0 && (
-        <div class="displayArea">
+        <div className="displayArea">
           <h1 className=" text-xl">Amenities</h1>
           <div className="">
             {busDetails ? (
@@ -75,19 +77,19 @@ const BusBottom = ({ filledSeats, setFilledSeats, busDetails }) => {
         </div>
       )}
       {isVisibleDisplayArea && displayIndex === 1 && (
-        <div class="displayArea">
+        <div className="displayArea">
           {" "}
           <h1 className=" text-xl">Boarding and Droping Points</h1>
         </div>
       )}
       {isVisibleDisplayArea && displayIndex === 2 && (
-        <div class="displayArea">
+        <div className="displayArea">
           <h1 className=" text-xl">Reviews</h1>
           <ReviewPage busDetails={busDetails}/>
         </div>
       )}
       {isVisibleDisplayArea && displayIndex === 3 && (
-        <div class="displayArea">
+        <div className="displayArea">
           {/* <h1 className=" text-xl">Booking Policies</h1> */}
           <div className=" mx-auto p-8 pl-2 pt-2 select-none">
             <h1 className="text-3xl font-bold mb-6">
@@ -157,16 +159,13 @@ const BusBottom = ({ filledSeats, setFilledSeats, busDetails }) => {
         </div>
       )}
       {isVisibleDisplayArea && displayIndex === 4 && (
-        <div class="displayArea">
+        <div className="displayArea">
           <h1 className=" text-xl">VIEW SEATS</h1>
           <ViewSeat
             filledSeats={filledSeats}
             setFilledSeats={setFilledSeats}
             busDetails={busDetails}
-          />
-          {/* <app-view-seats [filledseats]="filledseats" [seatprice]="seatprice" [routedetails]="routedetails" [busid]="busid"
-        [busarrivaltime]="busarrivaltime" [busdeparturetime]="busdeparturetime">
-    </app-view-seats> */}
+            />
         </div>
       )}
     </div>

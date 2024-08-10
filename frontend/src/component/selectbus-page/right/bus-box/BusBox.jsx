@@ -13,42 +13,73 @@ import { FaAngleDown } from "react-icons/fa";
 import "./busbox.css";
 import BusBottom from "../bus-book/BusBottom";
 import useFetch from "../../../../hooks";
+import axiosInstance from "../../../../utils/axiosInstance";
 import Loader from "../../../loader/Loader";
+import { useBusContext } from "../../../../context/busContext";
 const amenities = ["Charging point", "Movies", "Lights", "Bus Stopage"];
 const BusBox = ({ loading, data, errorMessage }) => {
   const [popUpVisible, setPopUpVisible] = useState(null);
-  const [filledSeats, setFilledSeats] = useState([1, 11, 21, 31]);
-  const [selectedbus, setSelectedBus] = useState(null);
-  const [busDetails, setBusDetails] = useState({});
+  const [totalSeatLeft, setTotalSeatLeft] = useState(0);
+  const {
+    filledSeats,
+    setFilledSeats,
+    setSubmitedForm,
+    setSelectedSeats,
+    selectedbus,
+    setSelectedBus,
+    setBusDetails,
+    setRouteDetails,
+  } = useBusContext();
   useEffect(() => {
-    const debouncer = setTimeout(()=>{
-
-      console.log("Selected Bus: " + selectedbus);
-      const fetchBusDetails = async () => {
+    
+    const debouncer = setTimeout(async () => {
+      // console.log("Selected Bus: " + selectedbus);
+      
+      if (selectedbus) {
+        // Reset state before fetching new data
+        setFilledSeats([1,11,21,31]);
+        setSubmitedForm([]);
+        setSelectedSeats([]);
+        
+        const selectedBusData = data?.data[selectedbus - 1];
+        setRouteDetails(selectedBusData);
+  
         try {
-          const response = await fetch(
-            `http://localhost:8000/api/v1/bus/${
-              data?.data[selectedbus - 1]?.busId
-            }`,
+          // Fetch Bus Details
+          const busResponse = await fetch(
+            `http://localhost:8000/api/v1/bus/${selectedBusData?.busId}`,
             {
               method: "GET",
-              "Content-Type": "application/json",
+              headers: {
+                "Content-Type": "application/json",
+              },
             }
           );
-          const result = await response.json();
-          console.log(result?.data);
-          
-          setBusDetails(result?.data)
+          const busResult = await busResponse.json();
+          // console.log(busResult?.data);
+          setBusDetails(busResult?.data);
+  
+          // Fetch Booked Tickets
+          const ticketsResponse = await axiosInstance.get(`/ticket/?route=${selectedBusData?._id}&busNumber=${selectedBusData?.busDetails?.busno}`);
+          if (ticketsResponse.status === 200) {
+            // console.log(ticketsResponse.data);
+            const bookedSeats = ticketsResponse.data?.data?.map((ticket) => parseInt(ticket.seatNo));
+            setFilledSeats(bookedSeats);
+  
+            // Calculate total seats left after data is updated
+            const totalSeatsLeft = busResult?.data?.totalSeat - bookedSeats.length;
+            setTotalSeatLeft(totalSeatsLeft);
+          }
         } catch (error) {
-          console.error(error)
+          alert("Something went wrong with the fetching data\n" + error.message);
+          console.error(error);
         }
-      };
-      if (selectedbus) {
-        fetchBusDetails()
       }
-    },800)
-    return ()=>clearTimeout(debouncer)
-  }, [selectedbus]);
+    }, 800);
+  
+    return () => clearTimeout(debouncer);
+  }, [selectedbus, data, setBusDetails, setFilledSeats, setSubmitedForm, setSelectedSeats, setRouteDetails]);
+  
   if (loading) {
     return (
       <div className=" flex justify-center h-[30vh] items-center">
@@ -57,7 +88,7 @@ const BusBox = ({ loading, data, errorMessage }) => {
     );
   }
   return (
-    <div class="bus-box w-full min-h-[180px] h-auto border border-[#ddd] mt-[20px] pl-[10px] text-[#4a4a4a] text-sm font-semibold p-[10px] ">
+    <div className="bus-box w-full min-h-[180px] h-auto border border-[#ddd] mt-[20px] pl-[10px] text-[#4a4a4a] text-sm font-semibold p-[10px] ">
       {data?.data.length > 0 ? (
         data?.data.map((d, index) => {
           return (
@@ -83,13 +114,12 @@ const BusBox = ({ loading, data, errorMessage }) => {
                   {d.arrivalTime.substr(0, 2) - d.departureTime.substr(0, 1)}h
                 </div>
               </div>
-              <div class="busBoxSection14 flex flex-col justify-center">
+              <div className="busBoxSection14 flex flex-col justify-center">
                 <div>{d.arrivalTime}</div>
                 <div>{d.arrivalLocation}</div>
               </div>
-              <div class="busBoxSection15">
+              <div className="busBoxSection15">
                 <div className=" bg-green-400 flex justify-evenly items-center p-1 rounded-md">
-                  {/* <i class="material-icons">star</i> */}
                   <BiSolidStar className=" text-white " />
                   <div className="">
                     <span className=" text-white text-sm">4.2</span>
@@ -100,7 +130,7 @@ const BusBox = ({ loading, data, errorMessage }) => {
                   <div>23</div>
                 </div>
               </div>
-              <div class="busBoxSection16">
+              <div className="busBoxSection16">
                 <div>
                   <div>INR</div>
                   <div>{d.fare}</div>
@@ -110,12 +140,14 @@ const BusBox = ({ loading, data, errorMessage }) => {
                   <div>Deal Applied</div>
                 </div>
               </div>
-              <div class="busBoxSection17">
+              <div className="busBoxSection17">
                 <div>
-                  <div>{d.busDetails?.totalSeat - filledSeats.length}</div>
+                  {/* <div>{d.busDetails?.totalSeat - filledSeats.length}</div> */}
+                  <div>{d.busDetails?.totalSeat - d.bookedTicketsCount}</div>
                   <div>Seats Available</div>
-                  <div>20</div>
-                  <div>Window</div>
+                  {/* <div>20</div>
+                  <div>Window</div> */}
+                  {/* <div>{filledSeats.length}</div> */}
                 </div>
                 <div>
                   {/* <div>20</div>
@@ -130,8 +162,8 @@ const BusBox = ({ loading, data, errorMessage }) => {
           Bus Information not found for this route ... {errorMessage}
         </div>
       )}
-      <div class="busBoxSection2 relative">
-        <div class="  busBoxSection21 flex justify-between items-center gap-5 text-xl">
+      <div className="busBoxSection2 relative">
+        <div className="  busBoxSection21 flex justify-between items-center gap-5 text-xl">
           {amenities.map((item, index) => (
             <div key={index}>
               {popUpVisible === index && (
@@ -174,7 +206,7 @@ const BusBox = ({ loading, data, errorMessage }) => {
             </div>
           ))}
         </div>
-        <div class="busBoxSection22">
+        <div className="busBoxSection22">
           <div className=" gap-1">
             <MdGpsFixed className=" text-2xl" />
             <span>Live Tracking</span>
@@ -185,11 +217,13 @@ const BusBox = ({ loading, data, errorMessage }) => {
           </div>
         </div>
       </div>
-      <div class="busBoxSection3">
-        {selectedbus &&<BusBottom filledSeats={filledSeats} setFilledSeats={setFilledSeats} busDetails={busDetails} />}
-        {/* <app-bottom-tab [busid]='busid' [filledseats]="filledseats" [seatprice]="seatprice"
-        [routedetails]="routedetails" [busarrivaltime]="busarrivaltime" [busdeparturetime]="busdeparturetime"
-            [operatorname]="operatorname"></app-bottom-tab> */}
+      <div className="busBoxSection3">
+        {selectedbus && (
+          <BusBottom
+            filledSeats={filledSeats}
+            setFilledSeats={setFilledSeats}
+          />
+        )}
       </div>
     </div>
   );

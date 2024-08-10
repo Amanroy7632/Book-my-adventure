@@ -23,12 +23,12 @@ const SelectBus = () => {
   // console.log(data);
   const urlforBus =`http://localhost:8000/api/v1/routes/?departureLocation=${query.get("departure")}&arrivalLocation=${query.get("arrival")}&date=${query.get("date")}`
   const {loading,errorMessage,data} = useFetch(urlforBus,requestOptions)
-  console.log(data);
+  // console.log(data?.data);
   
   return (
-    <div class="'selectbus">
+    <div className="'selectbus">
       <SelectHeader arrival={query.get("arrival")} departure={query.get("departure")} date={query.get("date")}/>
-      <div class="SelectBUS_MAINCONTENT  ">
+      <div className="SelectBUS_MAINCONTENT  ">
         <Left/>
         <Right>
             <div className="">

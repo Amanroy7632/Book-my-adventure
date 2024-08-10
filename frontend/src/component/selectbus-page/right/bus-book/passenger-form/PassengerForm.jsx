@@ -1,12 +1,32 @@
 import { useState } from "react";
-import {toast} from "react-hot-toast";
-function MediumSizedForm({ seatNo, passengerNo,onSubmit,submittedForm,setSubmittedForm,selectedSeats,setSelectedSeat }) {
+import { toast } from "react-hot-toast";
+import { useBusContext } from "../../../../../context/busContext";
+import { useCurrentUser } from "../../../../../context/userContext";
+function MediumSizedForm({
+  seatNo,
+  passengerNo,
+  onSubmit,
+  submittedForm,
+  setSubmittedForm,
+}) {
+  const { selectedSeats, setSelectedSeats, busDetails, routeDetails } =
+    useBusContext();
+  const { currentUser } = useCurrentUser();
+  // console.log(busDetails);
+  // console.log(routeDetails);
+
   const [formData, setFormData] = useState({
+    route: routeDetails?._id || "",
+    busNumber: busDetails?.busno || "",
     name: "",
     age: "",
     gender: "",
-    passengerCount: passengerNo,
-    passengerSeat: seatNo,
+    passengerNo: passengerNo?.toString(),
+    seatNo: seatNo?.toString(),
+    departureTime: routeDetails?.departureTime || "",
+    arrivalTime: routeDetails?.arrivalTime || "",
+    price: routeDetails?.fare || "",
+    bookedBy: currentUser?._id || "",
   });
 
   const handleChange = (e) => {
@@ -19,54 +39,79 @@ function MediumSizedForm({ seatNo, passengerNo,onSubmit,submittedForm,setSubmitt
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if ([formData.name,formData.age,formData.gender].some(field=>field.trim()==="")) {
-        toast.error("All fields are required")
-        return
+    if (
+      [formData.name, formData.age, formData.gender].some(
+        (field) => field.trim() === ""
+      )
+    ) {
+      toast.error("All fields are required");
+      return;
     }
     if (submittedForm.includes(passengerNo)) {
-        alert("passenger is already submitted")
-        setFormData({
-            name: "",
-            age: "",
-            gender: "",
-            passengerCount: passengerNo,
-            passengerSeat: seatNo,
-          });
-          return
+      alert("passenger is already submitted");
+      setFormData({
+        route: routeDetails?._id || "",
+        busNumber: busDetails?.busno || "",
+        name: "",
+        age: "",
+        gender: "",
+        passengerNo: passengerNo?.toString(),
+        seatNo: seatNo?.toString(),
+        departureTime: routeDetails?.departureTime || "",
+        arrivalTime: routeDetails?.arrivalTime || "",
+        price: routeDetails?.fare || "",
+        bookedBy: currentUser?._id || "",
+      });
+      return;
     }
-    onSubmit(formData)
-    toast.success("Passenger has been added successfully")
+    onSubmit(formData);
+    toast.success("Passenger has been added successfully");
     setFormData({
+      route: routeDetails?._id || "",
+      busNumber: busDetails?.busno || "",
       name: "",
       age: "",
       gender: "",
-      passengerCount: passengerNo,
-      passengerSeat: seatNo,
+      passengerNo: passengerNo?.toString(),
+      seatNo: seatNo?.toString(),
+      departureTime: routeDetails?.departureTime || "",
+      arrivalTime: routeDetails?.arrivalTime || "",
+      price: routeDetails?.fare || "",
+      bookedBy: currentUser?._id || "",
     });
-    setSubmittedForm((prev)=>[...prev,passengerNo])
+    setSubmittedForm((prev) => [...prev, seatNo]);
   };
-  const removeFromSelectHandler = (seatNo,passengerNo)=>{
-    if (submittedForm.includes(passengerNo)) {
-       return
+  const removeFromSelectHandler = (seatNo, passengerNo) => {
+    if (submittedForm.includes(seatNo)) {
+      return;
     }
-    const newSeletedSeat = selectedSeats.filter(seat=>seat!=seatNo)
-    setSelectedSeat(newSeletedSeat)
-  }
+    const newSeletedSeat = selectedSeats.filter((seat) => seat != seatNo);
+    setSelectedSeats(newSeletedSeat);
+  };
   return (
     <form
       onSubmit={handleSubmit}
       className="w-96 p-6 bg-white rounded-md shadow-md mx-auto relative"
     >
-        <div>
-            <h1>Enter Passenger Details</h1>
+      <div>
+        <h1>Enter Passenger Details</h1>
+      </div>
+      {!submittedForm.includes(seatNo) && (
+        <div
+          onClick={() => removeFromSelectHandler(seatNo, passengerNo)}
+          className=" absolute top-2 right-4 bg-red-500 px-2 py-1 rounded-full text-white cursor-pointer"
+        >
+          X
         </div>
-       { !submittedForm.includes(passengerNo)&&<div onClick={()=>removeFromSelectHandler(seatNo,passengerNo)} className=" absolute top-2 right-4 bg-red-500 px-2 py-1 rounded-full text-white cursor-pointer">X</div>}
-        <div className=" bg-green-700 p-[2px] mt-2"></div>
+      )}
+      <div className=" bg-green-700 p-[2px] mt-2"></div>
       <div className="mb-4 flex justify-between mt-3">
-          <span className="text-gray-700 font-bold ">Passenger No:</span><span className=" mr-5">{passengerNo}</span>
+        <span className="text-gray-700 font-bold ">Passenger No:</span>
+        <span className=" mr-5">{passengerNo}</span>
       </div>
       <div className="mb-4 flex justify-between mt-3">
-          <span className="text-gray-700 font-bold ">Seat No:</span><span className=" mr-5">{seatNo}</span>
+        <span className="text-gray-700 font-bold ">Seat No:</span>
+        <span className=" mr-5">{seatNo}</span>
       </div>
       <div className="mb-4">
         <label className="block text-gray-700 font-bold mb-2" htmlFor="name">
@@ -116,16 +161,24 @@ function MediumSizedForm({ seatNo, passengerNo,onSubmit,submittedForm,setSubmitt
           <option value="other">Other</option>
         </select>
       </div>
-      {submittedForm.includes(passengerNo)?<div>
-        <p>Passenger No: {passengerNo}</p>
-        <p>Seat No: {seatNo}</p>
-        <p>Status: <span className=" text-green-500">{"Confirmed ✔️"}</span></p></div>:<button
-        type="submit"
-        className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300"
-        disabled={submittedForm.includes(passengerNo)}
-      >Submit
-      </button>}
-        {/* {submittedForm.includes(passengerNo)?"Submitted":"Submit"} */}
+      {submittedForm.includes(seatNo) ? (
+        <div>
+          <p>Passenger No: {passengerNo}</p>
+          <p>Seat No: {seatNo}</p>
+          <p>
+            Status: <span className=" text-green-500">{"Confirmed ✔️"}</span>
+          </p>
+        </div>
+      ) : (
+        <button
+          type="submit"
+          className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300"
+          disabled={submittedForm.includes(seatNo)}
+        >
+          Submit
+        </button>
+      )}
+      {/* {submittedForm.includes(passengerNo)?"Submitted":"Submit"} */}
     </form>
   );
 }

@@ -16,6 +16,7 @@ import Profile from './component/profile/Profile.jsx'
 import LoadingAnimation from './component/home/Animation/LandingPageAnimation.jsx'
 import { MouseTrackerProvider } from './context/mouseTrackerContext.jsx'
 import Sparkles from './component/home/Animation/Sparkle.jsx'
+import { BusContextProvider } from './context/busContext.jsx'
 
 const router =createBrowserRouter(
   createRoutesFromChildren(
@@ -40,7 +41,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   
    <UserProvider>
     <MouseTrackerProvider>
+      <BusContextProvider>
     <RouterProvider router={router} />
+    </BusContextProvider>
     </MouseTrackerProvider>
    </UserProvider>
     
