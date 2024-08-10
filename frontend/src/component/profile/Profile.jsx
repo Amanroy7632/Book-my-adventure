@@ -317,7 +317,7 @@ import {
 } from "react-icons/bi";
 import { FaPencilAlt } from "react-icons/fa";
 import { MdAirplaneTicket, MdSdStorage } from "react-icons/md";
-import { useCurrentUser } from "../../context/userContext";
+import { useCurrentUser } from "../../context/userContext.jsx";
 
 const Profile = () => {
   const [user, setUser] = useState({

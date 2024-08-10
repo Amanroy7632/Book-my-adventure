@@ -1,5 +1,5 @@
 import  { useEffect, useState } from 'react';
-import { useMouseTracker } from '../../../context/mouseTrackerContext';
+import { useMouseTracker } from '../../../context/mouseTrackerContext.jsx';
 
 const getRandomColor = () => {
   const letters = '0123456789ABCDEF';

@@ -1,5 +1,5 @@
 import React from 'react'
-import { useCurrentUser } from '../../context/userContext'
+import { useCurrentUser } from '../../context/userContext.jsx'
 import { Navigate } from 'react-router-dom'
 
 function ProtectedRoute({element}) {

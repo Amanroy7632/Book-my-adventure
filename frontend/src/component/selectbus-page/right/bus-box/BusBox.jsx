@@ -11,11 +11,11 @@ import {
 import { BsPower, BsPeopleFill } from "react-icons/bs";
 import { FaAngleDown } from "react-icons/fa";
 import "./busbox.css";
-import BusBottom from "../bus-book/BusBottom";
-import useFetch from "../../../../hooks";
-import axiosInstance from "../../../../utils/axiosInstance";
-import Loader from "../../../loader/Loader";
-import { useBusContext } from "../../../../context/busContext";
+import BusBottom from "../bus-book/BusBottom.jsx";
+// import useFetch from "../../../../hooks.jsx";
+import axiosInstance from "../../../../utils/axiosInstance.js";
+import Loader from "../../../loader/Loader.jsx";
+import { useBusContext } from "../../../../context/busContext.jsx";
 const amenities = ["Charging point", "Movies", "Lights", "Bus Stopage"];
 const BusBox = ({ loading, data, errorMessage }) => {
   const [popUpVisible, setPopUpVisible] = useState(null);

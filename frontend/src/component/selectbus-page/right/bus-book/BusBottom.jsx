@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./busbottom.css";
-import ViewSeat from "./view-seats/ViewSeat";
+import ViewSeat from "./view-seats/ViewSeat.jsx";
 const displayText = [
   "Amenities",
   "Boarding and Droping Points",
@@ -17,8 +17,8 @@ import {
   MdCheckCircleOutline,
 } from "react-icons/md";
 import { BiWater } from "react-icons/bi";
-import ReviewPage from "./view-seats/Review/ReviewPage";
-import { useBusContext } from "../../../../context/busContext";
+import ReviewPage from "./view-seats/Review/ReviewPage.jsx";
+import { useBusContext } from "../../../../context/busContext.jsx";
 const BusBottom = ({ filledSeats, setFilledSeats }) => {
   const [isVisibleDisplayArea, setIsVisibleDisplayArea] = useState(false);
   const [displayIndex, setdisplayIndex] = useState(null);

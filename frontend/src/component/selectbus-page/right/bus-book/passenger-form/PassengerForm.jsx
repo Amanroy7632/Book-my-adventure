@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { toast } from "react-hot-toast";
-import { useBusContext } from "../../../../../context/busContext";
-import { useCurrentUser } from "../../../../../context/userContext";
+import { useBusContext } from "../../../../../context/busContext.jsx";
+import { useCurrentUser } from "../../../../../context/userContext.jsx";
 function MediumSizedForm({
   seatNo,
   passengerNo,

@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import Cookies from "js-cookie"
-import axiosInstance from "../utils/axiosInstance";
+import axiosInstance from "../utils/axiosInstance.js";
 const UserContext = createContext()
 export const useCurrentUser=()=>{
     return useContext(UserContext)

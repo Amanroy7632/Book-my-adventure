@@ -3,7 +3,7 @@ import logo from "../../assets/red-bus-with-word-bus-it_600323-482.avif"
 import { Link,NavLink } from "react-router-dom";
 import {MdOutlineTextRotationAngledown} from "react-icons/md"
 import { FaAngleDown,FaUser,FaHeadset  } from "react-icons/fa"
-import { useCurrentUser } from "../../context/userContext";
+import { useCurrentUser } from "../../context/userContext.jsx";
 import Logo from "../logo/Logo";
 import {GrLogin} from "react-icons/gr"
 const Header = () => {

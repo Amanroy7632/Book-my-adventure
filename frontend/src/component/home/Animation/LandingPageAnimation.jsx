@@ -1,7 +1,7 @@
 // LoadingAnimation.js
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom"; // If you're using react-router for navigation
-import Loader from "../../loader/Loader";
+import Loader from "../../loader/Loader.jsx";
 
 const LoadingAnimation = () => {
   const navigate = useNavigate();

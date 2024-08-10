@@ -1,19 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 import "./selectbus.css";
-import SelectHeader from "./header/SelectHeader";
-import Left from "./left/Left";
-import Right from "./right/Right";
-import SortingBar from "./right/sorting-bar/SortingBar";
-import BusBox from "./right/bus-box/BusBox";
-import BusBottom from "./right/bus-book/BusBottom";
-import { useParams,useLocation } from "react-router-dom";
+import SelectHeader from "./header/SelectHeader.jsx";
+import Left from "./left/Left.jsx";
+import Right from "./right/Right.jsx";
+import SortingBar from "./right/sorting-bar/SortingBar.jsx";
+import BusBox from "./right/bus-box/BusBox.jsx";
+// import BusBottom from "./right/bus-book/BusBottom.jsx";
+import { useLocation } from "react-router-dom";
 import useFetch from "../../hooks";
 const SelectBus = () => {
   const useQuery = ()=>{
     return new URLSearchParams(useLocation().search)
   }
   const query =useQuery()
-  const [bus,setBus] = useState({})
+  // const [bus,setBus] = useState({})
   const URL=`http://localhost:8000/api/v1/bus/709670`
     const requestOptions = {
       method:"GET",
