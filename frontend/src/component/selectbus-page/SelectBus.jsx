@@ -19,24 +19,19 @@ const SelectBus = () => {
       method:"GET",
       "Content-Type": "application/json"
     }
-  // const { loading, errorMessage, data } = useFetch(URL, requestOptions);
-  // console.log(data);
   const urlforBus =`https://book-my-adventure.onrender.com/api/v1/routes/?departureLocation=${query.get("departure")}&arrivalLocation=${query.get("arrival")}&date=${query.get("date")}`
-  const {loading,errorMessage,data} = useFetch(urlforBus,requestOptions)
-  // console.log(data?.data);
-  
+  const {loading,errorMessage,data} = useFetch(urlforBus,requestOptions)  
   return (
     <div className="selectbus">
       <SelectHeader arrival={query.get("arrival")} departure={query.get("departure")} date={query.get("date")}/>
-      <div  className=" max-md:flex max-md:flex-col ">
-        <Left/>
-        <Right>
-            <div className=" ">
+      <div  className=" md:flex gap-2 max-md:flex max-md:flex-col ">
+        <Left className=""/>
+        <Right className="">
+            <div className=" w-full">
               <SortingBar/>
               <BusBox loading={loading} data={data} errorMessage={errorMessage}/>
             </div>
         </Right>
-        {/* <app-right></app-right> */}
       </div>
     </div>
   );

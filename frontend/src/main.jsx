@@ -17,6 +17,7 @@ import LoadingAnimation from './component/home/Animation/LandingPageAnimation.js
 import { MouseTrackerProvider } from './context/mouseTrackerContext.jsx'
 import Sparkles from './component/home/Animation/Sparkle.jsx'
 import { BusContextProvider } from './context/busContext.jsx'
+import TicketReceiptPage from './component/selectbus-page/right/bus-book/bill/TicketRecipt.jsx'
 
 const router =createBrowserRouter(
   createRoutesFromChildren(
@@ -31,7 +32,7 @@ const router =createBrowserRouter(
       <Route path='/profile' element={<ProtectedRoute element={<Profile/>} />}/>
       <Route path='/select-bus' element={<SelectBus/>}/>
       <Route path='/a' element={<LoadingAnimation/>}/>
-      <Route path='/sparkle' element={<Sparkles/>}/>
+      <Route path='/receipt' element={<TicketReceiptPage/>}/>
       <Route path='*' element={<div className=' text-3xl text-red-500'>404 Page not found</div>}/>
     </Route>
   )

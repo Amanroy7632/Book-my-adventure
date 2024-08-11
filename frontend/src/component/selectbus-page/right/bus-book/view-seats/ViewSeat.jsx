@@ -16,6 +16,7 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useBusContext } from "../../../../../context/busContext.jsx";
 import axiosInstance from "../../../../../utils/axiosInstance.js";
+import TicketReceiptPage from "../bill/TicketRecipt.jsx";
 const customFilter = (seatNo, seletedSeat, setSelectedSeats) => {
   const newSeats = seletedSeat.filter((seatno) => seatno !== seatNo);
   setSelectedSeats(newSeats);
@@ -77,6 +78,7 @@ function ViewSeat() {
   const [passengerForm, setPassengerForm] = useState(false);
   const [passengerData, setPassengerData] = useState([]);
   const [ticketData,setTicketData] = useState([])
+  const [isModelopen,setIsModelOpen] = useState(false)
   // const [submittedForm, setSubmitedForm] = useState([]);
   const { register, handleSubmit } = useForm();
   const { currentUser } = useCurrentUser();
@@ -126,7 +128,8 @@ function ViewSeat() {
     setSubmitedForm([]);
     storeTickets({ticketData:passengerData})
     console.log(passengerData);
-    setPassengerData([])
+    setIsModelOpen(true)
+    // setPassengerData([])
     // console.log(x);
 
     // toast.success(
@@ -411,6 +414,9 @@ function ViewSeat() {
             </div>
           </div>
         )}
+        {
+          isModelopen && <TicketReceiptPage ticketData={passengerData} />
+        }
     </>
   );
 }

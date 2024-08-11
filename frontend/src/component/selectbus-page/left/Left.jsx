@@ -14,7 +14,7 @@ import {
   MdMovie,
   MdHotel,
 } from "react-icons/md";
-const Left = () => {
+const Left = ({className=""}) => {
   const [checked, setChecked] = useState({});
 
   const handleChecked = (filter, index) => {
@@ -52,7 +52,7 @@ const Left = () => {
   ];
 
   return (
-    <div className="left p-[15px] border-r-2 max-md:grid max-md:grid-cols-3 gap-3 max-md:text-sm max-sm:grid-cols-2 ">
+    <div className={`${className}left p-[15px] lg:w-[20%] border-r-2 max-md:grid max-md:grid-cols-3 gap-3 max-md:text-sm max-sm:grid-cols-2 `}>
       <div className="left_filters mb-[25px]">
         <p>Filters</p>
         <ul className="list-none p-0 m-0">

@@ -1,15 +1,7 @@
-import React from 'react'
-import SortingBar from './sorting-bar/SortingBar'
-import BusBox from './bus-box/BusBox'
-import BusBottom from './bus-book/BusBottom'
-
-const Right = ({children}) => {
+const Right = ({children,className=""}) => {
   return (
-    <div>
+    <div className={`${className} md:w-[80%]`}>
       {children}
-      {/* <SortingBar/>
-      <BusBox/>
-      <BusBottom/> */}
     </div>
   )
 }
