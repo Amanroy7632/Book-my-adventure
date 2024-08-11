@@ -203,7 +203,7 @@ function ViewSeat() {
             })}
           </div>
         </div>
-        <div className="mainContainer2 select-none w-[470px] h-[400px] px-[20px] py-[10px] my-[30px] bg-[rgb(248,248,248)] font-sans">
+        <div className="mainContainer2 select-none w-[470px] max-sm:w-full h-[400px] px-[20px] py-[10px] my-[30px] bg-[rgb(248,248,248)] font-sans">
           <div className="mainContainer21 w-full text-[#3e3e52] flex justify-between">
             <div className=" text-xl font-semibold">Boarding and Droping</div>
             <div className=" text-[#5279d0] font-bold cursor-pointer uppercase">

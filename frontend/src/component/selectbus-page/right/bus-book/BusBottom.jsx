@@ -30,17 +30,17 @@ const BusBottom = ({ filledSeats, setFilledSeats }) => {
 
   return (
     <div>
-      <div className="mainBar">
+      <div className="mainBar w-[60%] flex ml-[40%] justify-between max-sm:grid max-sm:grid-cols-2 items-center max-md:ml-0 max-md:w-full max-sm:gap-3">
         <div onClick={() => displayClickHandler(0)}>Amenities</div>
-        <div>|</div>
+        <div className=" max-sm:hidden">|</div>
         <div onClick={() => displayClickHandler(1)}>
           Boarding and Droping Points
         </div>
-        <div>|</div>
+        <div className=" max-sm:hidden">|</div>
         <div onClick={() => displayClickHandler(2)}>Reviews</div>
-        <div>|</div>
+        <div className=" max-sm:hidden">|</div>
         <div onClick={() => displayClickHandler(3)}>Booking Policies</div>
-        <div>|</div>
+        <div className=" max-sm:hidden">|</div>
         <div onClick={() => displayClickHandler(4)}>VIEW SEATS</div>
       </div>
       {isVisibleDisplayArea && displayIndex === 0 && (

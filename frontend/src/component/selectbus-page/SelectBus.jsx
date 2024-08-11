@@ -26,12 +26,12 @@ const SelectBus = () => {
   // console.log(data?.data);
   
   return (
-    <div className="'selectbus">
+    <div className="selectbus">
       <SelectHeader arrival={query.get("arrival")} departure={query.get("departure")} date={query.get("date")}/>
-      <div className="SelectBUS_MAINCONTENT  ">
+      <div  className=" max-md:flex max-md:flex-col ">
         <Left/>
         <Right>
-            <div className="">
+            <div className=" ">
               <SortingBar/>
               <BusBox loading={loading} data={data} errorMessage={errorMessage}/>
             </div>

@@ -1,10 +1,10 @@
-.mainBar {
+/* .mainBar {
     width: 60%;
     display: flex;
     margin-left: 40%;
     justify-content: space-between;
     align-items: center;
-  }
+  } */
   
   .mainBar > div {
     cursor: pointer;

@@ -366,7 +366,7 @@ const Home = () => {
           </div>
         </div>
       </section>
-      <section className="flex relative md:bottom-[150px] mb-20 mt-10 md:my-0 justify-center">
+      <section className="flex relative md:bottom-[150px] mb-20 max-sm:my-5 mt-10 md:my-0 justify-center">
         <div className="flex flex-col items-center w-full max-w-[1400px] py-6 pb-0">
           <div className="w-full md:w-[83%] md:p-8 flex flex-col gap-6 bg-white md:rounded-3xl md:drop-shadow-xl">
             <div className="flex justify-between px-4 md:px-0">
@@ -387,7 +387,7 @@ const Home = () => {
       </section>
 
       <section
-        className={`  flex justify-center py-3 bg-gradient-to-r from-red-500 to-red-800  max-md:my-40 overflow-y-scroll scroll-smooth  ${
+        className={`  flex justify-center py-3 bg-gradient-to-r from-red-500 to-red-800 overflow-y-scroll scroll-smooth  ${
           frequentlyAskedQuestions && frequentlyAskedQuestions.length > 0
             ? "h-[80vh]"
             : "h-[50vh]"
@@ -527,7 +527,7 @@ const Home = () => {
           </div>
         </div>
       </section>
-      <section className=" flex justify-center items-center">
+      <section className=" flex justify-center items-center ">
         <Pagination
           currentPage={currentPage}
           totalPages={data?.data.totalPages}
@@ -536,7 +536,7 @@ const Home = () => {
         />
       </section>
       <section className=" relative flex justify-center flex-col items-center border my-20">
-        <div className=" bg-gradient-to-r from-gray-800 to-gray-500 absolute flex flex-col justify-center lg:w-[70%] max-md:w-[90%] rounded-xl drop-shadow-md z-10 p-5">
+        <div className=" bg-gradient-to-r from-gray-800 to-gray-500 absolute flex flex-col justify-center lg:w-[70%] max-md:w-[90%] max-sm:mt-10 rounded-xl drop-shadow-md z-10 p-5">
           <h1 className=" text-2xl font-semibold text-white pl-4 m-auto">
             Ask a Question ?
           </h1>
