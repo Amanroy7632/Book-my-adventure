@@ -52,7 +52,7 @@ const getTickets = async (req,res,next)=>{
         }
         const tickets = await Ticket.find({route,busNumber})
         if (tickets.length<=0) {
-            res.status(200).send(new ApiResponse(200,{},"Tickets Not Found"))
+            res.status(200).send(new ApiResponse(200,[],"Tickets Not Found"))
         }
         return res.status(200).send(new ApiResponse(200,tickets,"Tickets fetched successfully"))
     } catch (error) {

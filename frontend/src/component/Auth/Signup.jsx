@@ -22,7 +22,7 @@ function Signup() {
   const handleLogin = async (userInfo) => {
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/v1/users/login",
+        "https://book-my-adventure.onrender.com/api/v1/users/login",
         userInfo
       );
       const { accessToken, refreshToken, user } = response.data.data;
@@ -81,7 +81,7 @@ function Signup() {
     // }
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/v1/users/register",
+        "https://book-my-adventure.onrender.com/api/v1/users/register",
         userInfo
       );
       const { user } = response.data.data;

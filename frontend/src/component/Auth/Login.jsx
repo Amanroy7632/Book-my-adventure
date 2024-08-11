@@ -24,7 +24,7 @@ function Login() {
   const handleLogin = async (userInfo) => {
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/v1/users/login",
+        "https://book-my-adventure.onrender.com/api/v1/users/login",
         userInfo
       );
       const { accessToken, refreshToken, user } = response.data.data;
@@ -40,7 +40,9 @@ function Login() {
         { expires: 7 },
         { httpOnly: true, secure: true }
       );
-      setCurrentUser(user)      
+      setCurrentUser(user)  
+      console.log(user);
+          
       setAlertMessage("Login successful");
       alert("Login successful");
       navigate("/");

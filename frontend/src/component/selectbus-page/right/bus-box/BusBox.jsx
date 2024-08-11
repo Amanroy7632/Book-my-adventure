@@ -47,7 +47,7 @@ const BusBox = ({ loading, data, errorMessage }) => {
         try {
           // Fetch Bus Details
           const busResponse = await fetch(
-            `http://localhost:8000/api/v1/bus/${selectedBusData?.busId}`,
+            `https://book-my-adventure.onrender.com/api/v1/bus/${selectedBusData?.busId}`,
             {
               method: "GET",
               headers: {
@@ -61,8 +61,12 @@ const BusBox = ({ loading, data, errorMessage }) => {
   
           // Fetch Booked Tickets
           const ticketsResponse = await axiosInstance.get(`/ticket/?route=${selectedBusData?._id}&busNumber=${selectedBusData?.busDetails?.busno}`);
+          console.log(ticketsResponse);
+          
           if (ticketsResponse.status === 200) {
             // console.log(ticketsResponse.data);
+            console.log(ticketsResponse.data?.data);
+            
             const bookedSeats = ticketsResponse.data?.data?.map((ticket) => parseInt(ticket.seatNo));
             setFilledSeats(bookedSeats);
   

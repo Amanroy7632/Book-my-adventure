@@ -237,7 +237,7 @@ const Home = () => {
     };
   }, [openLocationModel]);
   const { loading, data, errorMessage } = useFetch(
-    `http://localhost:8000/api/v1/question-answer/?limit=5&page=${currentPage}`,
+    `https://book-my-adventure.onrender.com/api/v1/question-answer/?limit=5&page=${currentPage}`,
     {
       method: "GET",
       "Content-Type": "application/json",

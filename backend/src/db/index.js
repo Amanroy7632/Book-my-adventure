@@ -4,7 +4,7 @@ const connectionUrl =`${process.env.MONGODB_URL}/${db_name}`
 
 const connectDB = async()=>{
     try {
-        console.log(connectionUrl);
+        // console.log(connectionUrl);
         const connectionInstance = await mongoose.connect("mongodb+srv://yadavaman7632:Aman7632@cluster0.atongtk.mongodb.net/busbook")
         console.log(`Database Connected || Hosted: ${connectionInstance.connection.host}`)
     } catch (error) {

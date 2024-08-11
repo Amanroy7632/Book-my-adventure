@@ -115,7 +115,7 @@ const ReviewPage = ({ busDetails }) => {
   const fetchFeedback = async (page) => {
     try {
       const response = await fetch(
-        `http://localhost:8000/api/v1/feedback?page=${page}&limit=5`
+        `https://book-my-adventure.onrender.com/api/v1/feedback?page=${page}&limit=5`
       );
       const data = await response.json();
       // console.log(data);
