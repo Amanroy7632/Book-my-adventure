@@ -21,11 +21,14 @@ const SelectBus = () => {
     }
   const urlforBus =`https://book-my-adventure.onrender.com/api/v1/routes/?departureLocation=${query.get("departure")}&arrivalLocation=${query.get("arrival")}&date=${query.get("date")}`
   const {loading,errorMessage,data} = useFetch(urlforBus,requestOptions)  
+  const onFilterChange =(filter,value)=>{
+
+  }
   return (
     <div className="selectbus">
       <SelectHeader arrival={query.get("arrival")} departure={query.get("departure")} date={query.get("date")}/>
       <div  className=" md:flex gap-2 max-md:flex max-md:flex-col ">
-        <Left className=""/>
+        <Left className="" onFilterChange={onFilterChange}/>
         <Right className="">
             <div className=" w-full">
               <SortingBar/>
