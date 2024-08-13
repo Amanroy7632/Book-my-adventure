@@ -66,7 +66,7 @@ function ViewSeat() {
     setFilledSeats,
     routeDetails
   } = useBusContext();
-  let passengerNo = filledSeats.length;
+  let passengerNo = filledSeats.length>0?filledSeats.length:1;
   const useQuery = () => {
     return new URLSearchParams(useLocation().search);
   };

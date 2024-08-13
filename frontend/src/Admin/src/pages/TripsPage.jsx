@@ -6,13 +6,15 @@ function TripsPage() {
 
   useEffect(() => {
     // Fetch trips data from API
-    // axios.get("/api/trips")
-    //   .then((response) => {
-    //     setTrips(response.data);
-    //   })
-    //   .catch((error) => {
-    //     console.error("Error fetching trips:", error);
-    //   });
+    axios.get("https://book-my-adventure.onrender.com/api/v1/routes/get-all-routes")
+      .then((response) => {
+        console.log(response.data);
+        setTrips(response.data?.data);
+        
+      })
+      .catch((error) => {
+        console.error("Error fetching trips:", error);
+      });
   }, []);
 
   const handleDelete = (tripId) => {
@@ -47,10 +49,10 @@ function TripsPage() {
         <tbody>
           {trips.map((trip) => (
             <tr key={trip.id}>
-              <td className="p-4">{trip.id}</td>
-              <td className="p-4">{trip.busName}</td>
-              <td className="p-4">{trip.fromLocation}</td>
-              <td className="p-4">{trip.toLocation}</td>
+              <td className="p-4">{trip._id}</td>
+              <td className="p-4">{trip.busDetails?.busname}</td>
+              <td className="p-4">{trip.departureLocation[0].toUpperCase()+trip.departureLocation?.substring(1)}</td>
+              <td className="p-4">{trip.arrivalLocation[0].toUpperCase()+trip.arrivalLocation?.substring(1)}</td>
               <td className="p-4">{new Date(trip.departureTime).toLocaleString()}</td>
               <td className="p-4">{new Date(trip.arrivalTime).toLocaleString()}</td>
               <td className="p-4">

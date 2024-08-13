@@ -87,7 +87,7 @@ function AddTripPage() {
 
   const fetchBusData = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/api/v1/bus/");
+      const response = await axios.get("https://book-my-adventure.onrender.com/api/v1/bus/");
       if (response.status === 200) {
         console.log(response.data);
         setBuses(response.data?.data || []);

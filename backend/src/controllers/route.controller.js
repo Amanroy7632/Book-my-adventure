@@ -142,4 +142,92 @@ const getRoute = async(req,res,next)=>{
         next(error)
     }
 }
-export {registerRoute,getRoute,updateRoute}
+const getAllRoute = async(req,res,next)=>{
+    try {
+        // const {departureLocation,arrivalLocation,date} = req.query
+        //  console.log(departureLocation,arrivalLocation);
+        //  const routes = await Route.find({departureLocation,arrivalLocation})
+        const routes = await Route.aggregate([
+            // {
+            //     $match: {
+            //     }
+            // },
+            {
+                $lookup: {
+                    from: "buses",
+                    localField: "busId",
+                    foreignField: "_id",
+                    as: "routeBuses"
+                }
+            },
+            
+            {
+                $unwind: {
+                    path: "$routeBuses",
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+            {
+                $group: {
+                    _id: "$_id",
+                    departureLocation: { $first: "$departureLocation" },
+                    arrivalLocation: { $first: "$arrivalLocation" },
+                    busId: { $first: "$busId" },
+                    operatorName: { $first: "$operatorName" },
+                    departureTime: { $first: "$departureTime" },
+                    arrivalTime: { $first: "$arrivalTime" },
+                    fare: { $first: "$fare" },
+                    routeBuses: { $first: "$routeBuses" }
+                }
+            },
+            {
+                $addFields: {
+                    busDetails: {
+                        busname: "$routeBuses.busname",
+                        busType: "$routeBuses.busType",
+                        totalSeat: "$routeBuses.totalSeat",
+                        amenity: "$routeBuses.amenity",
+                        busno:"$routeBuses.busno"
+                    }
+                }
+            },
+            {
+                $lookup:{
+                    from:"tickets",
+                    localField:"_id",
+                    foreignField:"route",
+                    as:"bookedTicket"
+                }
+            },
+            {
+                $addFields:{
+                    bookedTicketsCount: { $size: "$bookedTicket" }
+                }
+            },
+            {
+                $project: {
+                    _id: 1,
+                    departureLocation: 1,
+                    arrivalLocation: 1,
+                    busId: 1,
+                    operatorName: 1,
+                    departureTime: 1,
+                    arrivalTime: 1,
+                    fare: 1,
+                    busDetails: 1,
+                    bookedTicketsCount:1
+                }
+            }
+        ]);
+        // console.log(routes.length);
+         if (routes.length===0) {
+            
+             return res.status(200).send(new ApiResponse(404,{},"route not found"))
+         }
+         
+         return res.status(200).send(new ApiResponse(200,routes,"route fetched successfully"))
+    } catch (error) {
+        next(error)
+    }
+}
+export {registerRoute,getRoute,updateRoute,getAllRoute}
