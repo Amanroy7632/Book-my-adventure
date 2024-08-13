@@ -1,12 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-function Sidebar() {
+function Sidebar({className=""}) {
   return (
-    <div className="w-64 bg-gray-800 text-white h-screen">
+    <div className={`lg:w-64 ${className} bg-gray-800 text-white h-screen`}>
       <div className="p-4 text-lg font-bold">Admin Dashboard</div>
       <nav className="mt-4">
-        <ul>
+        <ul className=" max-sm:flex">
           <li className="p-4 hover:bg-gray-700">
             <Link to="/">Dashboard</Link>
           </li>

@@ -13,8 +13,8 @@ import AddTripPage from "./pages/AddTripPage";
 function App() {
   return (
     <Router>
-      <div className="flex">
-        <Sidebar />
+      <div className="flex max-sm:flex-col">
+        <Sidebar  className=" max-sm:h-[13vh] w-full "/>
         <div className="flex-1">
           <Navbar />
           <div className="p-4">

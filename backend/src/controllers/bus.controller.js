@@ -46,4 +46,17 @@ const getBusId =async (req,res,next)=>{
         next(error)
     }
 }
-export {registerBus,getBus,getBusId}
+const getAllBus = async (req,res,next)=>{
+    try {
+        const buses = await Bus.find({}).select("-owner -createdAt -updatedAt -__v")
+        console.log(buses.length);
+        
+        if (buses.length<=0) {
+            return res.status(404).send(new ApiResponse(404,{},"Bus not found"))
+        }
+        return res.status(200).send(new ApiResponse(200,buses,"Bus data fetched successfully"))
+    } catch (error) {
+        next(error)
+    }
+}
+export {registerBus,getBus,getBusId,getAllBus}
