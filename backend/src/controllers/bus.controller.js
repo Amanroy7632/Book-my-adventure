@@ -38,4 +38,12 @@ const getBus =async (req,res,next)=>{
         next(error)
     }
 }
-export {registerBus,getBus}
+const getBusId =async (req,res,next)=>{
+    try {
+        const bus = await Bus.find({}).select("-busType -owner -amenity -totalSeat -createdAt -updatedAt -__v")
+        return res.status(200).send(new ApiResponse(200,bus,"Bus data fetched"))
+    } catch (error) {
+        next(error)
+    }
+}
+export {registerBus,getBus,getBusId}

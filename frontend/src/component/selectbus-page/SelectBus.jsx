@@ -21,6 +21,8 @@ const SelectBus = () => {
     }
   const urlforBus =`https://book-my-adventure.onrender.com/api/v1/routes/?departureLocation=${query.get("departure")}&arrivalLocation=${query.get("arrival")}&date=${query.get("date")}`
   const {loading,errorMessage,data} = useFetch(urlforBus,requestOptions)  
+  console.log(data);
+  
   const onFilterChange =(filter,value)=>{
 
   }
