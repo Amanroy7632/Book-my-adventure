@@ -59,4 +59,57 @@ const getTickets = async (req,res,next)=>{
         next(error)
     }
 }
-export {registerManyTicket,registerTicket,getTickets}
+const getAllTickets = async (req,res,next)=>{
+    try {
+        
+        const tickets = await Ticket.find({})
+        if (tickets.length<=0) {
+            res.status(200).send(new ApiResponse(200,[],"Tickets Not Found"))
+        }
+        return res.status(200).send(new ApiResponse(200,tickets,"Tickets fetched successfully"))
+    } catch (error) {
+        next(error)
+    }
+}
+const deleteTicket = async(req,res,next)=>{
+    try {
+        const {ticketId} = req.params
+        if (!ticketId) {
+            throw new ApiError(400,"Invalid ticket id provided")
+        }
+        const data = await Ticket.findByIdAndDelete(ticketId)
+        if (!data) {
+            throw new ApiError(500,"Something went wrong,while deleting ticket"+errorHandler.message)
+        }
+        return res.status(200).send(new ApiResponse(200,data,"Ticket deleted successfully"))
+    } catch (error) {
+        next(error)
+    }
+}
+const updateTicket = async(req,res,next)=>{
+    try {
+        const {ticketId} = req.params
+        const {name,busNumber,seatNo,departureTime} = req.body
+        if ([name,busNumber,seatNo,departureTime].some((field)=>field.trim()==="")) {
+            throw new ApiError(400,"All fields are required")
+        }
+        if (!ticketId) {
+            throw new ApiError(400,"Invalid ticket id provided")
+        }
+        const data = await Ticket.findByIdAndUpdate(ticketId,{
+            $set:{
+              name,
+              busNumber,
+              seatNo,
+              departureTime
+            }
+        },{new:true})
+        if (!data) {
+            throw new ApiError(500,"Something went wrong,while updating ticket"+errorHandler.message)
+        }
+        return res.status(200).send(new ApiResponse(200,data,"Ticket updated successfully"))
+    } catch (error) {
+        next(error)
+    }
+}
+export {registerManyTicket,registerTicket,getTickets,getAllTickets,deleteTicket,updateTicket}

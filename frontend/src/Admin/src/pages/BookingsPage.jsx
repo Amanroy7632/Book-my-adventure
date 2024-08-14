@@ -1,28 +1,34 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-
+const baseUrl ="https://book-my-adventure.onrender.com/api/v1/ticket"
 function BookingsPage() {
   const [bookings, setBookings] = useState([]);
-
+ 
+  const fetchBusData = async () => {
+    try {
+      const response = await axios.get(baseUrl+"/tickets/all");
+      if (response.status === 200) {
+        console.log(response.data?.data);
+        setBookings(response.data?.data)
+        // setBuses(response.data?.data || []);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
   useEffect(() => {
-    // Fetch booking data from API
-    // axios.get("/api/bookings")
-    //   .then((response) => {
-    //     setBookings(response.data);
-    //   })
-    //   .catch((error) => {
-    //     console.error("Error fetching bookings:", error);
-    //   });
+    fetchBusData()
   }, []);
 
   const handleDelete = (bookingId) => {
     // Call API to delete booking
-    axios.delete(`/api/bookings/${bookingId}`)
+    axios.delete(baseUrl+`/${bookingId}`)
       .then(() => {
         // Remove deleted booking from state
         setBookings((prevBookings) => 
-          prevBookings.filter((booking) => booking.id !== bookingId)
-        );
+          prevBookings.filter((booking) => booking._id !== bookingId)
+      );
+      alert("Ticket deleted successfully")
       })
       .catch((error) => {
         console.error("Error deleting booking:", error);
@@ -30,11 +36,11 @@ function BookingsPage() {
   };
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold mb-4">Bookings</h1>
+    <div className=" h-[85vh] overflow-y-scroll relative">
+      <h1 className="text-2xl font-bold mb-4  sticky top-[-10px] backdrop-blur-md z-10">Bookings</h1>
       <table className="w-full bg-white rounded-md shadow-md">
         <thead>
-          <tr>
+          <tr className="sticky top-[10px] backdrop-blur-md">
             <th className="p-4 text-left">Booking ID</th>
             <th className="p-4 text-left">Passenger Name</th>
             <th className="p-4 text-left">Bus</th>
@@ -45,18 +51,18 @@ function BookingsPage() {
         </thead>
         <tbody>
           {bookings.map((booking) => (
-            <tr key={booking.id}>
-              <td className="p-4">{booking.id}</td>
-              <td className="p-4">{booking.passengerName}</td>
-              <td className="p-4">{booking.busName}</td>
-              <td className="p-4">{booking.seatNumber}</td>
-              <td className="p-4">{new Date(booking.tripDate).toLocaleDateString()}</td>
+            <tr key={booking._id}>
+              <td className="p-4">{booking._id}</td>
+              <td className="p-4">{booking.name}</td>
+              <td className="p-4">{booking.busNumber}</td>
+              <td className="p-4">{booking.seatNo}</td>
+              <td className="p-4">{new Date(booking.departureTime).toLocaleDateString()}</td>
               <td className="p-4">
                 <button className="bg-yellow-500 text-white py-1 px-3 rounded-md hover:bg-yellow-600">
                   Edit
                 </button>
                 <button 
-                  onClick={() => handleDelete(booking.id)}
+                  onClick={() => handleDelete(booking._id)}
                   className="bg-red-500 text-white py-1 px-3 rounded-md hover:bg-red-600 ml-2">
                   Delete
                 </button>

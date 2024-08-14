@@ -32,30 +32,30 @@ function TripsPage() {
   };
 
   return (
-    <div>
+    <div className=" overflow-x-scroll">
       <h1 className="text-2xl font-bold mb-4">Trips</h1>
       <table className="w-full bg-white rounded-md shadow-md">
         <thead>
           <tr>
-            <th className="p-4 text-left">Trip ID</th>
-            <th className="p-4 text-left">Bus Name</th>
-            <th className="p-4 text-left">From</th>
-            <th className="p-4 text-left">To</th>
-            <th className="p-4 text-left">Departure Time</th>
-            <th className="p-4 text-left">Arrival Time</th>
-            <th className="p-4 text-left">Actions</th>
+            <th className="p-4 max-sm:p-2 text-left">Trip ID</th>
+            <th className="p-4 max-sm:p-2 text-left">Bus Name</th>
+            <th className="p-4 max-sm:p-2 text-left">From</th>
+            <th className="p-4 max-sm:p-2 text-left">To</th>
+            <th className="p-4 max-sm:p-2 text-left">Departure Time</th>
+            <th className="p-4 max-sm:p-2 text-left">Arrival Time</th>
+            <th className="p-4 max-sm:p-2 text-left">Actions</th>
           </tr>
         </thead>
         <tbody>
           {trips.map((trip) => (
             <tr key={trip.id}>
-              <td className="p-4">{trip._id}</td>
-              <td className="p-4">{trip.busDetails?.busname}</td>
-              <td className="p-4">{trip.departureLocation[0].toUpperCase()+trip.departureLocation?.substring(1)}</td>
-              <td className="p-4">{trip.arrivalLocation[0].toUpperCase()+trip.arrivalLocation?.substring(1)}</td>
-              <td className="p-4">{new Date(trip.departureTime).toLocaleString()}</td>
-              <td className="p-4">{new Date(trip.arrivalTime).toLocaleString()}</td>
-              <td className="p-4">
+              <td className="p-4 max-sm:p-2">{trip._id}</td>
+              <td className="p-4 max-sm:p-2">{trip.busDetails?.busname}</td>
+              <td className="p-4 max-sm:p-2">{trip.departureLocation[0].toUpperCase()+trip.departureLocation?.substring(1)}</td>
+              <td className="p-4 max-sm:p-2">{trip.arrivalLocation[0].toUpperCase()+trip.arrivalLocation?.substring(1)}</td>
+              <td className="p-4 max-sm:p-2">{new Date(trip.departureTime).toLocaleString()}</td>
+              <td className="p-4 max-sm:p-2">{new Date(trip.arrivalTime).toLocaleString()}</td>
+              <td className="p-4 max-sm:p-2">
                 <button className="bg-yellow-500 text-white py-1 px-3 rounded-md hover:bg-yellow-600">
                   Edit
                 </button>
