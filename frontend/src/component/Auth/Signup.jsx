@@ -13,11 +13,14 @@ import {
 } from "react-icons/ai";
 import Logo from "../logo/Logo.jsx";
 import axios from "axios";
+import Alert from "../CustomAlert/Alert.jsx"
 import { useCurrentUser } from "../../context/userContext.jsx";
+import Spinner from "../loader/Spinner.jsx";
 function Signup() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const { handleSubmit, register, reset } = useForm();
-  const {setAlertMessage,setCurrentUser} = useCurrentUser()
+  const {alertMessage,setAlertMessage,onCloseHandler,setCurrentUser} = useCurrentUser()
+  const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
   const handleLogin = async (userInfo) => {
     try {
@@ -80,6 +83,8 @@ function Signup() {
     //   console.log(error.message);
     // }
     try {
+      // throw new Error("Not implemented");
+      setIsLoading(true)
       const response = await axios.post(
         "https://book-my-adventure.onrender.com/api/v1/users/register",
         userInfo
@@ -99,20 +104,21 @@ function Signup() {
       // );
       // setCurrentUser(user)      
       // setAlertMessage("Login successful");
-      console.log(user);
+      // console.log(user);
       
       if (!user) {
         alert("User registration failed");
+        setAlertMessage("User registration failed");
       }
-      alert("User registered successful");
-      
+      // alert("User registered successful");
+      setAlertMessage("User registeredn successful.")
+      setIsLoading(false)
       navigate("/login");
     } catch (error) {
-      setAlertMessage("Login failed");
+      setAlertMessage("User Registration failed \n Try again later");
+      setIsLoading(false)
       console.error("Login error:", error);
-    } finally {
-      setAlertMessage("");
-    }
+    } 
   };
   const passwordToggleHandler = () => {
     setIsPasswordVisible(!isPasswordVisible);
@@ -218,7 +224,8 @@ function Signup() {
           </div>
         </form>
       </div>
-      {/* {alertMessage && <Alert message={alertMessage} onClose={onClose} />} */}
+      {isLoading && <Spinner/>}
+      {alertMessage && <Alert message={alertMessage} onClose={onCloseHandler} />}
     </div>
   );
 }

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { Input, Button } from "../commonUi/index.js";
-import { BiEnvelope } from "react-icons/bi";
+import { BiCheckCircle, BiEnvelope } from "react-icons/bi";
 import { AiOutlineEye, AiFillEyeInvisible } from "react-icons/ai";
 import Logo from "../logo/Logo.jsx";
 import Cookies from "js-cookie";
@@ -10,9 +10,12 @@ import axios from "axios";
 import axiosInstance from "../../utils/axiosInstance.js";
 import { useCurrentUser } from "../../context/userContext.jsx";
 import Alert from "../CustomAlert/Alert.jsx";
+import Loader from "../loader/Loader.jsx"
+import Spinner from "../loader/Spinner.jsx";
 function Login() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const { handleSubmit, register, reset } = useForm();
+  const [isLoading,setIsLoading] =useState(false)
   const {
     currentUser,
     setCurrentUser,
@@ -23,6 +26,7 @@ function Login() {
   const navigate = useNavigate();
   const handleLogin = async (userInfo) => {
     try {
+      setIsLoading(true)
       const response = await axios.post(
         "https://book-my-adventure.onrender.com/api/v1/users/login",
         userInfo
@@ -42,19 +46,22 @@ function Login() {
       );
       setCurrentUser(user)  
       console.log(user);
-          
-      setAlertMessage("Login successful");
-      alert("Login successful");
+      setTimeout(() => {
+        setIsLoading(false)
+      }, 1000);
+      setAlertMessage("Welcome "+user.fullname);
+      // alert("Login successful");
       navigate("/");
     } catch (error) {
         if (error.code ==="ERR_NETWORK") {
             
             alert("Login failed \nInternet connection not found");
         }
+        setIsLoading(false)
       setAlertMessage("Login failed");
       console.error("Login error:", error);
     } finally {
-      setAlertMessage("");
+      // setAlertMessage("");
     }
   };
   const login = (data) => {
@@ -146,6 +153,7 @@ function Login() {
             Sign Up
           </Link>
         </p>
+        {isLoading &&  <Spinner/>}
         {/* {errorMessage && <p className=" text-red-600 mt-8 text-center" >{errorMessage}</p>} */}
         <form onSubmit={handleSubmit(handleLogin)} className=" mt-8 ">
           <div className=" space-y-5">
