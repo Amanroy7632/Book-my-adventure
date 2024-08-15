@@ -90,6 +90,7 @@ function MediumSizedForm({
   };
   return (
     <form
+    
       onSubmit={handleSubmit}
       className="w-96 p-6 bg-white rounded-md shadow-md mx-auto relative"
     >

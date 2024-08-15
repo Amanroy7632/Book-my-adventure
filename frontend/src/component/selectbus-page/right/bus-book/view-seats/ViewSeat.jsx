@@ -6,7 +6,7 @@ import {
   MdFlightLand,
 } from "react-icons/md";
 import { BiLogoWhatsapp, BiSolidEnvelope } from "react-icons/bi";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { HiCurrencyRupee } from "react-icons/hi";
 import "./viewseats.css";
 import { Button, Input } from "../../../../commonUi/index.js";
@@ -56,7 +56,7 @@ const storeTickets = async (ticketData) => {
 
 function ViewSeat() {
   const {
-    selectedbus,
+    routeDetails,
     submittedForm,
     setSubmitedForm,
     selectedSeats,
@@ -64,24 +64,24 @@ function ViewSeat() {
     busDetails,
     filledSeats,
     setFilledSeats,
-    routeDetails
   } = useBusContext();
-  let passengerNo = filledSeats.length>0?filledSeats.length:1;
+  let passengerNo = filledSeats.length > 0 ? filledSeats.length : 1;
   const useQuery = () => {
     return new URLSearchParams(useLocation().search);
   };
   const query = useQuery();
- 
+
   // const [selectedSeats, setSelectedSeats] = useState([]);
   const [boardAndDrop, setBoardAndDrop] = useState(false);
   const [visibleSeatNo, setVisibleSeatNo] = useState(null);
   const [passengerForm, setPassengerForm] = useState(false);
   const [passengerData, setPassengerData] = useState([]);
-  const [ticketData,setTicketData] = useState([])
-  const [isModelopen,setIsModelOpen] = useState(false)
+  const [ticketData, setTicketData] = useState([]);
+  const [isModelopen, setIsModelOpen] = useState(false);
   // const [submittedForm, setSubmitedForm] = useState([]);
   const { register, handleSubmit } = useForm();
   const { currentUser } = useCurrentUser();
+  const navigate = useNavigate();
   const handleSelectedSeats = (seatNo) => {
     // console.log(selectedSeats);
 
@@ -103,11 +103,13 @@ function ViewSeat() {
   const handleVisiblitySelectedSeat = (seatNo) => {
     setVisibleSeatNo(seatNo);
   };
-  const SEAT_PRICE = 105.55;
+  // const SEAT_PRICE = 105.55;
   const handleFormSubmit = (formData) => {
     setPassengerData((prevData) => [...prevData, formData]);
   };
   const handleFinalSubmit = (data) => {
+    
+    // return;
     Object.keys(data).forEach((key) => {});
     if (!data.email) {
       toast.error("Email is required");
@@ -126,9 +128,26 @@ function ViewSeat() {
     });
     setSelectedSeats([]);
     setSubmitedForm([]);
-    storeTickets({ticketData:passengerData})
+    // storeTickets({ ticketData: passengerData });
     console.log(passengerData);
-    setIsModelOpen(true)
+    setIsModelOpen(true);
+    let totalAmount = 0
+    passengerData.forEach((passData)=>{
+      totalAmount+=parseFloat(passData.price)
+      
+    })
+    // const totalAmount = passengerData.reduce((acc,next)=>acc.price+next.price)
+    console.log(totalAmount);
+    
+    navigate(
+      `/payment?operatorName=${routeDetails?.operatorName}&customerName=${
+        currentUser?.fullname
+      }&departureLocation=${query.get("departure")}&arrivalLocation=${query.get(
+        "arrival"
+      )}&seats=${selectedSeats}&departureTime=${
+        routeDetails?.departureTime
+      }&arrivalTime=${routeDetails?.arrivalTime}&totalAmount=${totalAmount}`
+    );
     // setPassengerData([])
     // console.log(x);
 
@@ -262,7 +281,7 @@ function ViewSeat() {
             <div className="  flex items-center">
               {" "}
               <HiCurrencyRupee className=" text-2xl text-blue-500" />{" "}
-              <span>{selectedSeats.length * SEAT_PRICE}</span>
+              <span>{(selectedSeats.length * routeDetails?.fare).toFixed(2)}</span>
             </div>
           </div>
           <div className="mainContainer27 pt-5 ">
@@ -277,7 +296,7 @@ function ViewSeat() {
         </div>
       </div>
       {passengerForm && (
-        <div className=" flex justify-end scroll-smooth duration-300">
+        <div className=" flex justify-start scroll-smooth duration-300">
           <div className="w-fit  overflow-x-auto p-4 bg-white rounded-md shadow-md">
             <div className="flex items-center space-x-4 gap-3">
               {selectedSeats.map((seat, index) => (
@@ -414,9 +433,7 @@ function ViewSeat() {
             </div>
           </div>
         )}
-        {
-          isModelopen && <TicketReceiptPage ticketData={passengerData} />
-        }
+      {isModelopen && <TicketReceiptPage ticketData={passengerData} />}
     </>
   );
 }

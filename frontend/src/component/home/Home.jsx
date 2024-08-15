@@ -15,6 +15,7 @@ import axiosInstance from "../../utils/axiosInstance.js";
 import { useCurrentUser } from "../../context/userContext.jsx";
 import Alert from "../CustomAlert/Alert.jsx";
 import LoadingAnimation from "./Animation/LandingPageAnimation.jsx";
+import axios from "axios";
 const offerCardDetails = [
   {
     id: 1,
@@ -125,16 +126,28 @@ const Home = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { handleSubmit, register, reset } = useForm();
-
+  const [routes, setRoutes] = useState([]);
+  const [showRoute, setShowRoute] = useState(false);
   const navigate = useNavigate();
+  const fetchAllRoutes = async () => {
+    try {
+      const response = await axios.get(
+        "https://book-my-adventure.onrender.com/api/v1/routes/get-all-routes"
+      );
+      if (response.status === 200) {
+        setRoutes(response.data?.data);
+      }
+      console.log(response.data?.data);
+    } catch (error) {}
+  };
   const handleFromLocation = (city) => {
-    setModelType("")
+    setModelType("");
     setOpenLocationModel(false);
     setFromLocation(city);
     fromModalRef.current = null;
   };
   const handleToLocation = (city) => {
-    setModelType("")
+    setModelType("");
     setOpenLocationModel(false);
     setToLocation(city);
 
@@ -158,17 +171,26 @@ const Home = () => {
     setFromLocation(toLocation);
     setToLocation(fromLocation);
   }
-  function handleSearchRequest() {
+  async function handleSearchRequest() {
     if (!fromLocation || !toLocation) {
-      alert("Please select from location and to location");
+      await fetchAllRoutes();
+      setShowRoute(true);
+      // alert("Please select from location and to location");
       return;
     }
     if (fromLocation === toLocation) {
-      alert("Please select a different location");
+      await fetchAllRoutes();
+      setShowRoute(true);
+      // alert("Please select a different location");
       return;
     }
-    if (!from.includes(fromLocation.toLowerCase()) || !to.includes(toLocation.toLowerCase())) {
-      alert("Please select a given location");
+    if (
+      !from.includes(fromLocation.toLowerCase()) ||
+      !to.includes(toLocation.toLowerCase())
+    ) {
+      await fetchAllRoutes();
+      setShowRoute(true);
+      // alert("Please select a given location");
       return;
     }
     const day = String(startDate.getDate()).padStart(2, "0");
@@ -261,7 +283,7 @@ const Home = () => {
             India's No. 1 Online Bus Ticket Booking Site
           </h1>
           <div className=" font-sans select-none font-[600] w-[90%] sm:w-[80%] lg:h-24 mt-4 bg-white cursor-pointer relative bottom-7 sm:bottom-0 flex flex-col lg:flex-row rounded-3xl overflow-x-clip ">
-            <div className="h-full flex flex-col sm:flex-row items-center justify-center lg:w-1/2">
+            <div className="h-full relative flex flex-col sm:flex-row items-center justify-center lg:w-1/2">
               <div className="h-full border-b sm:border-r border-gray-300 w-full md:w-[50%] sm:w-auto">
                 <div
                   className=" relative px-7 py-8 flex items-center h-full gap-3 overflow-visible"
@@ -289,7 +311,7 @@ const Home = () => {
                     <CityModel
                       location={fromLocation}
                       cityInfo={from}
-                      onBlur={()=>setModelType("")}
+                      onBlur={() => setModelType("")}
                       handleLocation={handleFromLocation}
                     />
                   )}
@@ -331,12 +353,72 @@ const Home = () => {
                     <CityModel
                       location={toLocation}
                       cityInfo={from}
-                      onBlur={()=>setModelType("")}
+                      onBlur={() => setModelType("")}
                       handleLocation={handleToLocation}
                     />
                   )}
                 </div>
               </div>
+              {/* <div className="absolute z-40 top-24 right-0 w-64 h-64 border bg-gray-400 ">
+                Hello
+              </div> */}
+              {showRoute && (
+                <div className="custom-alert-overlay z-50 fixed top-0 left-0 w-full h-full bg-[rgba(0,0,0,0.5)] flex justify-center items-center">
+                  <div
+                    onMouseLeave={() => setShowRoute(false)}
+                    className="custom-alert bg-white p-[20px] rounded-md "
+                  >
+                    <h2 className=" text-xl pb-1">Bus Rotes Available</h2>
+                    <table className="table-auto w-full border-collapse shadow-md">
+                      <thead>
+                        <tr className="bg-gray-200">
+                          <th className="border px-6 py-3">No.</th>
+                          <th className="border px-6 py-3">From</th>
+                          <th className="border px-6 py-3">To</th>
+                          <th className="border px-6 py-3">No. OF BUS</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {routes.length > 0
+                          ? routes.map((route, index) => {
+                              return (
+                                <tr className="bg-white">
+                                  <td className="border-b-2 px-6 py-3">
+                                    {index + 1}
+                                  </td>
+                                  <td className="border-b-2 px-6 py-3">
+                                    {route?.departureLocation[0].toUpperCase() +
+                                      route?.departureLocation.substring(1)}
+                                  </td>
+                                  <td className="border-b-2 px-6 py-3">
+                                    {route?.arrivalLocation[0].toUpperCase() +
+                                      route?.arrivalLocation.substring(1)}
+                                  </td>
+                                  <td className="border-b-2 px-6 py-3">2</td>
+                                </tr>
+                              );
+                            })
+                          : ""}
+                        <tr></tr>
+                      </tbody>
+                    </table>
+                    {/* <p className="mb-[20px]">{"jhvjg"}</p> */}
+                    <form
+                      onSubmit={() => {
+                        setShowRoute(false);
+                      }}
+                      className=" flex w-full"
+                    >
+                      <Button
+                        type="submit"
+                        className=" items-end px-[20px] py-[10px] border-none bg-gray-400 duration-300 hover:bg-gray-500 text-white rounded-sm cursor-pointer"
+                      >
+                        CANCEL
+                      </Button>
+                    </form>
+                  </div>
+                </div>
+              )}
             </div>
             <div className="flex bg-white flex-col sm:flex-row lg:w-1/2  rounded-r-3xl ">
               <div className="h-full border-b sm:border-r border-gray-300 sm:w-1/2 w-full rounded-r-3xl">

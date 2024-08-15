@@ -18,6 +18,8 @@ import { MouseTrackerProvider } from './context/mouseTrackerContext.jsx'
 import Sparkles from './component/home/Animation/Sparkle.jsx'
 import { BusContextProvider } from './context/busContext.jsx'
 import TicketReceiptPage from './component/selectbus-page/right/bus-book/bill/TicketRecipt.jsx'
+import PaymentPage from './pages/PaymentPage.jsx'
+
 
 const router =createBrowserRouter(
   createRoutesFromChildren(
@@ -30,6 +32,7 @@ const router =createBrowserRouter(
       <Route path='/login' element={<PublicRoute element={<Login/>} />}/>
       <Route path='/register' element={<PublicRoute element={<Signup/>}/>}/>
       <Route path='/profile' element={<ProtectedRoute element={<Profile/>} />}/>
+      <Route path='/payment' element={<ProtectedRoute element={<PaymentPage/>} />}/>
       <Route path='/select-bus' element={<SelectBus/>}/>
       <Route path='/a' element={<LoadingAnimation/>}/>
       <Route path='/receipt' element={<TicketReceiptPage/>}/>
