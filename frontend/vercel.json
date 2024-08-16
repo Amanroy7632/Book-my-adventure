@@ -19,6 +19,14 @@
         {
             "src":"/register",
             "dest":"/"
+        },
+        {
+            "src":"/payment",
+            "dest":"/"
+        },
+        {
+            "src":"*",
+            "dest":"/"
         }
     ]
 }
