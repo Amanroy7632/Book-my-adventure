@@ -19,14 +19,15 @@ import Sparkles from './component/home/Animation/Sparkle.jsx'
 import { BusContextProvider } from './context/busContext.jsx'
 import TicketReceiptPage from './component/selectbus-page/right/bus-book/bill/TicketRecipt.jsx'
 import PaymentPage from './pages/PaymentPage.jsx'
+import Landing from './component/home/Animation/Landing.jsx'
 
 
 const router =createBrowserRouter(
   createRoutesFromChildren(
-    <Route path='/' element={<Suspense fallback={<LoadingAnimation/>}>
+    <Route path='/' element={<Suspense fallback={<Landing/>}>
       <Layout/>
     </Suspense>}>
-      <Route path='' element={<Suspense fallback={<LoadingAnimation/>}>
+      <Route path='' element={<Suspense fallback={<Landing/>}>
       <Home/>
     </Suspense>}/>
       <Route path='/login' element={<PublicRoute element={<Login/>} />}/>
@@ -34,7 +35,7 @@ const router =createBrowserRouter(
       <Route path='/profile' element={<ProtectedRoute element={<Profile/>} />}/>
       <Route path='/payment' element={<ProtectedRoute element={<PaymentPage/>} />}/>
       <Route path='/select-bus' element={<SelectBus/>}/>
-      <Route path='/a' element={<LoadingAnimation/>}/>
+      <Route path='/a' element={<Landing/>}/>
       <Route path='/receipt' element={<TicketReceiptPage/>}/>
       <Route path='*' element={<div className=' text-3xl text-red-500'>404 Page not found</div>}/>
     </Route>
