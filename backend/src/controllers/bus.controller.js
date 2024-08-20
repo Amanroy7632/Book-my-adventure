@@ -4,6 +4,22 @@ import { ApiError, ApiResponse } from "../utils/index.js";
 const registerBus = async (req,res,next)=>{
   try {
     const {busname,busno,owner,busType,totalSeat,wifi,waterBottle,chargingPorts,movie,blanket} = req.body;
+    let amenityArray=[]
+    if (wifi) {
+        amenityArray.push("wifi")
+    }
+    if (waterBottle) {
+        amenityArray.push("waterBottle")
+    }
+    if (chargingPorts) {
+        amenityArray.push("chargingPorts")
+    }
+    if (blanket) {
+        amenityArray.push("blanket")
+    }
+    if (movie) {
+        amenityArray.push("movie")
+    }
     if ([busname,busno,owner,busType].some(item=>item?.trim()==="")) {
         throw new ApiError(401,"All Fields are required")
     }
@@ -17,9 +33,13 @@ const registerBus = async (req,res,next)=>{
     if (alreadyRegisteredBus) {
         return res.status(401).send(new ApiResponse(401,{},"Bus Number is already registered"))
     }
-    const newBus = await Bus.create({busname,busno,owner,totalSeat,busType,amenity:[wifi,waterBottle,chargingPorts,movie,blanket]})
+    console.log("Working registration of buses");
+    
+    const newBus = await Bus.create({busname,busno,owner,totalSeat,busType,amenity:amenityArray})
     return res.status(201).send(new ApiResponse(201,newBus,"Bus registered Successfully"))
   } catch (error) {
+    console.log(error.message);
+    
     next(error)
   }
 }

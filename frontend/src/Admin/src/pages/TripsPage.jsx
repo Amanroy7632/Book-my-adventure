@@ -49,7 +49,7 @@ function TripsPage() {
         <tbody>
           {trips.map((trip) => (
             <tr key={trip.id}>
-              <td className="p-4 max-sm:p-2">{trip._id}</td>
+              <td className="p-4 max-sm:p-2">{trip._id?.substring(0,5)}</td>
               <td className="p-4 max-sm:p-2">{trip.busDetails?.busname}</td>
               <td className="p-4 max-sm:p-2">{trip.departureLocation[0].toUpperCase()+trip.departureLocation?.substring(1)}</td>
               <td className="p-4 max-sm:p-2">{trip.arrivalLocation[0].toUpperCase()+trip.arrivalLocation?.substring(1)}</td>

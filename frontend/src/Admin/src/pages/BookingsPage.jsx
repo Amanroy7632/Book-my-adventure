@@ -52,7 +52,7 @@ function BookingsPage() {
         <tbody>
           {bookings.map((booking) => (
             <tr key={booking._id}>
-              <td className="p-4">{booking._id}</td>
+              <td className="p-4">{booking._id?.substring(0,5)}</td>
               <td className="p-4">{booking.name}</td>
               <td className="p-4">{booking.busNumber}</td>
               <td className="p-4">{booking.seatNo}</td>

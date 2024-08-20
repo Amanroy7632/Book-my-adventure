@@ -35,11 +35,11 @@ function BusesPage() {
           {isLoading&&<div className=" flex justify-center items-center p-5 mt-5"><Loader/></div>}
           {buses.length>0?buses?.map((bus) => (
             <tr key={bus.id}>
-              <td className="p-4 max-sm:p-1">{bus._id}</td>
+              <td className="p-4 max-sm:p-1">{bus._id?.substring(0,5)}</td>
               <td className="p-4 max-sm:p-1">{bus.busname}</td>
               <td className="p-4 max-sm:p-1">{bus.totalSeat}</td>
               <td className="p-4 max-sm:p-1">{bus.busType}</td>
-              <td className="p-4 max-sm:p-1">
+              <td className="p-4 max-sm:p-1 max-sm:flex">
                 <button className="bg-yellow-500 text-white py-1 px-3 rounded-md hover:bg-yellow-600">
                   Edit
                 </button>
