@@ -1,16 +1,18 @@
 import React, { useState } from "react";
 import logo from "../../assets/red-bus-with-word-bus-it_600323-482.avif"
-import { Link,NavLink } from "react-router-dom";
+import { Link,NavLink, useNavigate } from "react-router-dom";
 import {MdOutlineTextRotationAngledown} from "react-icons/md"
 import { FaAngleDown,FaUser,FaHeadset  } from "react-icons/fa"
 import { useCurrentUser } from "../../context/userContext.jsx";
 import Logo from "../logo/Logo";
 import {GrLogin} from "react-icons/gr"
 const Header = () => {
+  const navigate =useNavigate()
   const [userNav,setUserNav] =useState(false)
   const {currentUser,logoutCurrentUser} =useCurrentUser()
   const setUserNavHandler =()=>{
-    setUserNav(!userNav)
+    // setUserNav(!userNav)
+    navigate("/profile")
   }
   return (
     <nav className="px-4 md:px-14 py-1 md:py-3 flex text-xs md:text-base font-normal items-center justify-between sticky top-0 bg-white z-20 drop-shadow-xl">
