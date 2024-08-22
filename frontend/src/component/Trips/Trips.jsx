@@ -65,7 +65,7 @@ function Trips() {
         />
         {/* <Logo/> */}
       </div>
-      <div className={"flex justify-evenly flex-col"}>
+      <div className={"flex justify-evenly flex-col h-[85vh] overflow-y-scroll"}>
         {trips?.length!==0?trips?.map((trip) => {
           return (
             <div className=" flex " key={trip?._id}>
