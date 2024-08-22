@@ -23,6 +23,14 @@
         {
             "src":"/payment",
             "dest":"/"
+        },
+        {
+            "src":"/profile/trips",
+            "dest":"/"
+        },
+        {
+            "src":"/profile/wallet",
+            "dest":"/"
         }
     ]
 }
