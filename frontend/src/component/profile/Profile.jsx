@@ -1,6 +1,7 @@
 
 
 import React, { useState } from "react";
+import {Outlet} from "react-router-dom"
 import {
   BiLaptop,
   BiKey,
@@ -63,8 +64,8 @@ const handleProfileImageError =()=>{
   })
 }
   return (
-    <div className="flex h-[86vh]">
-      <div className="w-1/4 relative bg-gray-900 text-white p-4 select-none">
+    <>
+      {/* <div className="w-1/4 relative bg-gray-900 text-white p-4 select-none">
         <div className="text-lg font-semibold mb-4">Settings</div>
         <ul>
           <li className="mb-2 hover:bg-gray-700 p-2 rounded flex items-center gap-2">
@@ -96,7 +97,7 @@ const handleProfileImageError =()=>{
             Profile
           </li>
         </ul>
-      </div>
+      </div> */}
       <div className="flex-1 bg-gray-800 text-white p-6">
         <div className="flex flex-col gap-4">
           <div className="relative">
@@ -203,7 +204,8 @@ const handleProfileImageError =()=>{
           {/* Chat history on this computer will be cleared when you log out. */}
         </p>
       </div>
-
+      
+{/* <Outlet/> */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center select-none">
           <div className="bg-white p-4 rounded-lg shadow-lg w-80 text-black relative">
@@ -231,7 +233,7 @@ const handleProfileImageError =()=>{
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 

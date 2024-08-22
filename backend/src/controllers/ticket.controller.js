@@ -1,6 +1,6 @@
 import { Ticket } from "../models/ticket.model.js"
 import { ApiError, ApiResponse } from "../utils/index.js"
-
+import mongoose from "mongoose"
 const registerTicket = async (req,res,next)=>{
    try {
      const {route,departureTime,arrivalTime,price,busNumber,passengerNo,seatNo,name,age,gender,bookedBy} = req.body
@@ -112,4 +112,102 @@ const updateTicket = async(req,res,next)=>{
         next(error)
     }
 }
-export {registerManyTicket,registerTicket,getTickets,getAllTickets,deleteTicket,updateTicket}
+// const getCurrentUserTickets = async (req,res,next)=>{
+//     try {
+//      const {userId} = req.params   
+//      if (!userId) {
+//         throw new ApiError(401,"User must be logged in")
+//      }
+//      const userObjectId = new mongoose.Types.ObjectId(userId);
+//      const tickets = await Ticket.aggregate([
+//         {
+//             $match:{
+//                 bookedBy:userObjectId
+//             }
+//         },
+//         {
+//             $lookup:{
+//                 from:"routes",
+//                 localField:"route",
+//                 foreignField:"_id",
+//                 as:"path"
+//             }
+//         }
+//      ])
+//      console.log(tickets.length);
+     
+//      if (tickets.length<=0) {
+//         return res.status(200).send(new ApiResponse(200,{},"User doesn;'t have any trips"))
+//      }
+//      return res.status(200).send(new ApiResponse(200,tickets,"All trips fetched successfully"))
+//     } catch (error) {
+//         next(error)
+//     }
+// }
+const getCurrentUserTickets = async (req, res, next) => {
+    try {
+        console.log(`Api Hit for retrival of Trips`);
+        
+      const { userId } = req.params;
+      
+      if (!userId) {
+        throw new ApiError(401, "User must be logged in");
+      }
+  
+      const userObjectId = new mongoose.Types.ObjectId(userId);
+  
+      const tickets = await Ticket.aggregate([
+        {
+          $match: {
+            bookedBy: userObjectId,
+          },
+        },
+        {
+          $lookup: {
+            from: "routes",
+            localField: "route",    // Field in Ticket collection
+            foreignField: "_id",    // Field in routes collection
+            as: "path",
+          },
+        },
+        {
+            $addFields:{
+                from:{$first:"$path.departureLocation"},
+                to:{$first:"$path.arrivalLocation"},
+                date:{$first:"$path.date"},
+                operatorName:{$first:"$path.operatorName"}
+            }
+        },
+        {
+            $project:{
+                _id:1,
+                busNumber:1,
+                passengerNo:1,
+                seatNo:1,
+                name:1,
+                age:1,
+                gender:1,
+                departureTime:1,
+                arrivalTime:1,
+                price:1,
+                from:1,
+                to:1,
+                date:1,
+                operatorName:1,
+
+            }
+        }
+      ]);
+  
+    //   console.log(tickets.length);
+  
+      if (tickets.length <= 0) {
+        return res.status(200).send(new ApiResponse(200, {}, "User doesn't have any trips"));
+      }
+  
+      return res.status(200).send(new ApiResponse(200, {tickets,totalTickets:tickets.length}, "All trips fetched successfully"));
+    } catch (error) {
+      next(error);
+    }
+  };
+export {registerManyTicket,registerTicket,getTickets,getAllTickets,deleteTicket,updateTicket,getCurrentUserTickets}

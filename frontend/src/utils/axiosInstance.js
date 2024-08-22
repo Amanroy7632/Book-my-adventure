@@ -3,6 +3,7 @@ import Cookies from 'js-cookie';
 
 const axiosInstance = axios.create({
   baseURL: 'https://book-my-adventure.onrender.com/api/v1', // Replace with your backend API base URL
+  // baseURL: 'http://localhost:8000/api/v1', // Replace with your backend API base URL
 });
 
 axiosInstance.interceptors.request.use(
