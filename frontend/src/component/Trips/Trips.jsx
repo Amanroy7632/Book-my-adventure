@@ -32,7 +32,7 @@ function Trips() {
           const response = await axiosInstance.get(`/ticket/tickets/user/${currentUser?._id}`)
           if (response.status===200) {
              console.log(response.data);
-             setTrips(response.data?.tickets)
+             setTrips(response.data?.data?.tickets)
           }else {
             alert("Something went wrong,\nplease try again")
           }
