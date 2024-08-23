@@ -10,12 +10,23 @@ import axios from "axios";
 import axiosInstance from "../../utils/axiosInstance.js";
 import { useCurrentUser } from "../../context/userContext.jsx";
 import Alert from "../CustomAlert/Alert.jsx";
-import Loader from "../loader/Loader.jsx"
+import Loader from "../loader/Loader.jsx";
 import Spinner from "../loader/Spinner.jsx";
+import { MdClose, MdKey } from "react-icons/md";
+import Modal from "../modal/Modal.jsx";
+import ForgetPasswordForm from "./ForgetPasswordForm.jsx";
 function Login() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const { handleSubmit, register, reset } = useForm();
-  const [isLoading,setIsLoading] =useState(false)
+  const [isLoading, setIsLoading] = useState(false);
+  const [isActiveForgotPassword, setIsActiveForgotPassword] = useState(false);
+  const [openModal,setOpenModal] = useState(false);
+  const [forgetFormData, setForgetFormData] = useState({
+    email:"",
+    otp:"",
+    newPassword:"",
+    confirmPassword:""
+  });
   const {
     currentUser,
     setCurrentUser,
@@ -26,7 +37,7 @@ function Login() {
   const navigate = useNavigate();
   const handleLogin = async (userInfo) => {
     try {
-      setIsLoading(true)
+      setIsLoading(true);
       const response = await axios.post(
         "https://book-my-adventure.onrender.com/api/v1/users/login",
         userInfo
@@ -44,22 +55,27 @@ function Login() {
         { expires: 7 },
         { httpOnly: true, secure: true }
       );
-      setCurrentUser(user)  
+      setCurrentUser(user);
       console.log(user);
       setTimeout(() => {
-        setIsLoading(false)
+        setIsLoading(false);
       }, 1000);
-      setAlertMessage("Welcome "+user.fullname);
+      setAlertMessage("Welcome " + user.fullname);
       // alert("Login successful");
       navigate("/");
     } catch (error) {
-        if (error.code ==="ERR_NETWORK") {
-            
-            alert("Login failed \nInternet connection not found");
-        }
-        setIsLoading(false)
-      setAlertMessage("Login failed");
-      console.error("Login error:", error);
+      if (error.code === "ERR_NETWORK") {
+        // alert("Login failed \nInternet connection not found");
+        setAlertMessage("Login failed. Internet connection not found");
+      }
+      if (error.response?.data?.statusCode === 404) {
+        setAlertMessage("Invalid Username ! ");
+      } else if (error.code === "ERR_BAD_REQUEST") {
+        setAlertMessage("Invalid Password");
+        setIsActiveForgotPassword(!isActiveForgotPassword);
+      }
+      setIsLoading(false);
+      console.error("Login error:", error.response?.data);
     } finally {
       // setAlertMessage("");
     }
@@ -107,7 +123,16 @@ function Login() {
   const passwordToggleHandler = () => {
     setIsPasswordVisible(!isPasswordVisible);
   };
-  useEffect(()=>{
+  const handleForgotPasswordToggle = () => {
+    // setIsActiveForgotPassword(!isActiveForgotPassword);
+    setOpenModal(!openModal)
+  };
+  const handleForgotPassword = async (userInfo) => {
+    console.log("working or not");
+    
+    console.log(userInfo);
+  };
+  useEffect(() => {
     //   const fetchUserData = async () => {
     //       try {
     //         const response = await axiosInstance.get('/users/profile');
@@ -126,12 +151,13 @@ function Login() {
 
     //       fetchUserData()
     //   }
+
     if (currentUser) {
-        console.log("useEffect wala navigate");
-        
-        navigate("/")
+      console.log("useEffect wala navigate");
+
+      navigate("/");
     }
-  },[currentUser,navigate])
+  }, [currentUser, navigate]);
   return (
     <div className=" flex items-center justify-center w-full  pt-[12vh]">
       <div
@@ -153,7 +179,7 @@ function Login() {
             Sign Up
           </Link>
         </p>
-        {isLoading &&  <Spinner/>}
+        {isLoading && <Spinner />}
         {/* {errorMessage && <p className=" text-red-600 mt-8 text-center" >{errorMessage}</p>} */}
         <form onSubmit={handleSubmit(handleLogin)} className=" mt-8 ">
           <div className=" space-y-5">
@@ -190,12 +216,37 @@ function Login() {
                 required: true,
               })}
             />
+            {isActiveForgotPassword&&<div className=" flex items-end justify-end">
+              <Link
+                onClick={handleForgotPasswordToggle}
+                className="flex items-center gap-2 hover:text-blue-500 hover:underline duration-300"
+              >
+                <MdKey /> Forget password
+              </Link>
+            </div>}
             <Button type="submit" className=" w-full">
               Log in
             </Button>
           </div>
         </form>
       </div>
+      {openModal && (
+        <Modal>
+          {/* {" "}
+          <div className=" flex justify-center items-center bg-white relative min-w-96">
+            <div className=" absolute top-2 right-2 cursor-pointer" onClick={handleForgotPasswordToggle}><MdClose/></div>
+            <form onSubmit={handleSubmit(handleForgotPassword)} className=" w-full p-4">
+              <div className=" flex flex-col p-2 w-full mb-2">
+                <label htmlFor="email">Email</label>
+                <input type="email" name="email" id="email" className=" w-full outline-none border border-gray-400 px-2 py-1" />
+              </div>
+              <div className=" w-[80%] m-auto"><Button type="submit" className=" w-full">Submit</Button></div>
+             
+            </form>
+          </div> */}
+          <ForgetPasswordForm onClose={handleForgotPasswordToggle}/>
+        </Modal>
+      )}
       {alertMessage && (
         <Alert message={alertMessage} onClose={onCloseHandler} />
       )}

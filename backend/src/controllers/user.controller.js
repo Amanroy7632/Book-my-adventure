@@ -1,4 +1,7 @@
+import { hash } from "bcrypt";
+import { sendMail } from "../config/mail.js";
 import { User } from "../models/index.js"
+import { generateOTP } from "../utils/generateOtp.js";
 import { ApiError, ApiResponse } from "../utils/index.js"
 const generateAccessTokenAndRefreshToken = async (userId) => {
     try {
@@ -8,19 +11,19 @@ const generateAccessTokenAndRefreshToken = async (userId) => {
         user.refreshToken = refreshToken;
         await user.save({ validateBeforeSave: false })
         // console.log(accessToken,refreshToken,x);
-        
+
         return { accessToken, refreshToken }
     } catch (error) {
         throw new ApiError(500, "Something went wrong while generating access token")
     }
 }
-const getUserProfile = async (req,res,next)=>{
+const getUserProfile = async (req, res, next) => {
     try {
-        const user =req.user
+        const user = req.user
         if (!user) {
-            throw new ApiError(404,"User not found ")
+            throw new ApiError(404, "User not found ")
         }
-        return res.status(200).send(new ApiResponse(200,user,"User data fetched successfully"))
+        return res.status(200).send(new ApiResponse(200, user, "User data fetched successfully"))
     } catch (error) {
         next(error)
     }
@@ -50,13 +53,13 @@ const registerUser = async (req, res, next) => {
             throw new ApiError(500, "Something went wrong while registering user")
         }
         return res.status(201).json(
-            new ApiResponse(201,{ user:userCreated}, "User Registered successfully")
+            new ApiResponse(201, { user: userCreated }, "User Registered successfully")
         )
     } catch (error) {
         next(error)
     }
 }
-async function loginUser(req, res, next){
+const loginUser = async (req, res, next) => {
     try {
         const { email, password } = req.body
         if (!email) {
@@ -67,7 +70,7 @@ async function loginUser(req, res, next){
         }
         const user = await User.findOne({ email })
         // console.log(user);
-        
+
         if (!user) {
             throw new ApiError(404, "User does not exist.")
         }
@@ -76,8 +79,8 @@ async function loginUser(req, res, next){
             throw new ApiError(401, "Invalid password")
         }
         const { accessToken, refreshToken } = await generateAccessTokenAndRefreshToken(user._id)
-        console.log(accessToken,refreshToken);
-        
+        console.log(accessToken, refreshToken);
+
         const loginUser = await User.findById(user._id).select("-password -refreshToken")
         const options = {
             httpOnly: true,
@@ -93,4 +96,56 @@ async function loginUser(req, res, next){
         next(error)
     }
 }
-export { registerUser, loginUser,getUserProfile }
+const forgetPasswordOtpGeneration = async (req, res, next) => {
+    try {
+        const { email } = req.body
+        if (!email) {
+            throw new ApiError(400, "Email is required")
+        }
+        const user = await User.findOne({ email })
+        if (!user) {
+            throw new ApiError(404, "User not found\nInvalid email address")
+        }
+        const otp = generateOTP(6)
+        const templateData = {
+            username: user?.fullname,
+            email,
+            phone: user?.phone,
+            otp
+        }
+        await sendMail(email, "Forgot Password", templateData)
+        user.forgetPasswordCode = otp
+        await user.save()
+        return res.status(200).send(new ApiResponse(200, {}, "Otp sent successfully.\nCheck your mail box"))
+    } catch (error) {
+        next(error)
+    }
+}
+const resetPassword = async (req, res, next) => {
+    try {
+        const { code, email, newPassword } = req.body
+        if (!email) {
+            throw new ApiError(400, "Email is required")
+        }
+        if (!code) {
+            throw new ApiError(400, "Invalid code")
+        }
+        const user = await User.findOne({ email }).select("-password")
+        if (!user) {
+            throw new ApiError(404, `User with ${email} doesn't exists.`)
+        }
+        if (code !== user.forgetPasswordCode) {
+            throw new ApiError(409, "Invalid verification code")
+        }
+        // const password = await hash(newPassword, 10)
+        user.password = newPassword
+        user.verificationCode = null
+        user.forgetPasswordCode = null
+        await user.save()
+        res.status(200).send(new ApiResponse(200, user, "Password updated successfully"))
+
+    } catch (error) {
+        next(error)
+    }
+}
+export { registerUser, loginUser, getUserProfile, forgetPasswordOtpGeneration, resetPassword }
