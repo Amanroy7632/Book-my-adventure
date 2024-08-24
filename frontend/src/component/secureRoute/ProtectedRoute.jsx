@@ -4,9 +4,9 @@ import { Navigate } from 'react-router-dom'
 
 function ProtectedRoute({element}) {
     const {currentUser} =useCurrentUser()
-    if (!(currentUser && currentUser.fullname )) {
-        return <Navigate to={"/"} replace />
-    }
+    // if (!(currentUser && currentUser.fullname )) {
+    //     return <Navigate to={"/"} replace />
+    // }
   return element
 }
 export default ProtectedRoute

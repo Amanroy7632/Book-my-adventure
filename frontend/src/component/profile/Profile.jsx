@@ -16,13 +16,15 @@ import { useCurrentUser } from "../../context/userContext.jsx";
 import axiosInstance from "../../utils/axiosInstance.js";
 const uploadAvatar = async (filePath)=>{
   try {
-    const response = await axiosInstance.patch("/users/upload-avatar",{avatar:filePath})
+    const response = await axiosInstance.patch("/users/upload-avatar",filePath)
     if (response.status===200) {
       alert("Avtar uploaded successfully")
     }
     console.log(response);
     
   } catch (error) {
+    console.log(error);
+    
     alert("Something went wron"+error.message)
   }
 }
@@ -39,19 +41,41 @@ const Profile = () => {
   const [editableAbout, setEditableAbout] = useState(false);
   const [editablePhone, setEditablePhone] = useState(false);
 
+  // const handleImageChange = (event) => {
+  //   const file = event.target.files[0];
+  //   console.log(file);
+    
+  //   if (file) {
+  //     const reader = new FileReader();
+  //     reader.onload = (e) => {
+  //       uploadAvatar(e.target.result)
+  //       // console.log(e.target.result);
+        
+  //       setCurrentUser({ ...currentUser, avatar: e.target.result });
+  //     };
+  //     reader.readAsDataURL(file);
+  //   }
+  //   closeModal()
+  // };
   const handleImageChange = (event) => {
     const file = event.target.files[0];
+    console.log(file);
+  
     if (file) {
+      const formData = new FormData();
+      formData.append('avatar', file);
+  
+      // Function to upload the avatar
+      uploadAvatar(formData);
+  
       const reader = new FileReader();
       reader.onload = (e) => {
-        uploadAvatar(e.target.result)
         setCurrentUser({ ...currentUser, avatar: e.target.result });
       };
       reader.readAsDataURL(file);
     }
-    closeModal()
+    closeModal();
   };
-
   const openModal = () => {
     setIsModalOpen(true);
   };
