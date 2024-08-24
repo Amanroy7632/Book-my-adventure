@@ -3,6 +3,7 @@ import { sendMail } from "../config/mail.js";
 import { User } from "../models/index.js"
 import { generateOTP } from "../utils/generateOtp.js";
 import { ApiError, ApiResponse } from "../utils/index.js"
+import { uploadOnCloudinary } from "../utils/uploadCloudinary.js";
 const generateAccessTokenAndRefreshToken = async (userId) => {
     try {
         const user = await User.findById(userId);
@@ -148,4 +149,25 @@ const resetPassword = async (req, res, next) => {
         next(error)
     }
 }
-export { registerUser, loginUser, getUserProfile, forgetPasswordOtpGeneration, resetPassword }
+const uploadAvatar =async (req,res,next)=>{
+    try {
+        const user = req.user
+        if (!user) {
+            throw new ApiError(400,"Unauthorize access")
+        }
+        const avatarLocalPath=req.files?.avatar[0]?.path
+        if (!avatarLocalPath) {
+            throw new ApiError(401,"Invalid avatar path")
+        }
+        const avatarResponse = await uploadOnCloudinary(avatarLocalPath)
+        if (!avatarResponse) {
+            throw new ApiError(500,"Something went wrong while uploading avatar to cloudinary")
+        }
+        user.avatar = avatarResponse?.url 
+        await user.save()
+        return res.status(200).json(new ApiResponse(200,user,"Avatar updated successfully"))
+    } catch (error) {
+        next(error)
+    }
+}
+export { registerUser, loginUser, getUserProfile, forgetPasswordOtpGeneration, resetPassword,uploadAvatar }

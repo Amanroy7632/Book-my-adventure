@@ -53,9 +53,9 @@ const router = createBrowserRouter(
         path="/profile"
         element={<ProtectedRoute element={<ProfilePage />} />}
       >
-        <Route path="" element={<Profile />} />
-        <Route path="/profile/wallet" element={<Wallet/>} />
-        <Route path="/profile/trips" element={<Trips />} />
+        <Route path="" element={ <ProtectedRoute element={<Profile />}/> } />
+        <Route path="/profile/wallet" element={ <ProtectedRoute element={<Wallet/>}/> } />
+        <Route path="/profile/trips" element={ <Trips />}/> 
       </Route>
       <Route
         path="/payment"

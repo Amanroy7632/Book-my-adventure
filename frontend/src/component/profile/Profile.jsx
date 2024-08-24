@@ -13,7 +13,19 @@ import {
 import { FaPencilAlt } from "react-icons/fa";
 import { MdAirplaneTicket, MdSdStorage } from "react-icons/md";
 import { useCurrentUser } from "../../context/userContext.jsx";
-
+import axiosInstance from "../../utils/axiosInstance.js";
+const uploadAvatar = async (filePath)=>{
+  try {
+    const response = await axiosInstance.patch("/users/upload-avatar",{avatar:filePath})
+    if (response.status===200) {
+      alert("Avtar uploaded successfully")
+    }
+    console.log(response);
+    
+  } catch (error) {
+    alert("Something went wron"+error.message)
+  }
+}
 const Profile = () => {
   const [user, setUser] = useState({
     avatar: "https://via.placeholder.com/150",
@@ -32,6 +44,7 @@ const Profile = () => {
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
+        uploadAvatar(e.target.result)
         setCurrentUser({ ...currentUser, avatar: e.target.result });
       };
       reader.readAsDataURL(file);

@@ -22,6 +22,8 @@ import axiosInstance from "../../utils/axiosInstance";
 // import useFetch from "../../hooks";
 // import Loader from "../loader/Loader";
 import { useCurrentUser } from "../../context/userContext";
+import Spinner from "../loader/Spinner";
+import Alert from "../CustomAlert/Alert";
 // function Trips() {
 //     const {currentUser} =useCurrentUser()
 //   const [trips, setTrips] = useState([]);
@@ -152,20 +154,35 @@ import { useCurrentUser } from "../../context/userContext";
 // ];
 
 const Trips = () => {
-  const { currentUser } = useCurrentUser();
+  const { currentUser,alertMessage,setAlertMessage,onCloseHandler } = useCurrentUser();
   const [trips, setTrips] = useState([]);
+  const [isLoading,setIsLoadin] =useState(true)
+  const [message,setMessage] = useState({
+    message:"",
+    type:""
+  })
   const fetchData = async () => {
     try {
+      // setIsLoadin(true)
       const response = await axiosInstance.get(
         `/ticket/tickets/user/${currentUser?._id}`
       );
+      console.log(response);
+      
       if (response.status === 200) {
         console.log(response.data);
         setTrips(response.data?.data?.tickets);
+        // setAlertMessage("All trips fetched successfully")
       } else {
-        alert("Something went wrong,\nplease try again");
+        setAlertMessage("Something went wrong, please try again")
+        // alert("Something went wrong,\nplease try again");
       }
+      // setTimeout(() => {
+      // }, 1500);
+      setIsLoadin(false)
     } catch (error) {
+      setIsLoadin(false)
+      setAlertMessage(error.message)
       console.log(error.message);
     }
   };
@@ -176,14 +193,14 @@ const Trips = () => {
     <div className="flex flex-col w-full items-center p-4 bg-gray-100 min-h-[86vh] overflow-y-scroll">
       <h1 className="text-2xl font-bold mb-4">My Trips</h1>
       <div className="w-full max-w-4xl">
-        {trips.map((trip) => (
+        {trips?trips?.map((trip) => (
           <div
             key={trip._id}
             className="bg-white shadow-md rounded-lg p-4 mb-4 flex flex-col md:flex-row justify-between items-center"
           >
             <div className="flex flex-col md:flex-row md:items-center md:gap-6">
-              <h2 className=" text-xl font-semibold">Passenger Details</h2>
               <div>
+              <h2 className=" text-xl font-semibold">Passenger Details</h2>
                 <p className=" flex items-center gap-3">
                   <MdArrowRightAlt /> Contact Email: {currentUser?.email}
                 </p>
@@ -233,8 +250,10 @@ const Trips = () => {
               )}
             </div>
           </div>
-        ))}
+        )):<div className=" p-10 text-2xl text-red-400">No trips record found</div>}
       </div>
+      {isLoading&& <Spinner/>}
+      {alertMessage&&<Alert message={alertMessage} onClose={onCloseHandler}/>}
     </div>
   );
 };
