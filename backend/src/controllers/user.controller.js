@@ -155,7 +155,9 @@ const uploadAvatar =async (req,res,next)=>{
         if (!user) {
             throw new ApiError(400,"Unauthorize access")
         }
-        const avatarLocalPath=req.files?.avatar[0]?.path
+        const avatarLocalPath = req.file?.path
+        console.log(avatarLocalPath);
+        
         if (!avatarLocalPath) {
             throw new ApiError(401,"Invalid avatar path")
         }
