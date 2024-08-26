@@ -16,6 +16,7 @@ import { useCurrentUser } from "../../context/userContext.jsx";
 import Alert from "../CustomAlert/Alert.jsx";
 import LoadingAnimation from "./Animation/LandingPageAnimation.jsx";
 import axios from "axios";
+import { BASE_URL } from "../../constraints.js";
 const offerCardDetails = [
   {
     id: 1,
@@ -132,7 +133,7 @@ const Home = () => {
   const fetchAllRoutes = async () => {
     try {
       const response = await axios.get(
-        "https://book-my-adventure.onrender.com/api/v1/routes/get-all-routes"
+        `${BASE_URL}/routes/get-all-routes`
       );
       if (response.status === 200) {
         setRoutes(response.data?.data);
@@ -165,8 +166,8 @@ const Home = () => {
     }
   };
   function exchangeLocation() {
-    console.log("Working exchange location");
-    console.log(`Locatiom Model :${openLocationModel}`);
+    // console.log("Working exchange location");
+    // console.log(`Locatiom Model :${openLocationModel}`);
     setOpenLocationModel(false);
     setFromLocation(toLocation);
     setToLocation(fromLocation);
@@ -245,7 +246,7 @@ const Home = () => {
       }, 500);
     }
   };
-  const { currentUser, setCurrentUser, alertMessage, setAlertMessage } =
+  const { currentUser, alertMessage, setAlertMessage,onCloseHandler } =
     useCurrentUser();
   useEffect(() => {
     if (openLocationModel) {
@@ -259,7 +260,7 @@ const Home = () => {
     };
   }, [openLocationModel]);
   const { loading, data, errorMessage } = useFetch(
-    `https://book-my-adventure.onrender.com/api/v1/question-answer/?limit=5&page=${currentPage}`,
+    `${BASE_URL}/question-answer/?limit=5&page=${currentPage}`,
     {
       method: "GET",
       "Content-Type": "application/json",
@@ -268,7 +269,7 @@ const Home = () => {
   // console.log(data);
 
   const frequentlyAskedQuestions = data?.data?.questionAnswer;
-  console.log(frequentlyAskedQuestions);
+  // console.log(frequentlyAskedQuestions);
   useEffect(() => {
     const timeDur = setTimeout(() => {
       return <LoadingAnimation />;
@@ -645,7 +646,7 @@ const Home = () => {
           </form>
         </div>
         {alertMessage && (
-          <Alert message={alertMessage} onClose={() => setAlertMessage("")} />
+          <Alert message={alertMessage} onClose={onCloseHandler} />
         )}
       </section>
     </>

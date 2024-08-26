@@ -18,9 +18,9 @@ import { UserProvider } from "./context/userContext.jsx";
 import PublicRoute from "./component/secureRoute/PublicRoute.jsx";
 import ProtectedRoute from "./component/secureRoute/ProtectedRoute.jsx";
 import Profile from "./component/profile/Profile.jsx";
-import LoadingAnimation from "./component/home/Animation/LandingPageAnimation.jsx";
+// import LoadingAnimation from "./component/home/Animation/LandingPageAnimation.jsx";
 import { MouseTrackerProvider } from "./context/mouseTrackerContext.jsx";
-import Sparkles from "./component/home/Animation/Sparkle.jsx";
+// import Sparkles from "./component/home/Animation/Sparkle.jsx";
 import { BusContextProvider } from "./context/busContext.jsx";
 import TicketReceiptPage from "./component/selectbus-page/right/bus-book/bill/TicketRecipt.jsx";
 import PaymentPage from "./pages/PaymentPage.jsx";
@@ -76,10 +76,10 @@ const router = createBrowserRouter(
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <UserProvider>
-    <MouseTrackerProvider>
+    {/* <MouseTrackerProvider> */}
       <BusContextProvider>
         <RouterProvider router={router} />
       </BusContextProvider>
-    </MouseTrackerProvider>
+    {/* </MouseTrackerProvider> */}
   </UserProvider>
 );

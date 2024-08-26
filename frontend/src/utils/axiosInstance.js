@@ -1,8 +1,8 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
-
+import { BASE_URL } from '../constraints';
 const axiosInstance = axios.create({
-  baseURL: 'https://book-my-adventure.onrender.com/api/v1', // Replace with your backend API base URL
+  baseURL: BASE_URL, // Replace with your backend API base URL
   // baseURL: 'http://localhost:8000/api/v1', // Replace with your backend API base URL
 });
 

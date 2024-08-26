@@ -12,7 +12,7 @@ const Layout = () => {
   return (
     <>
       <Header />
-      <Sparkles/>
+      {/* <Sparkles/> */}
       <Toaster position="bottom-right" reverseOrder={true} />
       <Outlet />
       <Footer />

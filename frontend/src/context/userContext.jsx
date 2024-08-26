@@ -19,8 +19,8 @@ export const UserProvider = ({children})=>{
         setCurrentUser(null)
         Cookies.remove("accessToken")
         Cookies.remove("refreshToken")
-        
-        alert("Logout Successfully")
+        setAlertMessage("Logout Successfully")
+        // alert("Logout Successfully")
     }
     useEffect(()=>{
         const fetchUserData =async ()=>{

@@ -12,10 +12,10 @@ import { BsPower, BsPeopleFill } from "react-icons/bs";
 import { FaAngleDown } from "react-icons/fa";
 import "./busbox.css";
 import BusBottom from "../bus-book/BusBottom.jsx";
-// import useFetch from "../../../../hooks.jsx";
 import axiosInstance from "../../../../utils/axiosInstance.js";
 import Loader from "../../../loader/Loader.jsx";
 import { useBusContext } from "../../../../context/busContext.jsx";
+import { BASE_URL } from "../../../../constraints.js";
 const amenities = ["Charging point", "Movies", "Lights", "Bus Stopage"];
 const BusBox = ({ loading, data, errorMessage }) => {
   const [popUpVisible, setPopUpVisible] = useState(null);
@@ -47,7 +47,7 @@ const BusBox = ({ loading, data, errorMessage }) => {
         try {
           // Fetch Bus Details
           const busResponse = await fetch(
-            `https://book-my-adventure.onrender.com/api/v1/bus/${selectedBusData?.busId}`,
+            `${BASE_URL}/bus/${selectedBusData?.busId}`,
             {
               method: "GET",
               headers: {

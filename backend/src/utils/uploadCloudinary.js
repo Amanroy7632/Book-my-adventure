@@ -1,6 +1,5 @@
 
 import { v2 as cloudinary } from "cloudinary";
-import exp from "constants";
 import fs from "fs" //used for handling a file system by default in node js
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,

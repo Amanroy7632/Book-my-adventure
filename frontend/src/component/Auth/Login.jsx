@@ -15,6 +15,7 @@ import Spinner from "../loader/Spinner.jsx";
 import { MdClose, MdKey } from "react-icons/md";
 import Modal from "../modal/Modal.jsx";
 import ForgetPasswordForm from "./ForgetPasswordForm.jsx";
+import { BASE_URL } from "../../constraints.js";
 function Login() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const { handleSubmit, register, reset } = useForm();
@@ -39,8 +40,8 @@ function Login() {
     try {
       setIsLoading(true);
       const response = await axios.post(
-        // "https://book-my-adventure.onrender.com/api/v1/users/login",
-        "http://localhost:8000/api/v1/users/login",
+        `${BASE_URL}/users/login`,
+        // "http://localhost:8000/api/v1/users/login",
         userInfo
       );
       const { accessToken, refreshToken, user } = response.data.data;
@@ -57,7 +58,7 @@ function Login() {
         { httpOnly: true, secure: true }
       );
       setCurrentUser(user);
-      console.log(user);
+      // console.log(user);
       setTimeout(() => {
         setIsLoading(false);
       }, 1000);
@@ -81,46 +82,7 @@ function Login() {
       // setAlertMessage("");
     }
   };
-  const login = (data) => {
-    console.log(data);
-    try {
-      fetch("http://localhost:8000/api/v1/users/login", {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log(data);
-          if (data.success) {
-            //   console.log(data?.data.accessToken);
-            const { accessToken } = data?.data;
-            Cookies.set(
-              `accessToken`,
-              accessToken,
-              { expires: 7 },
-              { httpOnly: true, secure: true }
-            );
-            setCurrentUser(data?.data);
-            alert("User logged in successfully");
-            navigate("/");
-            reset();
-          } else {
-            alert("Something went wrong with the login");
-
-            return;
-          }
-        })
-        .catch((err) => {
-          alert("Error: " + err.message);
-          console.log(err.message);
-        });
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
+ 
   const passwordToggleHandler = () => {
     setIsPasswordVisible(!isPasswordVisible);
   };

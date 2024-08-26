@@ -16,77 +16,50 @@ import axios from "axios";
 import Alert from "../CustomAlert/Alert.jsx"
 import { useCurrentUser } from "../../context/userContext.jsx";
 import Spinner from "../loader/Spinner.jsx";
+import { BASE_URL } from "../../constraints.js";
 function Signup() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const { handleSubmit, register, reset } = useForm();
   const {alertMessage,setAlertMessage,onCloseHandler,setCurrentUser} = useCurrentUser()
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
-  const handleLogin = async (userInfo) => {
-    try {
-      const response = await axios.post(
-        "https://book-my-adventure.onrender.com/api/v1/users/login",
-        userInfo
-      );
-      const { accessToken, refreshToken, user } = response.data.data;
-      Cookies.set(
-        "accessToken",
-        accessToken,
-        { expires: 7 },
-        { httpOnly: true, secure: true }
-      );
-      Cookies.set(
-        "refreshToken",
-        refreshToken,
-        { expires: 7 },
-        { httpOnly: true, secure: true }
-      );
-      setCurrentUser(user)      
-      setAlertMessage("Login successful");
-      alert("Login successful");
-      navigate("/");
-    } catch (error) {
-      setAlertMessage("Login failed");
-      console.error("Login error:", error);
-    } finally {
-      setAlertMessage("");
-    }
-  };
+  // const handleLogin = async (userInfo) => {
+  //   try {
+  //     const response = await axios.post(
+  //       "https://book-my-adventure.onrender.com/api/v1/users/login",
+  //       userInfo
+  //     );
+  //     const { accessToken, refreshToken, user } = response.data.data;
+  //     Cookies.set(
+  //       "accessToken",
+  //       accessToken,
+  //       { expires: 7 },
+  //       { httpOnly: true, secure: true }
+  //     );
+  //     Cookies.set(
+  //       "refreshToken",
+  //       refreshToken,
+  //       { expires: 7 },
+  //       { httpOnly: true, secure: true }
+  //     );
+  //     setCurrentUser(user)      
+  //     setAlertMessage("Login successful");
+  //     alert("Login successful");
+  //     navigate("/");
+  //   } catch (error) {
+  //     setAlertMessage("Login failed");
+  //     console.error("Login error:", error);
+  //   } finally {
+  //     setAlertMessage("");
+  //   }
+  // };
   const createUser = async(userInfo) => {
-    console.log(userInfo);
-    // try {
-    //   fetch("http://localhost:8000/api/v1/users/register",
-    //     {
-    //       method:"POST",
-    //       body:JSON.stringify(data),
-    //       headers:{
-    //         "Content-Type": "application/json"
-    //       }
-    //     }
-    //   ).then((response)=>response.json()).then((data)=>{
-    //     console.log(data);
-    //     if (data.success) {
-          
-    //       alert("User registered successfully")
-    //       reset()
-    //     }else{
-    //       alert("Something went wrong with the registration")
-    //       return
-
-    //     }
-        
-    //   }).catch((err)=>{
-    //     alert("Error: " + err.message)
-    //     console.log(err.message);
-    //   })
-    // } catch (error) {
-    //   console.log(error.message);
-    // }
+    // console.log(userInfo);
     try {
       // throw new Error("Not implemented");
       setIsLoading(true)
       const response = await axios.post(
-        "https://book-my-adventure.onrender.com/api/v1/users/register",
+        `${BASE_URL}/users/register`,
         userInfo
       );
       const { user } = response.data.data;
