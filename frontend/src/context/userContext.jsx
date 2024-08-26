@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import Cookies from "js-cookie"
 import axiosInstance from "../utils/axiosInstance.js";
+import { useNavigate } from "react-router-dom";
 const UserContext = createContext()
 export const useCurrentUser=()=>{
     return useContext(UserContext)
@@ -20,7 +21,6 @@ export const UserProvider = ({children})=>{
         Cookies.remove("refreshToken")
         
         alert("Logout Successfully")
-
     }
     useEffect(()=>{
         const fetchUserData =async ()=>{

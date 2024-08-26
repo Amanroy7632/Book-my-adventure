@@ -1,43 +1,18 @@
-// import {v2 as cloudinary} from "cloudinary"
-// import fs from "fs"
-// cloudinary.config({
-//     cloud_name:process.env.CLOUDINARY_CLOUD_NAME,
-//     api_key:process.env.CLOUDINARY_API_KEY, 
-//     api_secret:process.env.CLOUDINARY_API_SECRET 
-// })
-// const uploadOnCloudinary =async (localFilePath)=>{
-//     try {
-//         if (!localFilePath)  {
-//             return null
-//         }
-//         const response = await cloudinary.uploader.upload(localFilePath,{
-//             resource_type:"auto"
-//         })
-//         console.log(`File is uploaded successfully to cloudinary: ${response.url}`);
-//         fs.unlinkSync(localFilePath)
-//         return response
-        
-//     } catch (error) {
-        
-//         fs.unlinkSync(localFilePath)
-//         return null
-//     }
-// }
-// export {uploadOnCloudinary}
+
 import { v2 as cloudinary } from "cloudinary";
 import exp from "constants";
 import fs from "fs" //used for handling a file system by default in node js
-cloudinary.config({ 
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME, 
-  api_key: process.env.CLOUDINARY_API_KEY, 
-  api_secret: process.env.CLOUDINARY_API_SECRET 
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
 });
-const uploadOnCloudinary=async(localFilePath)=>{
+const uploadOnCloudinary = async (localFilePath) => {
     try {
-        if(!localFilePath) return null;
+        if (!localFilePath) return null;
         // upload our file to cloudinary 
-       const response= await cloudinary.uploader.upload(localFilePath,{
-            resource_type:"auto"
+        const response = await cloudinary.uploader.upload(localFilePath, {
+            resource_type: "auto"
         })
         // printing a message on successfully uploaded file 
         console.log(`File is uploaded successfully to cloudinary:\n Path of file is: ${response.url}`);
@@ -51,4 +26,26 @@ const uploadOnCloudinary=async(localFilePath)=>{
 // cloudinary.uploader.upload("https://upload.wikimedia.org/wikipedia/commons/a/ae/Olympic_flag.jpg",
 //   { public_id: "olympic_flag" }, 
 //   function(error, result) {console.log(result); });
-export {uploadOnCloudinary};
+const deleteFromCloudinary = async (fileName) => {
+    try {
+        if (!fileName) {
+            return null
+        }
+        const response = await cloudinary.api.delete_resources([fileName],
+            {
+                type: 'upload',
+                resource_type: 'image'
+            }
+        )
+        console.log(`File ${fileName} has been removed from cloudinary`)
+
+        if (!response) {
+            return null
+        }
+        return response
+    } catch (error) {
+        console.error(error);
+        return null
+    }
+}
+export { uploadOnCloudinary, deleteFromCloudinary };

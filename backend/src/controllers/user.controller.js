@@ -3,7 +3,7 @@ import { sendMail } from "../config/mail.js";
 import { User } from "../models/index.js"
 import { generateOTP } from "../utils/generateOtp.js";
 import { ApiError, ApiResponse } from "../utils/index.js"
-import { uploadOnCloudinary } from "../utils/uploadCloudinary.js";
+import { deleteFromCloudinary, uploadOnCloudinary } from "../utils/uploadCloudinary.js";
 const generateAccessTokenAndRefreshToken = async (userId) => {
     try {
         const user = await User.findById(userId);
@@ -172,4 +172,27 @@ const uploadAvatar =async (req,res,next)=>{
         next(error)
     }
 }
-export { registerUser, loginUser, getUserProfile, forgetPasswordOtpGeneration, resetPassword,uploadAvatar }
+const removeAvatar = async (req,res,next)=>{
+    try {
+        const user =req.user
+        if (!user) {
+            throw new ApiError(401,"Unauthorized access")
+        }
+        const imgName = user?.avatar?.split("/")[7]?.split(".")[0]
+        console.log(imgName);
+        
+        if (!imgName) {
+            throw new ApiError(400,"Image url is not found")
+        }
+        const response = await deleteFromCloudinary(imgName)
+        if (!response) {
+            throw new ApiError(500,"Something went wrong while removing the avatar from the cloudinary")
+        }
+        user.avatar="https://via.placeholder.com/150"
+        await user.save()
+        return res.status(200).send(new ApiResponse(200,{user,response},"Avtar removed successfully"))
+    } catch (error) {
+        next(error)
+    }
+}
+export { registerUser, loginUser, getUserProfile, forgetPasswordOtpGeneration, resetPassword,uploadAvatar,removeAvatar }

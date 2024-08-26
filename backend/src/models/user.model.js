@@ -29,6 +29,7 @@ const userSchema = new mongoose.Schema({
       },
       avatar:{
         type:String,//Cloudinary url
+        default:"https://via.placeholder.com/150"
         // required:true,
       },
       password:{

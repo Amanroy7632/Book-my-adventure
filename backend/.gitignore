@@ -6,10 +6,11 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
-.env
-env
+
 node_modules
 dist
+env
+.env
 dist-ssr
 *.local
 
