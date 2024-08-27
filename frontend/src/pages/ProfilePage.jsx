@@ -162,14 +162,17 @@
 // export default ProfilePage;
 // ye use kiya ja sakta hai 
 import React, { useState } from "react";
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink,Link, Outlet, useLocation } from "react-router-dom";
 import { MdAirplaneTicket, MdSdStorage, MdWallet, MdMenu, MdClose } from "react-icons/md";
 import { BiLaptop, BiInfoCircle, BiUser } from "react-icons/bi";
-import { FaLocationArrow } from "react-icons/fa";
+import { FaChevronRight, FaLocationArrow } from "react-icons/fa";
+import RouterCumb from "../component/routing/RouterCumb";
 
 const ProfilePage = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
+  const location =useLocation()
+  console.log(location.pathname);
+  
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
@@ -190,7 +193,15 @@ const ProfilePage = () => {
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         } md:translate-x-0 transition-transform duration-300 ease-in-out w-3/4 md:w-1/4 h-[86vh] fixed md:relative bg-gray-900 text-white p-4 select-none z-10 md:z-0`}
       >
-        <div className="text-lg font-semibold mb-4">Settings</div>
+        <RouterCumb />
+        {/* <div className="text-lg font-semibold mb-4 flex items-center gap-1">
+        <Link to={"/"}>Home</Link>
+         
+          {location.pathname.split("/").map((path,index)=><div className=" flex items-center gap-1" key={index}>
+            <Link to={path!==location.pathname.split("/")[(location.pathname.split("/").length)-1]?``:path}>{path}</Link>
+            {index<(location.pathname.split("/").length-1) &&<FaChevronRight/>}
+          </div>)}
+          </div> */}
         <ul>
           <NavLink
             to={``} onClick={toggleSidebar}
@@ -235,10 +246,10 @@ const ProfilePage = () => {
             <BiInfoCircle />
             Help
           </li>
-          <li className="absolute bottom-3 mt-10 mb-2 bg-gray-700 p-2 px-3 rounded flex items-center gap-2">
+          <Link to={"/profile"} className="absolute bottom-3 mt-10 mb-2 bg-gray-700 p-2 px-3 rounded flex items-center gap-2">
             <BiUser />
             Profile
-          </li>
+          </Link>
         </ul>
       </div>
 

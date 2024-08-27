@@ -36,7 +36,7 @@ const Header = () => {
             <p className="text-white sm:text-black">Bus Tickets</p>
           </Link>
 
-          <Link className="flex flex-col items-center text-center gap-1 px-2 py-3 rounded-lg group hover:bg-gray-100">
+          <Link to={"/cabs"} className="flex flex-col items-center text-center gap-1 px-2 py-3 rounded-lg group hover:bg-gray-100">
             <svg
               className="group-hover:fill-[#5F4299]"
               width="35"

@@ -22,16 +22,16 @@ export const UserProvider = ({children})=>{
         setAlertMessage("Logout Successfully")
         // alert("Logout Successfully")
     }
+    const fetchUserData =async ()=>{
+        try {
+          const response = await axiosInstance.get("/users/profile")
+        //   console.log(response.data);
+          setCurrentUser(response.data?.data)
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+        }
+      }
     useEffect(()=>{
-        const fetchUserData =async ()=>{
-            try {
-              const response = await axiosInstance.get("/users/profile")
-            //   console.log(response.data);
-              setCurrentUser(response.data?.data)
-            } catch (error) {
-              console.error('Error fetching user data:', error);
-            }
-          }
           fetchUserData()
         //   console.log(currentUser);
     },[])

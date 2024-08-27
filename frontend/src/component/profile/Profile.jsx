@@ -154,7 +154,7 @@ const Profile = () => {
               onClick={openModal}
             />
           {loading&&  <div className="absolute rounded-full top-0 w-full h-full bg-[rgba(0,0,0,0.7)]">
-              <div className=" absolute top-[41%] left-[41%] w-6 h-6 rounded-full border-r-4 border-green-50 animate-spin"></div>
+              <div className=" absolute top-[40%] left-[40%] w-6 h-6 rounded-full border-r-4 border-l-4 border-green-50 animate-spin"></div>
             </div>}
           </div>
           <div className="">

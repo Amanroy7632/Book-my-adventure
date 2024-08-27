@@ -250,7 +250,7 @@ const Trips = () => {
               )}
             </div>
           </div>
-        )):<div className=" p-10 text-2xl text-red-400">No trips record found</div>}
+        )):<div className=" p-10 text-2xl text-red-400">The user don't have any trips yet ..</div>}
       </div>
       {isLoading&& <Spinner/>}
       {alertMessage&&<Alert message={alertMessage} onClose={onCloseHandler}/>}

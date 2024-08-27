@@ -28,6 +28,7 @@ import Landing from "./component/home/Animation/Landing.jsx";
 import ProfilePage from "./pages/ProfilePage.jsx";
 import Trips from "./component/Trips/Trips.jsx";
 import Wallet from "./component/profile/Wallet.jsx";
+import CabRentalPage from "./pages/CabRentalPage.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromChildren(
@@ -62,6 +63,7 @@ const router = createBrowserRouter(
         element={<ProtectedRoute element={<PaymentPage />} />}
       />
       <Route path="/select-bus" element={<SelectBus />} />
+      <Route path="/cabs" element={<CabRentalPage />} />
       <Route path="/a" element={<Landing />} />
       <Route path="/receipt" element={<TicketReceiptPage />} />
       <Route
