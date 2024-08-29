@@ -32,7 +32,7 @@ function BusesPage() {
           </tr>
         </thead>
         <tbody>
-          {isLoading&&<div className=" flex justify-center items-center p-5 mt-5"><Loader/></div>}
+          
           {buses.length>0?buses?.map((bus) => (
             <tr key={bus.id}>
               <td className="p-4 max-sm:p-1">{bus._id?.substring(0,5)}</td>
@@ -51,6 +51,7 @@ function BusesPage() {
           )):!isLoading&&<div className=" text-2xl text-orange-500">Buses data not found...</div>}
         </tbody>
       </table>
+      {isLoading&&<Loader/>}
     </div>
   );
 }

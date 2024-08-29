@@ -5,4 +5,14 @@ import questionAnswerRouter from "./question_answer.routes.js"
 import feedbackRouter from "./feedback.routes.js"
 import ticketRouter from "./ticket.routes.js"
 import contactRouter from "./contact.routes.js"
-export { userRouter, busRouter, routeRouter, questionAnswerRouter, feedbackRouter, ticketRouter, contactRouter }
+import adminRouter from "./admin.routes.js"
+export {
+    userRouter,
+    busRouter,
+    routeRouter,
+    questionAnswerRouter,
+    feedbackRouter,
+    ticketRouter,
+    contactRouter,
+    adminRouter
+}

@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import Loader from "../components/Loader";
 
 function TripsPage() {
   const [trips, setTrips] = useState([]);
-
+  const [loading,setLoading] = useState(true)
   useEffect(() => {
     // Fetch trips data from API
     axios.get("https://book-my-adventure.onrender.com/api/v1/routes/get-all-routes")
       .then((response) => {
         console.log(response.data);
         setTrips(response.data?.data);
-        
+        setLoading(false)
       })
       .catch((error) => {
+        setLoading(false)
         console.error("Error fetching trips:", error);
       });
   }, []);
@@ -69,6 +71,7 @@ function TripsPage() {
           ))}
         </tbody>
       </table>
+      {loading && <Loader/>}
     </div>
   );
 }

@@ -1,6 +1,7 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import DashboardPage from "./pages/DashboardPage";
+// import DashboardPage from "./pages/DashboardPage";
+const DashboardPage = React.lazy(()=>import("./pages/DashboardPage"))
 import BusesPage from "./pages/BusesPage";
 import TripsPage from "./pages/TripsPage";
 import BookingsPage from "./pages/BookingsPage";
@@ -9,6 +10,9 @@ import Navbar from "./components/Navbar";
 import AddTripPage from "./pages/AddTripPage";
 import AdminRoute from "./components/AdminRoute";
 import AddBusPage from "./pages/AddBusPage";
+import Spinner from "../../component/loader/Spinner";
+import Loader from "./components/Loader";
+import UsersPage from "./pages/UsersPage";
 
 function App() {
   return (
@@ -18,7 +22,9 @@ function App() {
           path="/"
           element={
             <AdminRoute>
+              <Suspense fallback={<Loader/>}>
               <DashboardPage />
+              </Suspense>
             </AdminRoute>
           }
         />
@@ -62,6 +68,15 @@ function App() {
             </AdminRoute>
           }
         />
+        <Route
+          path="/users"
+          element={
+            <AdminRoute>
+              <UsersPage/>
+            </AdminRoute>
+          }
+        />
+        <Route path="*" element={<div>404 Page not found </div>}/>
       </Routes>
     </Router>
   );

@@ -8,7 +8,7 @@ const useFetch = (URL,requestOptions={}) =>{
     useEffect(()=>{
         const fetchData = async()=>{
             try {
-                const response = await axios.get(URL,requestOptions)
+                const response = await fetch(URL,requestOptions)
                 if (!response.ok) {
                     throw new Error(`Error: ${response.statusText}`);
                 }

@@ -1,3 +1,35 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+} */
+
+/* ::-webkit-scrollbar {
+    background: red;
+    color: gray;
+    width: 10px;
+} */
+ /* Custom Scrollbar Styling */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f0f0f0; /* Light gray background for the track */
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(20, 51, 69, 0.99); /* Medium gray for the thumb */
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555; /* Darker gray when hovered */
+}
+body{
+    overflow-x: hidden;
+}

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import Loader from "../components/Loader";
 const baseUrl ="https://book-my-adventure.onrender.com/api/v1/ticket"
 function BookingsPage() {
   const [bookings, setBookings] = useState([]);
- 
+  const [loading,setLoading] = useState(true)
   const fetchBusData = async () => {
     try {
       const response = await axios.get(baseUrl+"/tickets/all");
@@ -12,7 +13,9 @@ function BookingsPage() {
         setBookings(response.data?.data)
         // setBuses(response.data?.data || []);
       }
+      setLoading(false)
     } catch (error) {
+      setLoading(false)
       console.error(error);
     }
   };
@@ -71,6 +74,7 @@ function BookingsPage() {
           ))}
         </tbody>
       </table>
+      {loading&& <Loader/>}
     </div>
   );
 }

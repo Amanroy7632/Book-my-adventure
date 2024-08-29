@@ -198,4 +198,19 @@ const removeAvatar = async (req,res,next)=>{
         next(error)
     }
 }
-export { registerUser, loginUser, getUserProfile, forgetPasswordOtpGeneration, resetPassword,uploadAvatar,removeAvatar }
+const getAllUsers = async(req,res,next)=>{
+    try {
+        const users = await User.find({}).select("-password -verificationCode -forgetPasswordCode -lastOtpGenerationTime -refreshToken -__v")
+        return res.status(200).send(new ApiResponse(200,users,"All users data fetched successfully"))
+    } catch (error) {
+        next(error)
+    }
+}
+export { registerUser, 
+         loginUser, 
+         getUserProfile, 
+         forgetPasswordOtpGeneration, 
+         resetPassword,
+         uploadAvatar,
+         removeAvatar,
+         getAllUsers }

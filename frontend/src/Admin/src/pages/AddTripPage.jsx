@@ -114,7 +114,7 @@ function AddTripPage() {
   }, [selectedbusId, buses]);
   return (
     <div className="w-full mx-auto bg-white p-8 max-sm:p-1 rounded-md shadow-md">
-      {loading &&<Loader/> }
+      
       <h1 className="text-2xl font-bold mb-4">Add New Trip</h1>
       <form onSubmit={handleSubmit}>
         <div className=" grid grid-cols-2 gap-4">
@@ -285,6 +285,7 @@ function AddTripPage() {
           </button>
         </div>
       </form>
+      {loading &&<Loader/> }
     </div>
   );
 }
