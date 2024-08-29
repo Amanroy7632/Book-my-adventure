@@ -20,12 +20,12 @@ function Navbar({ toggleSidebar, sidebarOpen }) {
     setOpenProfile(!openProfile)
   };
   return (
-    <nav className=" bg-gray-100 p-4 shadow-md flex justify-between items-center z-40 sticky top-0">
+    <nav className={` bg-gray-100 p-4  shadow-md flex justify-between items-center z-40 sticky top-0`}>
       <div className="text-lg font-bold">Book My Adventure</div>
       <div className=" flex items-center gap-3">
         <button
           onClick={toggleSidebar}
-          className="md:hidden focus:outline-none"
+          className=" focus:outline-none"
         >
           {sidebarOpen ? (
             <AiOutlineClose size={28} />

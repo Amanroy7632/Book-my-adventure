@@ -174,7 +174,7 @@ const Trips = () => {
         setTrips(response.data?.data?.tickets);
         // setAlertMessage("All trips fetched successfully")
       } else {
-        setAlertMessage("Something went wrong, please try again")
+        setAlertMessage({message:"Something went wrong, please try again",type:"error"})
         // alert("Something went wrong,\nplease try again");
       }
       // setTimeout(() => {
@@ -253,7 +253,7 @@ const Trips = () => {
         )):<div className=" p-10 text-2xl text-red-400">The user don't have any trips yet ..</div>}
       </div>
       {isLoading&& <Spinner/>}
-      {alertMessage&&<Alert message={alertMessage} onClose={onCloseHandler}/>}
+      {alertMessage.message&&<Alert message={alertMessage} onClose={onCloseHandler}/>}
     </div>
   );
 };
