@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Loader from "../components/Loader";
+import { BASE_URl } from "../constraints";
 function BusesPage() {
   const [buses, setBuses] = useState([]);
   const [isLoading,setIsLoading] = useState(false)
   useEffect(() => {
     setIsLoading(true)
     // Fetch bus data from API
-    axios.get("https://book-my-adventure.onrender.com/api/v1/bus/admin/bus").then((response) => {
+    axios.get(`${BASE_URl}/bus/admin/bus`).then((response) => {
       console.log(response);
       setBuses(response.data?.data);
       setIsLoading(false)

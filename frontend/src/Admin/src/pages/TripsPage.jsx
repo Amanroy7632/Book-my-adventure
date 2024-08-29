@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Loader from "../components/Loader";
+import { BASE_URl } from "../constraints";
 
 function TripsPage() {
   const [trips, setTrips] = useState([]);
   const [loading,setLoading] = useState(true)
   useEffect(() => {
     // Fetch trips data from API
-    axios.get("https://book-my-adventure.onrender.com/api/v1/routes/get-all-routes")
+    axios.get(`${BASE_URl}/routes/get-all-routes`)
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
         setTrips(response.data?.data);
         setLoading(false)
       })

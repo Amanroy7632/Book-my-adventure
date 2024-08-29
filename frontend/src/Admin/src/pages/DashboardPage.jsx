@@ -10,7 +10,7 @@ function DashboardPage() {
       try {
         const response = await axios.get(`${BASE_URl}/admin/information`);
         if (response.status === 200) {
-          console.log(response.data?.data);
+          // console.log(response.data?.data);
           setDashBoardInfo(response.data?.data);
         }
         setLoading(false);

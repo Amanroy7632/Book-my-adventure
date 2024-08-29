@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Loader from "../components/Loader";
-const baseUrl ="https://book-my-adventure.onrender.com/api/v1/ticket"
+import { BASE_URl } from "../constraints";
+
 function BookingsPage() {
   const [bookings, setBookings] = useState([]);
   const [loading,setLoading] = useState(true)
   const fetchBusData = async () => {
     try {
-      const response = await axios.get(baseUrl+"/tickets/all");
+      const response = await axios.get(BASE_URl+"/tickets/all");
       if (response.status === 200) {
         console.log(response.data?.data);
         setBookings(response.data?.data)

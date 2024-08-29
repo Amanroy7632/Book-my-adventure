@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Loader from "../components/Loader";
+import { BASE_URl } from "../constraints";
 
 function AddBusPage() {
   const [selectedbusId, setSelectedBusId] = useState("");
@@ -53,7 +54,7 @@ function AddBusPage() {
       redirect: "follow"
     };
     
-    fetch("http://localhost:8000/api/v1/bus/register", requestOptions)
+    fetch(`${BASE_URl}/bus/register`, requestOptions)
       .then((response) => response.text())
       .then((result) => console.log(result))
       .catch((error) => console.error(error));

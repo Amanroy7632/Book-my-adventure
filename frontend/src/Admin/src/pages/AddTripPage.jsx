@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Loader from "../components/Loader";
+import { BASE_URl } from "../constraints";
+
 
 function AddTripPage() {
   const [selectedbusId, setSelectedBusId] = useState("");
@@ -44,10 +46,10 @@ function AddTripPage() {
       };
       console.log(data);
       const response = await axios.post(
-        "https://book-my-adventure.onrender.com/api/v1/routes/register",
+        `${BASE_URl}/routes/register`,
         data
       );
-      console.log(response.data);
+      // console.log(response.data);
 
       if (response.status === 200) {
         alert("Route added successfully");
@@ -87,7 +89,7 @@ function AddTripPage() {
 
   const fetchBusData = async () => {
     try {
-      const response = await axios.get("https://book-my-adventure.onrender.com/api/v1/bus/");
+      const response = await axios.get(`${BASE_URl}/bus/`);
       if (response.status === 200) {
         console.log(response.data);
         setBuses(response.data?.data || []);
