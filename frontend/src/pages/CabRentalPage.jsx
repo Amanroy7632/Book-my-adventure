@@ -98,29 +98,45 @@ import { useForm } from "react-hook-form";
 import { MdOutlineConfirmationNumber } from "react-icons/md";
 import { useCurrentUser } from "../context/userContext";
 import Alert from "../component/CustomAlert/Alert";
+import axios from "axios";
+import { BASE_URL } from "../constraints";
+import SpinnerSmall from "../component/loader/SpinnerSmall";
 
 const CabRentalPage = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const {alertMessage,setAlertMessage,onCloseHandler} =useCurrentUser()
   const {register,handleSubmit,reset} = useForm()
+  const [loading,setLoading] = useState(false)
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
-  function onMessageSubmit(data){
+ async function onMessageSubmit(data){
     console.log(data);
     if ([data.email,data.phone,data.name].some(field=>field.trim()==="")) {
       setAlertMessage({message:"All fields are required",type:"error",title:""})
       return;
     }
+    try {
+      setLoading(true)
+      const response = await axios.post(`${BASE_URL}/cabs/contact`,data)
+      if (response.status===200) {
+        setAlertMessage({
+          message:"Thanks for your contacting us",type:"success",title:"Thanks"
+        })
+        reset()
+      }
+      setLoading(false)
+    } catch (error) {
+      setLoading(false)
+      setAlertMessage({message:"Something went wrong"+error.message,type:"error"})
+    }
     // call an api and store the data 
     // setAlertMessage("Congratulations Message submitted successfully")
-    setAlertMessage({
-      message:"Message submitted successfully",
-      title:"Congratulations",
-      type:"success"
-    })
-    reset()
-    
+    // setAlertMessage({
+    //   message:"Message submitted successfully",
+    //   title:"Congratulations",
+    //   type:"success"
+    // })
   }
   return (
     <div className="min-h-screen bg-gray-100 text-gray-800">
@@ -338,8 +354,8 @@ const CabRentalPage = () => {
                   {...register("message")}
                 ></textarea>
               </div>
-              <Button type="submit" className=" bg-blue-900 text-white px-6 py-3 rounded-md hover:bg-blue-800">
-                Submit
+              <Button type="submit" disabled={loading} className=" bg-blue-900 text-white px-6 py-3 rounded-md hover:bg-blue-800">
+                {loading?<div className=" flex items-center gap-2">Sending <SpinnerSmall className=" border-white border-t-2 border-b-2"/> </div>:"Send"}
               </Button>
             </form>
           </div>
