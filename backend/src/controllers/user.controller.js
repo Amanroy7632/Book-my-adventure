@@ -35,6 +35,9 @@ const registerUser = async (req, res, next) => {
         if ([email, password, fullname, phone].some(field => field?.trim() === "")) {
             throw new ApiError(400, "All fields are required")
         }
+        if (phone?.length!==10) {
+            throw new ApiError(403,"Invalid phone number")
+        }
         // check if user is already exist 
         const existingUser = await User.findOne({
             $or: [{ phone }, { email }]

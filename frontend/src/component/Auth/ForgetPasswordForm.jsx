@@ -5,6 +5,8 @@ import axios from "axios";
 import { BASE_URL } from "../../constraints";
 import SpinnerSmall from "../loader/SpinnerSmall";
 import { AiOutlineEye, AiFillEyeInvisible } from "react-icons/ai";
+import { useCurrentUser } from "../../context/userContext";
+import Alert from "../CustomAlert/Alert";
 const ForgetPasswordForm = ({ isActiveForgotPassword, onClose }) => {
   const [forgetFormData, setForgetFormData] = useState({
     email: "",
@@ -12,6 +14,7 @@ const ForgetPasswordForm = ({ isActiveForgotPassword, onClose }) => {
     newPassword: "",
     confirmPassword: "",
   });
+  const {alertMessage,setAlertMessage,onCloseHandler} =useCurrentUser()
   const [freezeEmail, setFreezeEmail] = useState(false);
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -44,6 +47,7 @@ const ForgetPasswordForm = ({ isActiveForgotPassword, onClose }) => {
     ) {
       // alert("All fields are required")
       setMessage({ message: "All fields are required", type: "error" });
+      setAlertMessage({ message: "All fields are required", type:"warning"})
       return;
     }
     if (forgetFormData.newPassword !== forgetFormData.confirmPassword) {
@@ -51,6 +55,7 @@ const ForgetPasswordForm = ({ isActiveForgotPassword, onClose }) => {
         message: "New Password does not match with confirm password",
         type: "error",
       });
+      setAlertMessage({message:"New Password does not match with confirm password",type:"error"})
       // alert("New Password does not match with confirm password")
       return;
     }
@@ -63,6 +68,7 @@ const ForgetPasswordForm = ({ isActiveForgotPassword, onClose }) => {
       if (response.status === 200) {
         console.log(response.data?.data);
         alert("Password reset successfully");
+        setAlertMessage({message:"Password reset successfully" ,type:"success"})
 
         setForgetFormData({
           email: "",
@@ -77,6 +83,7 @@ const ForgetPasswordForm = ({ isActiveForgotPassword, onClose }) => {
       // },2000)
     } catch (error) {
       if(error.code==="ERR_BAD_REQUEST"){
+        setAlertMessage({message:"Invalid verification code",type:"error"})
         setMessage({message:"Invalid verification code",type:"error"})
       }
       setLoading(false)
@@ -128,6 +135,7 @@ const ForgetPasswordForm = ({ isActiveForgotPassword, onClose }) => {
       console.log(error.code);
       if (error.code === "ERR_BAD_REQUEST") {
         setMessage({ message: "Invalid email", type: "error" });
+        setAlertMessage({message: "Email doesn't registered.", type: "error" })
       }
       // alert("Something went wrong" + error);
     }
@@ -177,6 +185,7 @@ const ForgetPasswordForm = ({ isActiveForgotPassword, onClose }) => {
   }, [message]);
   return (
     <div className="flex justify-center flex-col items-center bg-white relative p-4 shadow-md rounded-lg max-w-md w-full mx-auto">
+      {alertMessage.message && <Alert message={alertMessage} onClose={onCloseHandler} />}
       <div className="absolute top-2 right-3 cursor-pointer" onClick={onClose}>
         <MdClose className=" text-xl" />
       </div>

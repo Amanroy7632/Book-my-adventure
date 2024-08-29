@@ -91,21 +91,41 @@
 
 // export default CabRentalPage;
 
-
-
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import { Button, Input } from "../component/commonUi";
+import { FaEnvelope, FaFontAwesome, FaMobile } from "react-icons/fa";
+import { useForm } from "react-hook-form";
+import { MdOutlineConfirmationNumber } from "react-icons/md";
+import { useCurrentUser } from "../context/userContext";
+import Alert from "../component/CustomAlert/Alert";
 
 const CabRentalPage = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+  const {alertMessage,setAlertMessage,onCloseHandler} =useCurrentUser()
+  const {register,handleSubmit,reset} = useForm()
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
-
+  function onMessageSubmit(data){
+    console.log(data);
+    if ([data.email,data.phone,data.name].some(field=>field.trim()==="")) {
+      setAlertMessage({message:"All fields are required",type:"error",title:""})
+      return;
+    }
+    // call an api and store the data 
+    // setAlertMessage("Congratulations Message submitted successfully")
+    setAlertMessage({
+      message:"Message submitted successfully",
+      title:"Congratulations",
+      type:"success"
+    })
+    reset()
+    
+  }
   return (
     <div className="min-h-screen bg-gray-100 text-gray-800">
       {/* Header */}
-      <header className="bg-blue-900 text-white py-4">
+      {/* <header className="bg-blue-900 text-white py-4">
         <div className="container mx-auto flex justify-between items-center">
           <h1 className="text-3xl font-bold">Book My Cab</h1>
           <div className="md:hidden">
@@ -162,34 +182,57 @@ const CabRentalPage = () => {
             </a>
           </nav>
         </div>
-      </header>
+      </header> */}
 
       {/* Hero Section */}
+      {alertMessage.message&&<Alert message={alertMessage} onClose={onCloseHandler} />}
       <section id="home" className="bg-white py-12">
         <div className="container mx-auto text-center">
-          <h2 className="text-4xl font-semibold mb-4">Rent a Cab Anytime, Anywhere</h2>
-          <p className="text-lg mb-6">Choose from a wide range of cabs to suit your needs.</p>
-          <button className="bg-blue-900 text-white px-6 py-3 rounded-md hover:bg-blue-800">Book Now</button>
+          <h2 className="text-4xl font-semibold mb-4">
+            Rent a Cab Anytime, Anywhere
+          </h2>
+          <p className="text-lg mb-6">
+            Choose from a wide range of cabs to suit your needs.
+          </p>
+          <button className="bg-blue-900 text-white px-6 py-3 rounded-md hover:bg-blue-800">
+            Book Now
+          </button>
         </div>
       </section>
 
       {/* Services Section */}
       <section id="services" className="py-12 bg-gray-100">
         <div className="container mx-auto">
-          <h2 className="text-3xl font-semibold text-center mb-8">Our Services</h2>
+          <h2 className="text-3xl font-semibold text-center mb-8">
+            Our Services
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="bg-white p-6 rounded-lg shadow-md">
-              <img src="https://www.internationalairportreview.com/wp-content/uploads/Deepturn_persfoto.webp" alt="airpot" className="w-full h-40 object-cover rounded-md mb-4" />
+              <img
+                src="https://www.internationalairportreview.com/wp-content/uploads/Deepturn_persfoto.webp"
+                alt="airpot"
+                className="w-full h-40 object-cover rounded-md mb-4"
+              />
               <h3 className="text-xl font-bold mb-4">Airport Transfers</h3>
-              <p>Reliable and comfortable airport pick-up and drop-off services.</p>
+              <p>
+                Reliable and comfortable airport pick-up and drop-off services.
+              </p>
             </div>
             <div className="bg-white p-6 rounded-lg shadow-md">
-              <img src="https://ik.imgkit.net/3vlqs5axxjf/TW/ik-seo/uploadedImages/Art/2023/0403/T0403TOOTBUS1_C_HR/Day-tours-bounce-back-in-big-cities-but-recovery-i.jpg?tr=w-780%2Ch-440%2Cfo-auto" alt="airpot" className="w-full h-40 object-cover rounded-md mb-4" />
+              <img
+                src="https://ik.imgkit.net/3vlqs5axxjf/TW/ik-seo/uploadedImages/Art/2023/0403/T0403TOOTBUS1_C_HR/Day-tours-bounce-back-in-big-cities-but-recovery-i.jpg?tr=w-780%2Ch-440%2Cfo-auto"
+                alt="airpot"
+                className="w-full h-40 object-cover rounded-md mb-4"
+              />
               <h3 className="text-xl font-bold mb-4">City Tours</h3>
               <p>Explore the city with our professional chauffeurs.</p>
             </div>
             <div className="bg-white p-6 rounded-lg shadow-md">
-              <img src="https://gos3.ibcdn.com/img-1658318593.jpg" alt="airpot" className="w-full h-40 object-cover rounded-md mb-4" />
+              <img
+                src="https://gos3.ibcdn.com/img-1658318593.jpg"
+                alt="airpot"
+                className="w-full h-40 object-cover rounded-md mb-4"
+              />
               <h3 className="text-xl font-bold mb-4">Hourly Rentals</h3>
               <p>Rent a cab by the hour for your convenience.</p>
             </div>
@@ -203,17 +246,29 @@ const CabRentalPage = () => {
           <h2 className="text-3xl font-semibold text-center mb-8">Our Fleet</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="bg-gray-100 p-6 rounded-lg shadow-md">
-              <img src="https://imgd-ct.aeplcdn.com/664x415/n/cw/ec/131145/s90-exterior-right-front-three-quarter-4.jpeg?isig=0&q=80" alt="Sedan" className="w-full h-40 object-cover rounded-md mb-4" />
+              <img
+                src="https://imgd-ct.aeplcdn.com/664x415/n/cw/ec/131145/s90-exterior-right-front-three-quarter-4.jpeg?isig=0&q=80"
+                alt="Sedan"
+                className="w-full h-40 object-cover rounded-md mb-4"
+              />
               <h3 className="text-xl font-bold mb-2">Sedan</h3>
               <p>Perfect for small groups and business trips.</p>
             </div>
             <div className="bg-gray-100 p-6 rounded-lg shadow-md">
-              <img src="https://imgd.aeplcdn.com/600x337/n/cw/ec/42355/xuv700-exterior-right-front-three-quarter-3.jpeg?isig=0&q=80" alt="SUV" className="w-full h-40 object-cover rounded-md mb-4" />
+              <img
+                src="https://imgd.aeplcdn.com/600x337/n/cw/ec/42355/xuv700-exterior-right-front-three-quarter-3.jpeg?isig=0&q=80"
+                alt="SUV"
+                className="w-full h-40 object-cover rounded-md mb-4"
+              />
               <h3 className="text-xl font-bold mb-2">SUV</h3>
               <p>Ideal for families and off-road adventures.</p>
             </div>
             <div className="bg-gray-100 p-6 rounded-lg shadow-md">
-              <img src="https://imgd.aeplcdn.com/600x337/n/cw/ec/44709/fortuner-exterior-right-front-three-quarter-20.jpeg?isig=0&q=80" alt="Luxury" className="w-full h-40 object-cover rounded-md mb-4" />
+              <img
+                src="https://imgd.aeplcdn.com/600x337/n/cw/ec/44709/fortuner-exterior-right-front-three-quarter-20.jpeg?isig=0&q=80"
+                alt="Luxury"
+                className="w-full h-40 object-cover rounded-md mb-4"
+              />
               <h3 className="text-xl font-bold mb-2">Luxury</h3>
               <p>Experience premium comfort and style.</p>
             </div>
@@ -222,11 +277,72 @@ const CabRentalPage = () => {
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="py-12 bg-blue-900 text-white">
-        <div className="container mx-auto text-center">
-          <h2 className="text-3xl font-semibold mb-6">Get in Touch</h2>
-          <p className="mb-4">Contact us for more information or to book a cab.</p>
-          <button className="bg-white text-blue-900 px-6 py-3 rounded-md hover:bg-gray-300">Contact Us</button>
+      <section id="contact" className="py-12 bg-blue-900 ">
+        <div className=" flex items-center max-sm:flex-col justify-center gap-6 ">
+          <div className="container text-center  w-fit  text-white">
+            <h2 className="text-3xl font-semibold mb-6">Get in Touch</h2>
+            <p className="mb-4">
+              Contact us for more information or to book a cab.
+            </p>
+            <button className="bg-white text-blue-900 px-6 py-3 rounded-md hover:bg-gray-300">
+              Contact Us
+            </button>
+          </div>
+
+          <div className="p-2 relative contact-form-container md:min-w-96 max-sm:w-full bg-white rounded-sm shadow-md shadow-black ">
+            <h2 className=" px-5 text-xl font-semibold mb-2">Send Us Message</h2>
+            <MdOutlineConfirmationNumber className=" absolute top-2 right-2"/>
+            <form action="" onSubmit={handleSubmit(onMessageSubmit)} className=" px-5">
+            <div className=" mb-1">
+                <Input
+                  label="Name"
+                  placeholder="Enter your name"
+                  icon={<FaFontAwesome />}
+                  className="rounded-none"
+                  {...register("name",{
+                      required: true,
+                  })}
+                />
+              </div>
+              <div className=" mb-1">
+                <Input
+                  label="Email"
+                  placeholder="Enter your email"
+                  icon={<FaEnvelope />}
+                  className="rounded-none"
+                  type="email"
+                  {...register("email",{
+                    required:true
+                  })}
+                />
+              </div>
+              
+              <div className=" mb-1">
+                <Input
+                  label="Phone"
+                  placeholder="Enter your phone number"
+                  icon={<FaMobile />}
+                  type="number"
+                  className="rounded-none"
+                  {...register("phone",{
+                    required:true
+                  })}
+                />
+              </div>
+              <div className=" my-3">
+                <textarea
+                  name="message"
+                  id="message"
+                  className=" w-full outline-none text-black px-3 py-2 border"
+                  placeholder="Write something ..."
+                  {...register("message")}
+                ></textarea>
+              </div>
+              <Button type="submit" className=" bg-blue-900 text-white px-6 py-3 rounded-md hover:bg-blue-800">
+                Submit
+              </Button>
+            </form>
+          </div>
         </div>
       </section>
 
@@ -241,18 +357,6 @@ const CabRentalPage = () => {
 };
 
 export default CabRentalPage;
-
-
-
-
-
-
-
-
-
-
-
-
 
 // import React, { useState } from "react";
 // import { Link } from "react-router-dom";
@@ -311,4 +415,3 @@ export default CabRentalPage;
 // };
 
 // export default CabRentalPage;
-

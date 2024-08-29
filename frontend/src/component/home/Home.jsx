@@ -212,12 +212,13 @@ const Home = () => {
     console.log(currentUser);
 
     if (!currentUser) {
-      setAlertMessage("Please Login for any Query");
+      setAlertMessage({message:"Please Login for any Query",type:"info"});
       navigate("/login");
       return;
     }
     if (!data) {
-      alert("Please enter your query..");
+      setAlertMessage({message:"Please enter your query..",type:"warning"});
+      // alert("Please enter your query..");
       return;
     }
     const quesData = {
@@ -232,12 +233,12 @@ const Home = () => {
       );
       console.log(response);
       if (response.status === 201) {
-        setAlertMessage("Your Query has been submitted successfully");
+        setAlertMessage({message:"Your Query has been submitted successfully",type:"success"});
         reset();
       }
     } catch (error) {
       // alert("Something went wrong: " + error.message)
-      setAlertMessage("Something went wrong " + error.message);
+      setAlertMessage({message:"Something went wrong"+error.message, type:"error"});
 
       console.log("Error" + error.message);
     } finally {
@@ -645,7 +646,7 @@ const Home = () => {
             </Button>
           </form>
         </div>
-        {alertMessage && (
+        {alertMessage.message && (
           <Alert message={alertMessage} onClose={onCloseHandler} />
         )}
       </section>

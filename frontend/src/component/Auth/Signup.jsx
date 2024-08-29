@@ -13,16 +13,17 @@ import {
 } from "react-icons/ai";
 import Logo from "../logo/Logo.jsx";
 import axios from "axios";
-import Alert from "../CustomAlert/Alert.jsx"
+import Alert from "../CustomAlert/Alert.jsx";
 import { useCurrentUser } from "../../context/userContext.jsx";
 import Spinner from "../loader/Spinner.jsx";
 import { BASE_URL } from "../../constraints.js";
 function Signup() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const { handleSubmit, register, reset } = useForm();
-  const {alertMessage,setAlertMessage,onCloseHandler,setCurrentUser} = useCurrentUser()
-  const [isLoading, setIsLoading] = useState(false)
-  const navigate = useNavigate()
+  const { alertMessage, setAlertMessage, onCloseHandler, setCurrentUser } =
+    useCurrentUser();
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
   // const handleLogin = async (userInfo) => {
   //   try {
   //     const response = await axios.post(
@@ -42,7 +43,7 @@ function Signup() {
   //       { expires: 7 },
   //       { httpOnly: true, secure: true }
   //     );
-  //     setCurrentUser(user)      
+  //     setCurrentUser(user)
   //     setAlertMessage("Login successful");
   //     alert("Login successful");
   //     navigate("/");
@@ -53,15 +54,12 @@ function Signup() {
   //     setAlertMessage("");
   //   }
   // };
-  const createUser = async(userInfo) => {
+  const createUser = async (userInfo) => {
     // console.log(userInfo);
     try {
       // throw new Error("Not implemented");
-      setIsLoading(true)
-      const response = await axios.post(
-        `${BASE_URL}/users/register`,
-        userInfo
-      );
+      setIsLoading(true);
+      const response = await axios.post(`${BASE_URL}/users/register`, userInfo);
       const { user } = response.data.data;
       // Cookies.set(
       //   "accessToken",
@@ -75,23 +73,41 @@ function Signup() {
       //   { expires: 7 },
       //   { httpOnly: true, secure: true }
       // );
-      // setCurrentUser(user)      
+      // setCurrentUser(user)
       // setAlertMessage("Login successful");
       // console.log(user);
-      
+
       if (!user) {
-        alert("User registration failed");
-        setAlertMessage("User registration failed");
+        // alert("User registration failed");
+        setAlertMessage({ message: "User registration failed", type: "error" });
       }
       // alert("User registered successful");
-      setAlertMessage("User registeredn successful.")
-      setIsLoading(false)
+      setAlertMessage({ message: "User registered successful." });
+      setIsLoading(false);
       navigate("/login");
     } catch (error) {
-      setAlertMessage("User Registration failed \n Try again later");
-      setIsLoading(false)
+      if (error.response?.data?.statusCode === 409) {
+        setAlertMessage({
+          message: "User with email or phone already exists",
+          type: "error",
+          title: "Registration Failed",
+        });
+      } 
+      else if (error.response?.data?.statusCode === 403) {
+        setAlertMessage({
+          message: "User with email or phone already exists",
+          type: "error",
+          title: "Registration Failed",
+        });
+      }else {
+        setAlertMessage({
+          message: "User Registration failed. Try again later",
+          type: "error",
+        });
+      }
+      setIsLoading(false);
       console.error("Login error:", error);
-    } 
+    }
   };
   const passwordToggleHandler = () => {
     setIsPasswordVisible(!isPasswordVisible);
@@ -104,7 +120,7 @@ function Signup() {
         <div className=" mb-2 flex justify-center">
           <Logo />
         </div>
-        
+
         <h2 className=" text-center text-2xl font-bold leading-tight">
           Sign up to create account
         </h2>
@@ -197,8 +213,10 @@ function Signup() {
           </div>
         </form>
       </div>
-      {isLoading && <Spinner/>}
-      {alertMessage && <Alert message={alertMessage} onClose={onCloseHandler} />}
+      {isLoading && <Spinner />}
+      {alertMessage.message && (
+        <Alert message={alertMessage} onClose={onCloseHandler} />
+      )}
     </div>
   );
 }

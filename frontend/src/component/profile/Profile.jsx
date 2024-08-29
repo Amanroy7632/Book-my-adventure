@@ -40,7 +40,10 @@ const Profile = () => {
         filePath
       );
       if (response.status === 200) {
-        setAlertMessage("Avtar uploaded successfully");
+        setAlertMessage({
+          message:"Avtar uploaded successfully",
+          type:"success"
+        });
         console.log(response.data);
         setCurrentUser(response.data?.data);
       }
@@ -49,7 +52,8 @@ const Profile = () => {
     } catch (error) {
       console.log(error);
       setLoading(false);
-      alertMessage("Error uploading avatar: " + error.message);
+      // alertMessage("Error uploading avatar: " + error.message);
+      alertMessage({message:"Error uploading avatar",type:"error"});
     }
   };
 
@@ -116,14 +120,22 @@ const Profile = () => {
       setLoading(true);
       if (!currentUser.avatar?.split("/")[7]?.split(".")[0]) {
         setLoading(false);
-        setAlertMessage("Avtar is not uploaded");
+        setAlertMessage({
+          message:"Avtar is not uploaded",
+          type:"info",
+          title:"Wrong Url"
+        });
         closeModal();
         return;
       }
       const response = await axiosInstance.delete(`/users/`);
       if (response.status === 200) {
         // console.log(response.data?.data);
-        setAlertMessage("Avatar removed successfully");
+        setAlertMessage({
+          message:"Avatar removed successfully",
+          title:"",
+          type:"success",
+        });
         setCurrentUser({
           ...currentUser,
           avatar: "https://via.placeholder.com/150",
@@ -132,7 +144,12 @@ const Profile = () => {
       setLoading(false);
     } catch (error) {
       setLoading(false);
-      setAlertMessage("Failed to remove the avatar " + error.message);
+      // setAlertMessage("Failed to remove the avatar " + error.message);
+      setAlertMessage({
+        message: "Failed to remove the avatar ",
+        type: "error",
+        title: error.message,
+      });
     } finally {
       closeModal();
     }
@@ -140,8 +157,11 @@ const Profile = () => {
   return (
     <>
       {loading && <Spinner message={loadingMessage} />}
-      {alertMessage && (
-        <Alert message={alertMessage} onClose={onCloseHandler} />
+      {alertMessage.message && (
+        <Alert
+          message={alertMessage}
+          onClose={onCloseHandler}
+        />
       )}
       <div className="flex-1 bg-gray-800 text-white p-6">
         <div className="flex flex-col gap-4">
@@ -153,9 +173,11 @@ const Profile = () => {
               onError={handleProfileImageError}
               onClick={openModal}
             />
-          {loading&&  <div className="absolute rounded-full top-0 w-full h-full bg-[rgba(0,0,0,0.7)]">
-              <div className=" absolute top-[40%] left-[40%] w-6 h-6 rounded-full border-r-4 border-l-4 border-green-50 animate-spin"></div>
-            </div>}
+            {loading && (
+              <div className="absolute rounded-full top-0 w-full h-full bg-[rgba(0,0,0,0.7)]">
+                <div className=" absolute top-[40%] left-[40%] w-6 h-6 rounded-full border-r-4 border-l-4 border-green-50 animate-spin"></div>
+              </div>
+            )}
           </div>
           <div className="">
             <div className="flex items-center mt-2  gap-10">

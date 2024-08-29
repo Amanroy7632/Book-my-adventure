@@ -21,12 +21,12 @@ function Login() {
   const { handleSubmit, register, reset } = useForm();
   const [isLoading, setIsLoading] = useState(false);
   const [isActiveForgotPassword, setIsActiveForgotPassword] = useState(false);
-  const [openModal,setOpenModal] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
   const [forgetFormData, setForgetFormData] = useState({
-    email:"",
-    otp:"",
-    newPassword:"",
-    confirmPassword:""
+    email: "",
+    otp: "",
+    newPassword: "",
+    confirmPassword: "",
   });
   const {
     currentUser,
@@ -62,18 +62,26 @@ function Login() {
       setTimeout(() => {
         setIsLoading(false);
       }, 1000);
-      setAlertMessage("Welcome " + user.fullname);
+      setAlertMessage({
+        message: user.fullname,
+        type: "success",
+        title: "Welcome",
+      });
       // alert("Login successful");
       navigate("/");
     } catch (error) {
       if (error.code === "ERR_NETWORK") {
         // alert("Login failed \nInternet connection not found");
-        setAlertMessage("Login failed. Internet connection not found");
+        setAlertMessage({
+          message: "Login failed. Internet connection not found",
+          type: "error",
+          title: "No Internet Connection",
+        });
       }
       if (error.response?.data?.statusCode === 404) {
-        setAlertMessage("Invalid Username ! ");
+        setAlertMessage({message:"Invalid Username ! ",type:"warning",title:"Oops"});
       } else if (error.code === "ERR_BAD_REQUEST") {
-        setAlertMessage("Invalid Password");
+        setAlertMessage({message:"Invalid Password",type:"warning"});
         setIsActiveForgotPassword(!isActiveForgotPassword);
       }
       setIsLoading(false);
@@ -82,17 +90,17 @@ function Login() {
       // setAlertMessage("");
     }
   };
- 
+
   const passwordToggleHandler = () => {
     setIsPasswordVisible(!isPasswordVisible);
   };
   const handleForgotPasswordToggle = () => {
     // setIsActiveForgotPassword(!isActiveForgotPassword);
-    setOpenModal(!openModal)
+    setOpenModal(!openModal);
   };
   const handleForgotPassword = async (userInfo) => {
     console.log("working or not");
-    
+
     console.log(userInfo);
   };
   useEffect(() => {
@@ -179,14 +187,16 @@ function Login() {
                 required: true,
               })}
             />
-            {isActiveForgotPassword&&<div className=" flex items-end justify-end">
-              <Link
-                onClick={handleForgotPasswordToggle}
-                className="flex items-center gap-2 hover:text-blue-500 hover:underline duration-300"
-              >
-                <MdKey /> Forget password
-              </Link>
-            </div>}
+            {isActiveForgotPassword && (
+              <div className=" flex items-end justify-end">
+                <Link
+                  onClick={handleForgotPasswordToggle}
+                  className="flex items-center gap-2 hover:text-blue-500 hover:underline duration-300"
+                >
+                  <MdKey /> Forget password
+                </Link>
+              </div>
+            )}
             <Button type="submit" className=" w-full">
               Log in
             </Button>
@@ -207,10 +217,10 @@ function Login() {
              
             </form>
           </div> */}
-          <ForgetPasswordForm onClose={handleForgotPasswordToggle}/>
+          <ForgetPasswordForm onClose={handleForgotPasswordToggle} />
         </Modal>
       )}
-      {alertMessage && (
+      {alertMessage.message && (
         <Alert message={alertMessage} onClose={onCloseHandler} />
       )}
     </div>
