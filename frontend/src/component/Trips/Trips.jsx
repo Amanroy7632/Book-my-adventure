@@ -174,7 +174,7 @@ const Trips = () => {
         setTrips(response.data?.data?.tickets);
         // setAlertMessage("All trips fetched successfully")
       } else {
-        setAlertMessage({message:"Something went wrong, please try again",type:"error"})
+        setAlertMessage({message:"Something went wrong, please try again",type:"error  "})
         // alert("Something went wrong,\nplease try again");
       }
       // setTimeout(() => {

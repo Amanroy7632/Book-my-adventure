@@ -15,7 +15,7 @@ const Header = () => {
     navigate("/profile")
   }
   return (
-    <nav className="px-4 md:px-14 py-1 md:py-3 flex text-xs md:text-base font-normal items-center justify-between sticky top-0 bg-white z-20 drop-shadow-xl">
+    <nav className="px-4 md:px-14 py-1 md:py-3 flex text-xs md:text-base font-normal items-center justify-between sticky top-0 bg-white z-50 drop-shadow-xl">
       <div className="flex gap-2 md:gap-16 items-center w-full justify-between md:w-auto md:justify-start">
         <Logo/>
         <div className="h-6 w-[1px] bg-gray-200"></div>

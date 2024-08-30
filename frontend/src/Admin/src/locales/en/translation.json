@@ -1,0 +1,27 @@
+{
+  "title": "Book My Adventure",
+  "busCount": "Total Buses",
+  "tripCount": "Total Trips",
+  "bookingCount": "Total Bookings",
+  "userCount": "Users",
+  "bus":"Buses",
+  "hello":"Hello",
+  "welcome": "Welcome",
+  "home": {
+    "title": "Home Page",
+    "description": "This is the home page of our application."
+  },
+  "header": {
+    "login": "Login",
+    "logout": "Logout"
+  },
+  "footer": {
+    "contact": "Contact Us",
+    "about": "About Us",
+    "privacy": "Privacy Policy"
+  },
+  "errors": {
+    "404": "Page not found",
+    "500": "Internal server error"
+  }
+}

@@ -91,56 +91,22 @@
 
 // export default CabRentalPage;
 
-import React, { useState } from "react";
-import { Button, Input } from "../component/commonUi";
-import { FaEnvelope, FaFontAwesome, FaMobile } from "react-icons/fa";
-import { useForm } from "react-hook-form";
-import { MdOutlineConfirmationNumber } from "react-icons/md";
+import React, { useEffect, useState } from "react";
 import { useCurrentUser } from "../context/userContext";
 import Alert from "../component/CustomAlert/Alert";
-import axios from "axios";
-import { BASE_URL } from "../constraints";
-import SpinnerSmall from "../component/loader/SpinnerSmall";
+import ContactSection from "../component/Cab/ContactSection";
+import ScrollToTop from "../component/commonUi/ScrollToTop";
 
 const CabRentalPage = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const {alertMessage,setAlertMessage,onCloseHandler} =useCurrentUser()
-  const {register,handleSubmit,reset} = useForm()
-  const [loading,setLoading] = useState(false)
+  const {alertMessage,setAlertMessage,onCloseHandler,isScrollTopVisible} =useCurrentUser()
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
- async function onMessageSubmit(data){
-    console.log(data);
-    if ([data.email,data.phone,data.name].some(field=>field.trim()==="")) {
-      setAlertMessage({message:"All fields are required",type:"error",title:""})
-      return;
-    }
-    try {
-      setLoading(true)
-      const response = await axios.post(`${BASE_URL}/cabs/contact`,data)
-      if (response.status===200) {
-        setAlertMessage({
-          message:"Thanks for your contacting us",type:"success",title:"Thanks"
-        })
-        reset()
-      }
-      setLoading(false)
-    } catch (error) {
-      setLoading(false)
-      setAlertMessage({message:"Something went wrong"+error.message,type:"error"})
-    }
-    // call an api and store the data 
-    // setAlertMessage("Congratulations Message submitted successfully")
-    // setAlertMessage({
-    //   message:"Message submitted successfully",
-    //   title:"Congratulations",
-    //   type:"success"
-    // })
-  }
   return (
     <div className="min-h-screen bg-gray-100 text-gray-800">
       {/* Header */}
+      {isScrollTopVisible&&<ScrollToTop/>}
       {/* <header className="bg-blue-900 text-white py-4">
         <div className="container mx-auto flex justify-between items-center">
           <h1 className="text-3xl font-bold">Book My Cab</h1>
@@ -293,7 +259,8 @@ const CabRentalPage = () => {
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="py-12 bg-blue-900 ">
+      <ContactSection/>
+      {/* <section id="contact" className="py-12 bg-blue-900 ">
         <div className=" flex items-center max-sm:flex-col justify-center gap-6 ">
           <div className="container text-center  w-fit  text-white">
             <h2 className="text-3xl font-semibold mb-6">Get in Touch</h2>
@@ -360,7 +327,7 @@ const CabRentalPage = () => {
             </form>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Footer */}
       {/* <footer className="bg-gray-800 text-gray-400 py-6">

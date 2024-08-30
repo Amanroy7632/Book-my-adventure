@@ -17,6 +17,8 @@ import Alert from "../CustomAlert/Alert.jsx";
 import LoadingAnimation from "./Animation/LandingPageAnimation.jsx";
 import axios from "axios";
 import { BASE_URL } from "../../constraints.js";
+import ScrollToTop from "../commonUi/ScrollToTop.jsx";
+import Spinner from "../loader/Spinner.jsx";
 const offerCardDetails = [
   {
     id: 1,
@@ -119,6 +121,7 @@ const Home = () => {
   const [startDate, setStartDate] = useState(new Date());
   const [fromLocation, setFromLocation] = useState("");
   const [toLocation, setToLocation] = useState("");
+  const { isScrollTopVisible } = useCurrentUser();
   // const [modelType,setmodelType] = useState<"from"|"to"|"">("")
   const [modelType, setModelType] = useState("from");
   const fromModalRef = useRef(null);
@@ -132,9 +135,7 @@ const Home = () => {
   const navigate = useNavigate();
   const fetchAllRoutes = async () => {
     try {
-      const response = await axios.get(
-        `${BASE_URL}/routes/get-all-routes`
-      );
+      const response = await axios.get(`${BASE_URL}/routes/get-all-routes`);
       if (response.status === 200) {
         setRoutes(response.data?.data);
       }
@@ -212,12 +213,15 @@ const Home = () => {
     console.log(currentUser);
 
     if (!currentUser) {
-      setAlertMessage({message:"Please Login for any Query",type:"info"});
+      setAlertMessage({ message: "Please Login for any Query", type: "info" });
       navigate("/login");
       return;
     }
     if (!data) {
-      setAlertMessage({message:"Please enter your query..",type:"warning"});
+      setAlertMessage({
+        message: "Please enter your query..",
+        type: "warning",
+      });
       // alert("Please enter your query..");
       return;
     }
@@ -233,12 +237,18 @@ const Home = () => {
       );
       console.log(response);
       if (response.status === 201) {
-        setAlertMessage({message:"Your Query has been submitted successfully",type:"success"});
+        setAlertMessage({
+          message: "Your Query has been submitted successfully",
+          type: "success",
+        });
         reset();
       }
     } catch (error) {
       // alert("Something went wrong: " + error.message)
-      setAlertMessage({message:"Something went wrong"+error.message, type:"error"});
+      setAlertMessage({
+        message: "Something went wrong" + error.message,
+        type: "error",
+      });
 
       console.log("Error" + error.message);
     } finally {
@@ -247,7 +257,7 @@ const Home = () => {
       }, 500);
     }
   };
-  const { currentUser, alertMessage, setAlertMessage,onCloseHandler } =
+  const { currentUser, alertMessage, setAlertMessage, onCloseHandler } =
     useCurrentUser();
   useEffect(() => {
     if (openLocationModel) {
@@ -649,6 +659,7 @@ const Home = () => {
         {alertMessage.message && (
           <Alert message={alertMessage} onClose={onCloseHandler} />
         )}
+        {isScrollTopVisible && <ScrollToTop/>}
       </section>
     </>
   );

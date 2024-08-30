@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Loader from "../components/Loader";
+import Spinner from "../components/loader/Spinner";
 import { BASE_URl } from "../constraints";
+import { useTranslation } from "react-i18next";
 function BusesPage() {
   const [buses, setBuses] = useState([]);
   const [isLoading,setIsLoading] = useState(false)
+  const {t} =useTranslation()
   useEffect(() => {
     setIsLoading(true)
     // Fetch bus data from API
@@ -19,9 +22,9 @@ function BusesPage() {
   }, []);
 
   return (
-    <div className=" overflow-x-scroll">
-      <h1 className="text-2xl font-bold mb-4">Buses</h1>
-
+    <div className=" overflow-x-scroll ">
+      {isLoading&&<Spinner/>}
+      <h1 className="text-2xl font-bold mb-4">{t("bus")}</h1>
       <table className="w-full bg-white rounded-md shadow-md">
         <thead>
           <tr>
@@ -52,7 +55,7 @@ function BusesPage() {
           )):!isLoading&&<div className=" text-2xl text-orange-500">Buses data not found...</div>}
         </tbody>
       </table>
-      {isLoading&&<Loader/>}
+      {/* {isLoading&&<Spinner/>} */}
     </div>
   );
 }

@@ -2,15 +2,16 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Loader from "../components/Loader";
 import { BASE_URl } from "../constraints";
+import Spinner from "../components/loader/Spinner";
 
 function BookingsPage() {
   const [bookings, setBookings] = useState([]);
   const [loading,setLoading] = useState(true)
   const fetchBusData = async () => {
     try {
-      const response = await axios.get(BASE_URl+"/tickets/all");
+      const response = await axios.get(`${BASE_URl}/ticket/tickets/all`);
       if (response.status === 200) {
-        console.log(response.data?.data);
+        // console.log(response.data?.data);
         setBookings(response.data?.data)
         // setBuses(response.data?.data || []);
       }
@@ -26,7 +27,7 @@ function BookingsPage() {
 
   const handleDelete = (bookingId) => {
     // Call API to delete booking
-    axios.delete(baseUrl+`/${bookingId}`)
+    axios.delete(BASE_URl+`/${bookingId}`)
       .then(() => {
         // Remove deleted booking from state
         setBookings((prevBookings) => 
@@ -76,6 +77,7 @@ function BookingsPage() {
         </tbody>
       </table>
       {loading&& <Loader/>}
+      {/* {loading && <Spinner/>} */}
     </div>
   );
 }

@@ -150,7 +150,7 @@ function Login() {
             Sign Up
           </Link>
         </p>
-        {isLoading && <Spinner />}
+        {isLoading && <Spinner message="Logging in..." />}
         {/* {errorMessage && <p className=" text-red-600 mt-8 text-center" >{errorMessage}</p>} */}
         <form onSubmit={handleSubmit(handleLogin)} className=" mt-8 ">
           <div className=" space-y-5">

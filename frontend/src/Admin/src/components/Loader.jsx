@@ -1,9 +1,11 @@
 import React from "react";
 import "./loader.css";
+import Spinner from "./loader/Spinner";
 const Loader = () => {
   return (
     <div className=" w-[70vw] h-[80vh] flex flex-col gap-3 items-center justify-center">
-      <div className=" w-10 h-10 border-r-4 rounded-full border-l-4 animate-spin border-black"></div>
+      {/* <div className=" w-10 h-10 border-r-4 rounded-full border-l-4 animate-spin border-black"></div> */}
+      <Spinner/>
       <p className=" uppercase space-x-2 text-xl">Loading ...</p>
     </div>
   );

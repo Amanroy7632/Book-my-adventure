@@ -5,12 +5,9 @@ const DashboardPage = React.lazy(()=>import("./pages/DashboardPage"))
 import BusesPage from "./pages/BusesPage";
 import TripsPage from "./pages/TripsPage";
 import BookingsPage from "./pages/BookingsPage";
-import Sidebar from "./components/Sidebar";
-import Navbar from "./components/Navbar";
 import AddTripPage from "./pages/AddTripPage";
 import AdminRoute from "./components/AdminRoute";
 import AddBusPage from "./pages/AddBusPage";
-import Spinner from "../../component/loader/Spinner";
 import Loader from "./components/Loader";
 import UsersPage from "./pages/UsersPage";
 

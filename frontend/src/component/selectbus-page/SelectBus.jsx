@@ -8,20 +8,23 @@ import BusBox from "./right/bus-box/BusBox.jsx";
 // import BusBottom from "./right/bus-book/BusBottom.jsx";
 import { useLocation } from "react-router-dom";
 import useFetch from "../../hooks";
+import ScrollToTop from "../commonUi/ScrollToTop.jsx";
+import { useCurrentUser } from "../../context/userContext.jsx";
+import { BASE_URL } from "../../constraints.js";
 const SelectBus = () => {
   const useQuery = ()=>{
     return new URLSearchParams(useLocation().search)
   }
+  const {isScrollTopVisible} = useCurrentUser()
   const query =useQuery()
-  // const [bus,setBus] = useState({})
-  const URL=`http://localhost:8000/api/v1/bus/709670`
+  
     const requestOptions = {
       method:"GET",
       "Content-Type": "application/json"
     }
-  const urlforBus =`https://book-my-adventure.onrender.com/api/v1/routes/?departureLocation=${query.get("departure")}&arrivalLocation=${query.get("arrival")}&date=${query.get("date")}`
+  const urlforBus =`${BASE_URL}/routes/?departureLocation=${query.get("departure")}&arrivalLocation=${query.get("arrival")}&date=${query.get("date")}`
   const {loading,errorMessage,data} = useFetch(urlforBus,requestOptions)  
-  console.log(data);
+  // console.log(data);
   
   const onFilterChange =(filter,value)=>{
 
@@ -38,6 +41,7 @@ const SelectBus = () => {
             </div>
         </Right>
       </div>
+      {isScrollTopVisible && <ScrollToTop/>}
     </div>
   );
 };

@@ -30,10 +30,45 @@ function AddBusPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
     
+    try {
+      setLoading(true)
+      const myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
+      const requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: JSON.stringify(formData),
+        redirect: "follow",
+      };
+      const response = await fetch(`${BASE_URl}/bus/register`, requestOptions)
+      const data = await response.json()
+      if (data.statusCode===201 && data.message==="success") {
+        
+        console.log(data);
+        alert("Bus Added successfully")
+        setFormData({
+          totalSeat: "",
+          busname: "",
+          busno: "",
+          busType: "",
+          owner: "",
+          wifi: false,
+          waterBottle: false,
+          chargingPorts: false,
+          movie: false,
+          blanket: false,
+        })
+      }
+      setLoading(false)
+
+    } catch (error) {
+      setLoading(false)
+      alert("Something went wrong"+error.message)
+      console.error(error);
+      
+    }
+
     // const raw = JSON.stringify({
     //   "busno": "768981",
     //   "busname": "NagpurExpress",
@@ -46,29 +81,13 @@ function AddBusPage() {
     //   "movie": false,
     //   "blanket": true
     // });
+
+   
+
     
-    const requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: JSON.stringify(formData),
-      redirect: "follow"
-    };
-    
-    fetch(`${BASE_URl}/bus/register`, requestOptions)
-      .then((response) => response.text())
-      .then((result) => console.log(result))
-      .catch((error) => console.error(error));
-
-
-
-
-
-
-
-
-
-
-
+      // .then((response) => response.text())
+      // .then((result) => console.log(result))
+      // .catch((error) => console.error(error));
 
     console.log(formData);
 
@@ -130,9 +149,9 @@ function AddBusPage() {
   // }, [selectedbusId, buses]);
 
   return (
-    <div className="w-full mx-auto bg-white p-8 max-sm:p-1 rounded-md shadow-md">
-      {loading && <Loader />}
-      <h1 className="text-2xl font-bold mb-4">Add New Trip</h1>
+    <div className="w-full mx-auto bg-white p-8 max-sm:p-1 rounded-md shadow-md relative">
+      {loading && <div className=" absolute top-0 left-0 bg-[rgb(0,0,0,0.3)] w-full z-30"><Loader /></div> }
+      <h1 className="text-2xl font-bold mb-4">Add New Bus</h1>
       <form onSubmit={handleSubmit}>
         <div className="grid grid-cols-2 gap-4">
           <div className="mb-4">

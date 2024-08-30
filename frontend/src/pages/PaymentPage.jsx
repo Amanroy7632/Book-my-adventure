@@ -1,11 +1,14 @@
 import React from "react";
 import "./paymentPage.css"
 import { useLocation } from "react-router-dom";
+import { useCurrentUser } from "../context/userContext";
+import ScrollToTop from "../component/commonUi/ScrollToTop";
 function PaymentPage() {
     const useQuery = ()=>{
         return new URLSearchParams(useLocation().search)
     }
     const query = useQuery()
+    const {isScrollTopVisible} = useCurrentUser()
   return (
     <section className=" max-md:flex-col max-md:mx-[1%] max-md:items-center text-[#4a4a4a] break-words font-[400] flex justify-between items-start mx-[3%] my-[5%]">
       <div className=" payment-container-left w-[55%] max-md:w-full p-2 flex flex-col ">
@@ -200,6 +203,7 @@ function PaymentPage() {
           <img className="payment_banner_icon_img" src="https://s3.rdbuz.com/Images/webplatform/Common/Payment/verisign-secured.png" alt=""/>
         </div>
       </div>
+      {isScrollTopVisible&& <ScrollToTop/>}
     </section>
   );
 }

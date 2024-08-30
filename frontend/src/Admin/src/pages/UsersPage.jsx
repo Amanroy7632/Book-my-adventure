@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { BASE_URl } from '../constraints';
-import Loader from '../components/Loader';
+import Spinner from '../components/loader/Spinner';
 
 const UsersPage = () => {
   const [loading,setLoading] = useState(true)
@@ -27,12 +27,12 @@ useEffect(()=>{
 
   return (
     <div className="min-h-[90vh] bg-gray-100 text-gray-800 ">
-        
-      <div className="container mx-auto">
+        {loading&&<Spinner/>}
+      {!loading&&<div className="container mx-auto">
         {/* <h1 className="text-3xl font-bold mb-6 text-center">User Information</h1> */}
-        <div className="overflow-x-auto bg-white shadow-md rounded-lg p-6 overflow-y-scroll h-[85vh]">
+        <div className="overflow-x-auto relative bg-white shadow-md rounded-lg px-6 overflow-y-scroll h-[85vh]">
           <table className="w-full table-auto">
-            <thead>
+            <thead className=' sticky top-0'>
               <tr className="bg-blue-900 text-white">
                 <th className="p-4 text-left">Avatar</th>
                 <th className="p-4 text-left">Full Name</th>
@@ -70,8 +70,8 @@ useEffect(()=>{
             </tbody>
           </table>
         </div>
-      </div>
-      {loading && <Loader/>}
+      </div>}
+      {/* {loading && <Loader/>} */}
     </div>
   );
 };

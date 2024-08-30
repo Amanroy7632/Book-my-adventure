@@ -6,7 +6,7 @@ const Input = React.forwardRef(function Input(
 ) {
   const id = useId();
   return (
-    <div className="w-full">
+    <div className="w-full ">
       <div className="flex items-center gap-1 select-none font-semibold">
         {icon && <span>{icon}</span>}
         {label && (
