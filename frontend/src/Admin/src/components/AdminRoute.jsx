@@ -5,7 +5,6 @@ import Navbar from "./Navbar";
 import { useAuthContext } from "../context/userContext";
 import { Navigate } from "react-router-dom";
 import {
-
   FaRoute,
   FaUserFriends,
 } from "react-icons/fa";
