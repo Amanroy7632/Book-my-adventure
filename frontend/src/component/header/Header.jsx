@@ -83,7 +83,8 @@ const Header = () => {
         {
           currentUser&& currentUser._id?<button onClick={setUserNavHandler} className=" flex flex-col justify-center items-center">
           <FaUser className=" text-blue-950"/>
-          <p>{currentUser?.fullname}</p>
+          <span className=" lg:hidden md:block">{currentUser?.fullname?.split(" ")[0]}</span>
+          <p className="hidden lg:block">{currentUser?.fullname} </p>
           <FaAngleDown/>
       </button>:<Link to={"/login"} className=" flex items-center gap-1 hover:bg-gray-200 rounded-md p-1"> <GrLogin /> Login</Link>
         }
