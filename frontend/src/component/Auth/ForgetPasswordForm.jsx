@@ -186,9 +186,9 @@ const ForgetPasswordForm = ({ isActiveForgotPassword, onClose }) => {
   return (
     <div className="flex justify-center flex-col items-center bg-white relative p-4 shadow-md rounded-lg max-w-md w-full mx-auto">
       {alertMessage.message && <Alert message={alertMessage} onClose={onCloseHandler} />}
-      <div className="absolute top-2 right-3 cursor-pointer" onClick={onClose}>
+      {/* <div className="absolute top-2 right-3 cursor-pointer" onClick={onClose}>
         <MdClose className=" text-xl" />
-      </div>
+      </div> */}
       <form onSubmit={handleForgotPassword} className="w-full space-y-4">
         <div className=" heading font-semibold font-sans">
           Password Recovery

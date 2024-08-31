@@ -19,6 +19,7 @@ import axios from "axios";
 import { BASE_URL } from "../../constraints.js";
 import ScrollToTop from "../commonUi/ScrollToTop.jsx";
 import Spinner from "../loader/Spinner.jsx";
+import Modal from "../modal/Modal.jsx";
 const offerCardDetails = [
   {
     id: 1,
@@ -133,11 +134,36 @@ const Home = () => {
   const [routes, setRoutes] = useState([]);
   const [showRoute, setShowRoute] = useState(false);
   const navigate = useNavigate();
+  const removeDuplicateRoute = (routes) => {
+    const uniqueRoutes = [];
+    const routeMap = new Map();
+  
+    routes.forEach((route) => {
+      const routeKey = `${route.departureLocation}-${route.arrivalLocation}`;
+      
+      if (routeMap.has(routeKey)) {
+        routeMap.get(routeKey).count += 1;
+      } else {
+        routeMap.set(routeKey, { ...route, count: 1 });
+      }
+    });
+  
+    routeMap.forEach((value) => uniqueRoutes.push(value));
+  
+    console.log(uniqueRoutes);
+    setRoutes(uniqueRoutes);
+    return uniqueRoutes;
+  };
+  
   const fetchAllRoutes = async () => {
     try {
       const response = await axios.get(`${BASE_URL}/routes/get-all-routes`);
       if (response.status === 200) {
         setRoutes(response.data?.data);
+        removeDuplicateRoute(response.data?.data)
+        // setRoutes(response.data?.data)
+        console.log(response.data?.data);
+        
       }
       console.log(response.data?.data);
     } catch (error) {}
@@ -374,8 +400,9 @@ const Home = () => {
               {/* <div className="absolute z-40 top-24 right-0 w-64 h-64 border bg-gray-400 ">
                 Hello
               </div> */}
-              {showRoute && (
-                <div className="custom-alert-overlay z-50 fixed top-0 left-0 w-full h-full bg-[rgba(0,0,0,0.5)] flex justify-center items-center">
+              {
+                <Modal onClose={() => setShowRoute(false)} isOpen={showRoute}>
+                  
                   <div
                     onMouseLeave={() => setShowRoute(false)}
                     className="custom-alert bg-white p-[20px] rounded-md "
@@ -406,7 +433,7 @@ const Home = () => {
                                     {route?.arrivalLocation[0].toUpperCase() +
                                       route?.arrivalLocation.substring(1)}
                                   </td>
-                                  <td className="border-b-2 px-6 py-3">2</td>
+                                  <td className="border-b-2 px-6 py-3">{route.count}</td>
                                 </tr>
                               );
                             })
@@ -429,8 +456,9 @@ const Home = () => {
                       </Button>
                     </form>
                   </div>
-                </div>
-              )}
+                
+                </Modal>
+              }
             </div>
             <div className="flex bg-white flex-col sm:flex-row lg:w-1/2  rounded-r-3xl ">
               <div className="h-full border-b sm:border-r border-gray-300 sm:w-1/2 w-full rounded-r-3xl">

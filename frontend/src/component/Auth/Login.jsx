@@ -203,23 +203,12 @@ function Login() {
           </div>
         </form>
       </div>
-      {openModal && (
-        <Modal>
-          {/* {" "}
-          <div className=" flex justify-center items-center bg-white relative min-w-96">
-            <div className=" absolute top-2 right-2 cursor-pointer" onClick={handleForgotPasswordToggle}><MdClose/></div>
-            <form onSubmit={handleSubmit(handleForgotPassword)} className=" w-full p-4">
-              <div className=" flex flex-col p-2 w-full mb-2">
-                <label htmlFor="email">Email</label>
-                <input type="email" name="email" id="email" className=" w-full outline-none border border-gray-400 px-2 py-1" />
-              </div>
-              <div className=" w-[80%] m-auto"><Button type="submit" className=" w-full">Submit</Button></div>
-             
-            </form>
-          </div> */}
+      {
+        <Modal onClose={handleForgotPasswordToggle} isOpen={openModal} >
+          
           <ForgetPasswordForm onClose={handleForgotPasswordToggle} />
         </Modal>
-      )}
+      }
       {alertMessage.message && (
         <Alert message={alertMessage} onClose={onCloseHandler} />
       )}

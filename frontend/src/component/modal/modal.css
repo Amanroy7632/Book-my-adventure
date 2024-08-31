@@ -1,0 +1,25 @@
+/* Fade animation for the background overlay */
+.fade-in {
+    opacity: 1;
+  }
+  
+  .fade-out {
+    opacity: 0;
+  }
+  
+  /* Slide and scale animation for the modal content */
+  .slide-in {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  
+  .slide-out {
+    transform: translateY(-20px) scale(0.95);
+    opacity: 0;
+  }
+  
+  /* Ensure smooth transitions */
+  .modal-content {
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+  
