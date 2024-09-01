@@ -61,8 +61,8 @@ const getRoute = async(req,res,next)=>{
         const routes = await Route.aggregate([
             {
                 $match: {
-                    departureLocation:departureLocation,
-                    arrivalLocation:arrivalLocation,
+                    departureLocation:departureLocation?.toLowerCase(),
+                    arrivalLocation:arrivalLocation?.toLowerCase(),
                     date
                 }
             },
