@@ -20,6 +20,7 @@ import { BASE_URL } from "../../constraints.js";
 import ScrollToTop from "../commonUi/ScrollToTop.jsx";
 import Spinner from "../loader/Spinner.jsx";
 import Modal from "../modal/Modal.jsx";
+import BusBox from "./Dumy.jsx";
 const offerCardDetails = [
   {
     id: 1,
@@ -315,6 +316,7 @@ const Home = () => {
   }, []);
   return (
     <>
+    <BusBox/>
       <section className="h-[32rem] bg-main-color bg-[url('assets/hero-img.png')] bg-center  bg-no-repeat bg-cover flex justify-center">
         <div className="flex flex-col items-center w-full max-w-[1400px]">
           <h1 className="text-2xl mx-4 md:text-[2rem] text-white font-bold mt-16 mb-4 text-center">

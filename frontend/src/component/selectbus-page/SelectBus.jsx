@@ -22,9 +22,11 @@ const SelectBus = () => {
       method:"GET",
       "Content-Type": "application/json"
     }
-  const urlforBus =`${BASE_URL}/routes/?departureLocation=${query.get("departure")}&arrivalLocation=${query.get("arrival")}&date=${query.get("date")}`
+  const urlforBus =`${BASE_URL}/routes/?departureLocation=${query.get("departure").toLocaleLowerCase()}&arrivalLocation=${query.get("arrival").toLocaleLowerCase()}&date=${query.get("date")}`
+  console.log(urlforBus);
+  
   const {loading,errorMessage,data} = useFetch(urlforBus,requestOptions)  
-  // console.log(data);
+  console.log(data);
   
   const onFilterChange =(filter,value)=>{
 

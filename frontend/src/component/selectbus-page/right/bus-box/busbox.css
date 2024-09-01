@@ -1,6 +1,10 @@
 * {
     box-sizing: border-box;
 }
+.bus-box{
+  transition: height 0.3s ease-in-out, padding 0.3s ease-in-out, margin 0.3s ease-in-out;
+  overflow: hidden;
+}
 .bus-box:hover{
     box-shadow: 0 16px 30px 1px rgb(0 0 0 / 10%);
     transition: 1s;

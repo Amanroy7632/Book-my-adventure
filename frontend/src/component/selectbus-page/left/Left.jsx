@@ -1,6 +1,5 @@
 import { useState } from "react";
 import "./left.css";
-import { BiMap, BiCheckCircle, BiWater } from "react-icons/bi";
 import {
   MdGpsFixed,
   MdRestore,
@@ -11,13 +10,13 @@ import {
   MdBattery90,
   MdMovie,
   MdHotel,
+  MdBusAlert,
+  MdTimer,
+  MdFilter,
 } from "react-icons/md";
-// import { useState } from "react";
-// import "./left.css";
-// import { MdGpsFixed, MdRestore, MdCheckCircleOutline, MdAvTimer, MdAirlineSeatLegroomExtra, MdWifi, MdBattery90, MdMovie, MdHotel } from "react-icons/md";
-import Modal from "./Modal";
+import Modal from "../../modal/Modal";
 
-const Left = ({className=""}) => {
+const Left = ({ className = "" }) => {
   const [checked, setChecked] = useState({});
   const [openModal, setOpenModal] = useState(null);
 
@@ -35,28 +34,32 @@ const Left = ({className=""}) => {
     {
       id: "time001",
       filterBy: "departure time",
+      icon: <MdAvTimer />,
       data: ["before 6 pm", "6 am to 12 pm", "12 pm to 6 pm", "after 6 pm"],
     },
     {
       id: "bus002",
       filterBy: "bus type",
+      icon: <MdBusAlert />,
       data: ["Seater", "Sleeper", "AC", "NonAc"],
     },
     {
       id: "time002",
       filterBy: "arrival time",
+      icon: <MdTimer />,
       data: ["before 6 pm", "6 am to 12 pm", "12 pm to 6 pm", "after 6 pm"],
     },
     {
       id: "amenity001",
       filterBy: "amenities",
+      icon: <MdFilter />,
       data: ["wifi", "WaterBottle", "Charging Points", "Movie", "Blanket"],
     },
   ];
 
   const openFilterModal = (filter) => {
     console.log(filter);
-    
+
     setOpenModal(filter);
   };
 
@@ -65,9 +68,11 @@ const Left = ({className=""}) => {
   };
 
   return (
-    <div className={`${className} left p-[15px] lg:w-[20%] border-r-2 max-md:grid max-md:grid-cols-3 gap-3 max-md:text-sm max-sm:grid-cols-2`}>
+    <div
+      className={`${className} left p-[15px] lg:w-[20%] border-r-2 max-md:grid max-md:grid-cols-3 gap-3 max-md:text-sm max-sm:grid-cols-2`}
+    >
       <div className="left_filters mb-[25px]">
-        <p>Filters</p>
+        <p className=" bg-green-600 w-fit px-3 rounded-md py-1 text-white">Filters</p>
         <ul className="list-none p-0 m-0">
           <li>
             <div className="first-section">
@@ -94,12 +99,13 @@ const Left = ({className=""}) => {
                 className="cursor-pointer first-section"
                 onClick={() => openFilterModal(item.id)}
               >
+                <span>{item.icon}</span>
                 <span> {item.filterBy.toUpperCase()}</span>
               </div>
             </li>
           </ul>
           <Modal isOpen={openModal === item.id} onClose={closeModal}>
-            <div className=" flex flex-col">
+            <div className=" flex flex-col p-6">
               <h2 className="text-xl mb-4">{item.filterBy.toUpperCase()}</h2>
               {item.data.map((data, index) => (
                 <div

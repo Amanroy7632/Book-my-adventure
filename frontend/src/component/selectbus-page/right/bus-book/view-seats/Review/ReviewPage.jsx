@@ -53,14 +53,13 @@ const RatingDisplay = ({ rating }) => (
 import React, { useEffect, useState } from "react";
 import axiosInstance from "../../../../../../utils/axiosInstance";
 import { useCurrentUser } from "../../../../../../context/userContext";
-import SelectBus from "../../../../SelectBus";
 import Alert from "../../../../../CustomAlert/Alert";
 import { Button } from "../../../../../commonUi";
 import logo from "./logo.png";
 import { useRef } from "react";
 
 const ReviewPage = ({ busDetails }) => {
-  const { currentUser, alertMessage, setAlertMessage } = useCurrentUser();
+  const { currentUser, alertMessage, setAlertMessage,onCloseHandler } = useCurrentUser();
   const [reviews, setReviews] = useState([]);
   const [newReview, setNewReview] = useState({
     name: currentUser ? currentUser.fullname : "",
@@ -144,13 +143,6 @@ const ReviewPage = ({ busDetails }) => {
     ) {
       setPage((prevPage) => prevPage + 1);
     }
-    // console.log("Top Scroll: " + reviewSection.scrollTop);
-    // console.log("Client height: " + reviewSection.clientHeight);
-    // console.log("Scroll height: " + reviewSection.scrollHeigh);
-    // console.log(
-    //   reviewSection.scrollTop + reviewSection.clientHeight,
-    //   reviewSection.scrollHeight
-    // );
   };
 
   useEffect(() => {
@@ -163,8 +155,8 @@ const ReviewPage = ({ busDetails }) => {
 
   return (
     <div className="max-w-4xl mx-auto p-8 pt-2">
-      {alertMessage && (
-        <Alert message={alertMessage} onClose={() => setAlertMessage("")} />
+      {alertMessage.message && (
+        <Alert message={alertMessage} onClose={onCloseHandler} />
       )}
       <section className="mb-8 form-section">
         <h2 className="text-2xl font-semibold mb-4">Add Your Review</h2>

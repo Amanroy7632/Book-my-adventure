@@ -1,11 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { FaChevronLeft,FaChevronRight } from "react-icons/fa"
+import RouterCumb from "../../routing/RouterCumb";
 const SelectHeader = ({ arrival, departure, date }) => {
   return (
     <div className="Header ">
       <div className="HeaderOne   bg-[#BD3B4A] text-white p-[10px] mb-[10px]">
-        <p className=" mx-[10px] max-sm:justify-between max-sm:gap-0 my-0 flex gap-2 items-center">
+        {/* <RouterCumb/> */}
+        <p className=" mx-[10px] py-1 max-sm:justify-between max-sm:gap-0 my-0 flex gap-2 items-center">
           <Link
             to={"/"}
             className=" hover:underline hover:text-blue-500 duration-300"
@@ -19,8 +21,6 @@ const SelectHeader = ({ arrival, departure, date }) => {
           >
             Bus Tickets
           </Link>{" "}
-          <FaChevronRight/>
-          {departure[0].toUpperCase() + departure.substring(1)} Bus{" "}
           <FaChevronRight/>
           {departure[0].toUpperCase() + departure.substring(1)} to{" "}
           {arrival[0].toUpperCase() + arrival.substring(1)}
