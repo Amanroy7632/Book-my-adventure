@@ -166,8 +166,8 @@ const BusBox = ({ loading, data, errorMessage }) => {
           Bus Information not found for this route ... {errorMessage}
         </div>
       )}
-      <div className="busBoxSection2 relative">
-        <div className="  busBoxSection21 flex justify-between items-center gap-5 text-xl">
+      <div className=" relative flex justify-between flex-wrap">
+        <div className="   flex justify-between items-center gap-5 text-xl max-sm:mt-1">
           {amenities.map((item, index) => (
             <div key={index}>
               {popUpVisible === index && (
@@ -210,12 +210,12 @@ const BusBox = ({ loading, data, errorMessage }) => {
             </div>
           ))}
         </div>
-        <div className="busBoxSection22">
-          <div className=" gap-1">
+        <div className="busBoxSection22 flex justify-between max-sm:mt-2 ">
+          <div className=" gap-1 w-full">
             <MdGpsFixed className=" text-2xl" />
             <span>Live Tracking</span>
           </div>
-          <div className=" gap-1">
+          <div className=" gap-1 w-full">
             <MdRestore className=" text-2xl" />
             <span>Reschedulable</span>
           </div>

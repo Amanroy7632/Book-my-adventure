@@ -17,6 +17,7 @@ import toast from "react-hot-toast";
 import { useBusContext } from "../../../../../context/busContext.jsx";
 import axiosInstance from "../../../../../utils/axiosInstance.js";
 import TicketReceiptPage from "../bill/TicketRecipt.jsx";
+import Modal from "../../../../modal/Modal.jsx";
 const customFilter = (seatNo, seletedSeat, setSelectedSeats) => {
   const newSeats = seletedSeat.filter((seatno) => seatno !== seatNo);
   setSelectedSeats(newSeats);
@@ -108,7 +109,6 @@ function ViewSeat() {
     setPassengerData((prevData) => [...prevData, formData]);
   };
   const handleFinalSubmit = (data) => {
-    
     // return;
     Object.keys(data).forEach((key) => {});
     if (!data.email) {
@@ -131,14 +131,13 @@ function ViewSeat() {
     // storeTickets({ ticketData: passengerData });
     console.log(passengerData);
     setIsModelOpen(true);
-    let totalAmount = 0
-    passengerData.forEach((passData)=>{
-      totalAmount+=parseFloat(passData.price)
-      
-    })
+    let totalAmount = 0;
+    passengerData.forEach((passData) => {
+      totalAmount += parseFloat(passData.price);
+    });
     // const totalAmount = passengerData.reduce((acc,next)=>acc.price+next.price)
     console.log(totalAmount);
-    
+
     navigate(
       `/payment?operatorName=${routeDetails?.operatorName}&customerName=${
         currentUser?.fullname
@@ -157,6 +156,11 @@ function ViewSeat() {
     console.log("All Passenger Data:", passengerData);
     // You can now send this data to your backend or process it as needed.
   };
+  const closeModal = ()=>{
+    setSelectedSeats([])
+    setSubmitedForm([])
+
+  }
   // useEffect(()=>{
   //   const getBookedTicket = async (route,busNumber) => {
   //     try {
@@ -281,7 +285,9 @@ function ViewSeat() {
             <div className="  flex items-center">
               {" "}
               <HiCurrencyRupee className=" text-2xl text-blue-500" />{" "}
-              <span>{(selectedSeats.length * routeDetails?.fare).toFixed(2)}</span>
+              <span>
+                {(selectedSeats.length * routeDetails?.fare).toFixed(2)}
+              </span>
             </div>
           </div>
           <div className="mainContainer27 pt-5 ">
@@ -295,144 +301,156 @@ function ViewSeat() {
           </div>
         </div>
       </div>
-      {passengerForm && (
-        <div className=" flex justify-start scroll-smooth duration-300">
-          <div className="w-fit  overflow-x-auto p-4 bg-white rounded-md shadow-md">
-            <div className="flex items-center space-x-4 gap-3">
-              {selectedSeats.map((seat, index) => (
-                <div key={seat}>
-                  <MediumSizedForm
-                    seatNo={seat}
-                    passengerNo={passengerNo++}
-                    onSubmit={handleFormSubmit}
-                    submittedForm={submittedForm}
-                    setSubmittedForm={setSubmitedForm}
-                  />
-                </div>
-              ))}
-            </div>
+      {/* passenger form  */}
+      <div
+        className={` ${
+          passengerForm ? "displayArea-active" : ""
+        } form-area flex justify-start scroll-smooth duration-300 transition-all`}
+      >
+        <div className="w-fit  overflow-x-auto p-4 bg-white rounded-md shadow-md">
+          <div className={`flex items-center space-x-4 gap-3  `}>
+            {selectedSeats.map((seat, index) => (
+              <div key={seat}>
+                <MediumSizedForm
+                  seatNo={seat}
+                  passengerNo={passengerNo++}
+                  onSubmit={handleFormSubmit}
+                  submittedForm={submittedForm}
+                  setSubmittedForm={setSubmitedForm}
+                />
+              </div>
+            ))}
           </div>
         </div>
-      )}
-      {selectedSeats.length !== 0 &&
-        submittedForm.length !== 0 &&
-        selectedSeats.length === submittedForm.length && (
-          <div className=" flex  items-center">
-            <div className=" flex flex-col border p-10 shadow-md">
-              <div className=" text-xl font-semibold flex items-center gap-4">
-                {" "}
-                <BiSolidEnvelope className=" text-yellow-500 text-2xl" />{" "}
-                Contact Details
-              </div>
-              <div className=" bg-yellow-200 w-fit px-4 py-[2px] text-sm font-semibold rounded-md">
-                Your ticket will be sent to these details
-              </div>
-              <div className=" ">
-                <form
-                  onSubmit={handleSubmit(handleFinalSubmit)}
-                  className=" flex flex-col gap-2"
-                >
-                  <Input
-                    label="Email"
-                    placeholder="Email"
-                    icon={<BiSolidEnvelope />}
-                    defaultValue={currentUser?.email}
-                    {...register("email", {
-                      required: true,
-                    })}
-                  />
+      </div>
+      {/* {passengerForm && (
+      )} */}
 
-                  <Input
-                    label="Phone"
-                    placeholder="Phone"
-                    defaultValue={currentUser?.phone}
-                    {...register("phone", {
-                      required: true,
-                    })}
-                  />
-                  <div className=" flex  gap-2  outline-none p-1 rounded-sm w-full">
-                    <input
-                      type="checkbox"
-                      name="business"
-                      id="business"
-                      {...register("business")}
-                      className="rounded-sm border border-gray-400 px-2 py-1 outline-none"
+      
+          <Modal
+            isOpen={
+              selectedSeats.length !== 0 &&
+              submittedForm.length !== 0 &&
+              selectedSeats.length === submittedForm.length
+            }
+            onClose={closeModal}
+          >
+            <div className=" flex  items-center">
+              <div className=" flex flex-col border p-10 shadow-md">
+                <div className=" text-xl font-semibold flex items-center gap-4">
+                  <BiSolidEnvelope className=" text-yellow-500 text-2xl" />{" "}
+                  Contact Details
+                </div>
+                <div className=" bg-yellow-200 w-fit px-4 py-[2px] text-sm font-semibold rounded-md">
+                  Your ticket will be sent to these details
+                </div>
+                <div className=" ">
+                  <form
+                    onSubmit={handleSubmit(handleFinalSubmit)}
+                    className=" flex flex-col gap-2"
+                  >
+                    <Input
+                      label="Email"
+                      placeholder="Email"
+                      icon={<BiSolidEnvelope />}
+                      defaultValue={currentUser?.email}
+                      {...register("email", {
+                        required: true,
+                      })}
                     />
-                    <label htmlFor="business">
-                      I am booking tickets for business travel.
-                    </label>
-                  </div>
-                  <div className=" flex gap-2  outline-none p-1 rounded-sm w-full">
-                    <input
-                      type="checkbox"
-                      name="updates"
-                      id="updates"
-                      {...register("updates")}
-                      className="rounded-sm border border-gray-400 px-2 py-1 outline-none"
-                    />
-                    <label
-                      htmlFor="updates"
-                      className=" flex items-center gap-3"
-                    >
-                      <BiLogoWhatsapp className=" text-3xl" /> Send updates and
-                      booking details on my Whatsapp number.
-                    </label>
-                  </div>
 
-                  <div className=" font-semibold text-sm bg-yellow-300/40 mx-6 p-3 rounded-md">
-                    Insure your travel by adding Rs 15 per passenger. Powered by
-                    𝙄�𝙄𝘾𝙄 �𝙇𝙤𝙢𝙗𝙖𝙧𝙙 𝙂𝙄𝘾 𝙇𝙩𝙙
-                  </div>
-                  <div className=" flex justify-evenly">
-                    <div className=" flex flex-col justify-center items-center">
-                      <p>Loss of baggage</p>{" "}
-                      <p>Upto Rs. 3000 insurance cover</p>
-                    </div>
-                    <div className=" flex flex-col justify-center items-center">
-                      <p>Personal Accident</p>
-                      <p> Rs. 6,00,000 insurance cover</p>
-                    </div>
-                  </div>
-                  <div className=" flex  gap-2  outline-none p-1 rounded-sm w-full">
-                    <input
-                      type="checkbox"
-                      name="insurance"
-                      id="insurance"
-                      {...register("insurance")}
-                      className="rounded-sm border border-gray-400 px-2 py-1 outline-none"
+                    <Input
+                      label="Phone"
+                      placeholder="Phone"
+                      defaultValue={currentUser?.phone}
+                      {...register("phone", {
+                        required: true,
+                      })}
                     />
-                    <label htmlFor="insurance">
-                      Yes , secure my trip with insurance , I have read and
-                      understood the Terms and conditions.
-                    </label>
-                  </div>
-                  <div className=" flex  gap-2  outline-none p-1 rounded-sm w-full">
-                    <input
-                      type="checkbox"
-                      name="covid"
-                      id="covid"
-                      {...register("covid")}
-                      className="rounded-sm border border-gray-400 px-2 py-1 outline-none"
-                    />
-                    <label htmlFor="covid">COVID Donation</label>
-                  </div>
-                  <div>
-                    By clicking on proceed, I agree that I have read and
-                    understood the TnCs and the Privacy Policy
-                  </div>
-                  <div>
-                    <Button
-                      type="submit"
-                      className=" bg-red-500/80 rounded-none"
-                    >
-                      PROCEED TO PAY
-                    </Button>
-                  </div>
-                </form>
+                    <div className=" flex  gap-2  outline-none p-1 rounded-sm w-full">
+                      <input
+                        type="checkbox"
+                        name="business"
+                        id="business"
+                        {...register("business")}
+                        className="rounded-sm border border-gray-400 px-2 py-1 outline-none"
+                      />
+                      <label htmlFor="business">
+                        I am booking tickets for business travel.
+                      </label>
+                    </div>
+                    <div className=" flex gap-2  outline-none p-1 rounded-sm w-full">
+                      <input
+                        type="checkbox"
+                        name="updates"
+                        id="updates"
+                        {...register("updates")}
+                        className="rounded-sm border border-gray-400 px-2 py-1 outline-none"
+                      />
+                      <label
+                        htmlFor="updates"
+                        className=" flex items-center gap-3"
+                      >
+                        <BiLogoWhatsapp className=" text-3xl" /> Send updates
+                        and booking details on my Whatsapp number.
+                      </label>
+                    </div>
+
+                    <div className=" font-semibold text-sm bg-yellow-300/40 mx-6 p-3 rounded-md">
+                      Insure your travel by adding Rs 15 per passenger. Powered
+                      by 𝙄�𝙄𝘾𝙄 �𝙇𝙤𝙢𝙗𝙖𝙧𝙙 𝙂𝙄𝘾 𝙇𝙩𝙙
+                    </div>
+                    <div className=" flex justify-evenly">
+                      <div className=" flex flex-col justify-center items-center">
+                        <p>Loss of baggage</p>{" "}
+                        <p>Upto Rs. 3000 insurance cover</p>
+                      </div>
+                      <div className=" flex flex-col justify-center items-center">
+                        <p>Personal Accident</p>
+                        <p> Rs. 6,00,000 insurance cover</p>
+                      </div>
+                    </div>
+                    <div className=" flex  gap-2  outline-none p-1 rounded-sm w-full">
+                      <input
+                        type="checkbox"
+                        name="insurance"
+                        id="insurance"
+                        {...register("insurance")}
+                        className="rounded-sm border border-gray-400 px-2 py-1 outline-none"
+                      />
+                      <label htmlFor="insurance">
+                        Yes , secure my trip with insurance , I have read and
+                        understood the Terms and conditions.
+                      </label>
+                    </div>
+                    <div className=" flex  gap-2  outline-none p-1 rounded-sm w-full">
+                      <input
+                        type="checkbox"
+                        name="covid"
+                        id="covid"
+                        {...register("covid")}
+                        className="rounded-sm border border-gray-400 px-2 py-1 outline-none"
+                      />
+                      <label htmlFor="covid">COVID Donation</label>
+                    </div>
+                    <div>
+                      By clicking on proceed, I agree that I have read and
+                      understood the TnCs and the Privacy Policy
+                    </div>
+                    <div className=" flex  justify-between">
+                      <Button
+                        type="submit"
+                        className=" bg-red-500/80 rounded-none"
+                      >
+                        PROCEED TO PAY
+                      </Button>
+                      <Button onClick={closeModal} className=" rounded-none bg-gray-600">CANCEL</Button>
+                    </div>
+                  </form>
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          </Modal>
       {isModelopen && <TicketReceiptPage ticketData={passengerData} />}
     </>
   );

@@ -7,7 +7,7 @@ const SelectHeader = ({ arrival, departure, date }) => {
     <div className="Header ">
       <div className="HeaderOne   bg-[#BD3B4A] text-white p-[10px] mb-[10px]">
         {/* <RouterCumb/> */}
-        <p className=" mx-[10px] py-1 max-sm:justify-between max-sm:gap-0 my-0 flex gap-2 items-center">
+        <p className=" mx-[10px] py-1 my-0 flex gap-2 items-center">
           <Link
             to={"/"}
             className=" hover:underline hover:text-blue-500 duration-300"

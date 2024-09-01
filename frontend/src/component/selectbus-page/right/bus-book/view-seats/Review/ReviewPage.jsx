@@ -92,11 +92,11 @@ const ReviewPage = ({ busDetails }) => {
         });
         console.log(response);
         if (response.status === 201) {
-          setAlertMessage("Review submitted successfully");
+          setAlertMessage({message:"Review submitted successfully",type:"success"});
           setNewReview({ name: "", review: "", rating: 0 });
         }
       } catch (error) {
-        setAlertMessage("Something went wrong " + error.message);
+        setAlertMessage({message:"Something went wrong " + error.message,type:"error"});
       }
       setReviews([
         ...reviews,

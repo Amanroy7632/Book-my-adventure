@@ -19,7 +19,7 @@ import Modal from "../../modal/Modal";
 const Left = ({ className = "" }) => {
   const [checked, setChecked] = useState({});
   const [openModal, setOpenModal] = useState(null);
-
+  const [openLocModel,setOpenLocModel] = useState(false);
   const handleChecked = (filter, index) => {
     setChecked((prevChecked) => ({
       ...prevChecked,
@@ -68,44 +68,136 @@ const Left = ({ className = "" }) => {
   };
 
   return (
+    // <div
+    //   className={`${className} left p-[15px] lg:w-[20%] border-r-2 max-md:grid max-md:grid-cols-3 gap-3 max-md:text-sm max-sm:grid-cols-2`}
+    // >
+    //   <div className="left_filters mb-[25px]">
+    //     <p className=" bg-green-600 w-fit px-3 rounded-md py-1 text-white">Filters</p>
+    //     <ul className="list-none p-0 m-0">
+    //       <li>
+    //         <div className="first-section">
+    //           <MdGpsFixed />
+    //           <span>Live Tracking</span>
+    //           <MdCheckCircleOutline />
+    //         </div>
+    //       </li>
+    //       <li>
+    //         <div className="first-section">
+    //           <MdRestore />
+    //           <span>Reschedulable</span>
+    //           <MdCheckCircleOutline />
+    //         </div>
+    //       </li>
+    //     </ul>
+    //   </div>
+    //   {filterBus.map((item) => (
+    //     <div key={item.id} className="left_filters mb-[20px] max-md:mb-[5px]">
+    //       {/* <p>{item.filterBy.toUpperCase()}</p> */}
+    //       <ul>
+    //         <li>
+    //           <div
+    //             className="cursor-pointer first-section"
+    //             onClick={() => openFilterModal(item.id)}
+    //           >
+    //             <span>{item.icon}</span>
+    //             <span> {item.filterBy.toUpperCase()}</span>
+    //           </div>
+    //         </li>
+    //       </ul>
+    //       <Modal isOpen={openModal === item.id} onClose={closeModal}>
+    //         <div className=" flex flex-col p-6">
+    //           <h2 className="text-xl mb-4">{item.filterBy.toUpperCase()}</h2>
+    //           {item.data.map((data, index) => (
+    //             <div
+    //               key={index}
+    //               className="flex items-center mb-2 cursor-pointer"
+    //               onClick={() => handleChecked(item.filterBy, index)}
+    //             >
+    //               <input
+    //                 type="checkbox"
+    //                 className="mr-2"
+    //                 checked={checked[item.filterBy]?.[index] || false}
+    //                 onChange={() => handleChecked(item.filterBy, index)}
+    //               />
+    //               <span>{data}</span>
+    //             </div>
+    //           ))}
+    //           <button
+    //             className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+    //             onClick={closeModal}
+    //           >
+    //             Apply
+    //           </button>
+    //         </div>
+    //       </Modal>
+    //     </div>
+    //   ))}
+    // </div>
     <div
-      className={`${className} left p-[15px] lg:w-[20%] border-r-2 max-md:grid max-md:grid-cols-3 gap-3 max-md:text-sm max-sm:grid-cols-2`}
+      className={` relative left p-[15px] lg:w-[20%] border-r-2 max-md:grid max-md:grid-cols-3 gap-3 max-md:text-sm max-sm:grid-cols-2 max-sm:p-[10px]`}
     >
-      <div className="left_filters mb-[25px]">
-        <p className=" bg-green-600 w-fit px-3 rounded-md py-1 text-white">Filters</p>
-        <ul className="list-none p-0 m-0">
+      <p onClick={()=>setOpenLocModel(!openLocModel)} className="absolute  cursor-pointer top-0 right-0 bg-green-600 w-fit px-3 rounded-md py-1 text-white">
+        Filters
+      </p>
+      <Modal isOpen={openLocModel} onClose={()=>setOpenLocModel(!openLocModel)} >
+        <ul className="list-none p-4 m-0">
           <li>
-            <div className="first-section">
+            <div className="first-section flex items-center gap-2">
               <MdGpsFixed />
               <span>Live Tracking</span>
               <MdCheckCircleOutline />
             </div>
           </li>
           <li>
-            <div className="first-section">
+            <div className="first-section flex items-center gap-2">
               <MdRestore />
               <span>Reschedulable</span>
               <MdCheckCircleOutline />
             </div>
           </li>
         </ul>
-      </div>
+      </Modal>
+      {/* <div className="left_filters mb-[25px] max-sm:mb-[15px]">
+        <p className="bg-green-600 w-fit px-3 rounded-md py-1 text-white">
+          Filters
+        </p>
+        <ul className="list-none p-0 m-0">
+          <li>
+            <div className="first-section flex items-center gap-2">
+              <MdGpsFixed />
+              <span>Live Tracking</span>
+              <MdCheckCircleOutline />
+            </div>
+          </li>
+          <li>
+            <div className="first-section flex items-center gap-2">
+              <MdRestore />
+              <span>Reschedulable</span>
+              <MdCheckCircleOutline />
+            </div>
+          </li>
+        </ul>
+      </div> */}
       {filterBus.map((item) => (
-        <div key={item.id} className="left_filters mb-[20px] max-md:mb-[5px]">
-          {/* <p>{item.filterBy.toUpperCase()}</p> */}
+        <div
+          key={item.id}
+          className="left_filters mb-[20px] max-md:mb-[5px] max-sm:mb-[10px]"
+        >
           <ul>
             <li>
               <div
-                className="cursor-pointer first-section"
+                className="cursor-pointer first-section flex items-center gap-2"
                 onClick={() => openFilterModal(item.id)}
               >
                 <span>{item.icon}</span>
-                <span> {item.filterBy.toUpperCase()}</span>
+                <span className="text-sm max-sm:text-xs">
+                  {item.filterBy.toUpperCase()}
+                </span>
               </div>
             </li>
           </ul>
           <Modal isOpen={openModal === item.id} onClose={closeModal}>
-            <div className=" flex flex-col p-6">
+            <div className="flex flex-col p-6">
               <h2 className="text-xl mb-4">{item.filterBy.toUpperCase()}</h2>
               {item.data.map((data, index) => (
                 <div

@@ -92,7 +92,7 @@ function MediumSizedForm({
     <form
     
       onSubmit={handleSubmit}
-      className="w-96 p-6 bg-white rounded-md shadow-md mx-auto relative"
+      className="w-96 p-6 bg-white rounded-md shadow-md mx-auto relative "
     >
       <div>
         <h1>Enter Passenger Details</h1>
