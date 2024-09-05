@@ -25,7 +25,7 @@ const transporter = nodemailer.createTransport({
         user: process.env.SMTP_MAIL,
         pass: process.env.SMTP_PASSWORD
     },
-    logger: true, // Enable logging
+    logger: false, // Enable logging
     debug: true,   // Enable debugging
     secure:false
 });

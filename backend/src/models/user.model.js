@@ -96,7 +96,7 @@ export const User = mongoose.model("User",userSchema)
 // Ensure indexes are synchronized
 User.syncIndexes()
 .then(() => {
-    console.log("Indexes synchronized");
+    // console.log("Indexes synchronized");
 })
 .catch((err) => {
     console.error("Error synchronizing indexes", err);
