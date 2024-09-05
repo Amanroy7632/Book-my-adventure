@@ -3,6 +3,7 @@ import { ApiError,ApiResponse } from "../utils/index.js"
 
 const registerRoute = async(req,res,next)=>{
     try {
+        console.log("\x1b[33m%s\x1b[0m",`Api Hits for registering route & served by ${process.pid}`)
         const {departureLocation,arrivalLocation,busId,operatorName,departureTime,arrivalTime,fare,date} = req.body
         if ([departureLocation,arrivalLocation,busId,operatorName,departureTime,arrivalTime,fare].some(item=>item?.trim()==="")) {
             throw new ApiError(401,"All fields are required")
@@ -23,6 +24,7 @@ const registerRoute = async(req,res,next)=>{
 }
 const updateRoute = async (req,res,next)=>{
     try {
+        console.log("\x1b[33m%s\x1b[0m",`Api Hits for updating route & served by ${process.pid}`)
         const {date,arrivalLocation,arrivalTime,departureLocation,departureTime,fare,busId} = req.body
         const {routeId} =req.params
         if (!routeId) {
@@ -55,8 +57,9 @@ const updateRoute = async (req,res,next)=>{
 }
 const getRoute = async(req,res,next)=>{
     try {
+        console.log("\x1b[33m%s\x1b[0m",`Api Hits for retrival of routes & served by ${process.pid}`)
         const {departureLocation,arrivalLocation,date} = req.query
-         console.log(departureLocation,arrivalLocation);
+        //  console.log(departureLocation,arrivalLocation);
         //  const routes = await Route.find({departureLocation,arrivalLocation})
         const routes = await Route.aggregate([
             {
@@ -144,9 +147,7 @@ const getRoute = async(req,res,next)=>{
 }
 const getAllRoute = async(req,res,next)=>{
     try {
-        // const {departureLocation,arrivalLocation,date} = req.query
-        //  console.log(departureLocation,arrivalLocation);
-        //  const routes = await Route.find({departureLocation,arrivalLocation})
+        console.log("\x1b[33m%s\x1b[0m",`Api Hits for retrival of all routes & served by ${process.pid}`)
         const routes = await Route.aggregate([
             // {
             //     $match: {

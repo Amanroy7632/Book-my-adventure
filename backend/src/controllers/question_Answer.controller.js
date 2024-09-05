@@ -5,6 +5,7 @@ import { ApiError, ApiResponse } from "../utils/index.js"
 const registerQuestion = async (req, res, next) => {
     try {
         console.log("Api Hit -> "+"/api/v1/question-answer/register")
+        console.log("\x1b[33m%s\x1b[0m",`Api Hits for retrival of question-answer & served by ${process.pid}`)
 
         const { question, userId } = req.body
         console.log(question,userId);
@@ -41,6 +42,7 @@ const deleteQuestion = async (req, res, next) => {
 const getQuestion = async (req, res, next) => {
     try {
         console.log("Api Hit -> "+"/api/v1/question-answer/")
+        console.log("\x1b[33m%s\x1b[0m",`Api Hits for retrival of question-answer & served by ${process.pid}`)
         const limit = parseInt(req.query.limit) || 10;
         const page = parseInt(req.query.page) || 1;
         const skip = (page - 1) * limit
@@ -91,7 +93,7 @@ const getQuestion = async (req, res, next) => {
 }
 const registerAnswer = async (req, res, next) => {
     try {
-        
+        console.log("\x1b[33m%s\x1b[0m",`Api Hits for registering question & served by ${process.pid}`)
         const { questionId } = req.params
         console.log("Api Hit -> "+`/register-answer/${questionId}`)
         const { answer, userId } = req.body

@@ -3,7 +3,7 @@ import { ApiError, ApiResponse } from "../utils/index.js"
 
 const registerContactForm = async(req,res,next)=>{
     try {
-        console.log("➡️  Contact form api hitted")
+        console.log("\x1b[33m%s\x1b[0m",`Api Hits for registration of contact form & served by ${process.pid}`)
         
         const {name,email,phone,message} = req.body
         if(!name || !email || !phone || !message){

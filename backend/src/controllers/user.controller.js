@@ -19,6 +19,7 @@ const generateAccessTokenAndRefreshToken = async (userId) => {
     }
 }
 const getUserProfile = async (req, res, next) => {
+    console.log("\x1b[33m%s\x1b[0m",`Api Hits for retrival of Current user & served by ${process.pid}`)
     try {
         const user = req.user
         if (!user) {
@@ -66,6 +67,7 @@ const registerUser = async (req, res, next) => {
 const loginUser = async (req, res, next) => {
     try {
         const { email, password } = req.body
+        console.log("\x1b[33m%s\x1b[0m",`Api Hits for Sign in by ${email} & served by ${process.pid}`)
         if (!email) {
             throw new ApiError(400, "Invalid Email Address")
         }
@@ -83,7 +85,7 @@ const loginUser = async (req, res, next) => {
             throw new ApiError(401, "Invalid password")
         }
         const { accessToken, refreshToken } = await generateAccessTokenAndRefreshToken(user._id)
-        console.log(accessToken, refreshToken);
+        // console.log(accessToken, refreshToken);
 
         const loginUser = await User.findById(user._id).select("-password -refreshToken")
         const options = {
@@ -154,12 +156,13 @@ const resetPassword = async (req, res, next) => {
 }
 const uploadAvatar =async (req,res,next)=>{
     try {
+        console.log("\x1b[33m%s\x1b[0m",`Api Hits for updating avtar & served by ${process.pid}`)
         const user = req.user
         if (!user) {
             throw new ApiError(400,"Unauthorize access")
         }
         const avatarLocalPath = req.file?.path
-        console.log(avatarLocalPath);
+        // console.log(avatarLocalPath);
         
         if (!avatarLocalPath) {
             throw new ApiError(401,"Invalid avatar path")
@@ -177,12 +180,13 @@ const uploadAvatar =async (req,res,next)=>{
 }
 const removeAvatar = async (req,res,next)=>{
     try {
+        console.log("\x1b[33m%s\x1b[0m",`Api Hits for removing avtar & served by ${process.pid}`)
         const user =req.user
         if (!user) {
             throw new ApiError(401,"Unauthorized access")
         }
         const imgName = user?.avatar?.split("/")[7]?.split(".")[0]
-        console.log(imgName);
+        // console.log(imgName);
         
         if (!imgName) {
             throw new ApiError(400,"Image url is not found")
@@ -200,6 +204,7 @@ const removeAvatar = async (req,res,next)=>{
 }
 const getAllUsers = async(req,res,next)=>{
     try {
+        console.log("\x1b[33m%s\x1b[0m",`Api Hits for retrival of all users & served by ${process.pid}`)
         const users = await User.find({}).select("-password -verificationCode -forgetPasswordCode -lastOtpGenerationTime -refreshToken -__v")
         return res.status(200).send(new ApiResponse(200,users,"All users data fetched successfully"))
     } catch (error) {

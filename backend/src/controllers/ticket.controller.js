@@ -3,6 +3,7 @@ import { ApiError, ApiResponse } from "../utils/index.js"
 import mongoose from "mongoose"
 const registerTicket = async (req,res,next)=>{
    try {
+    console.log("\x1b[33m%s\x1b[0m",`Api Hits for registering tickets & served by ${process.pid}`)
      const {route,departureTime,arrivalTime,price,busNumber,passengerNo,seatNo,name,age,gender,bookedBy} = req.body
      if ([route,passengerNo,seatNo,name,age,gender].some(field=>field.trim()==="")) {
          throw new ApiError(400,"All fields are required")
@@ -28,6 +29,7 @@ const registerTicket = async (req,res,next)=>{
 }
 const registerManyTicket = async (req,res,next)=>{
    try {
+    console.log("\x1b[33m%s\x1b[0m",`Api Hits for registering multiple tickets & served by ${process.pid}`)
      const {ticketData} = req.body
      if (!ticketData) {
          throw new ApiError(400,"Tickets information are required")
@@ -45,6 +47,7 @@ const registerManyTicket = async (req,res,next)=>{
 }
 const getTickets = async (req,res,next)=>{
     try {
+      console.log("\x1b[33m%s\x1b[0m",`Api Hits for retrival of tickets by route & busno & served by ${process.pid}`)
         const route= req.query.route
         const busNumber= req.query.busNumber
         if (!route || !busNumber) {
@@ -61,7 +64,7 @@ const getTickets = async (req,res,next)=>{
 }
 const getAllTickets = async (req,res,next)=>{
     try {
-        
+      console.log("\x1b[33m%s\x1b[0m",`Api Hits for retrivsl of all tickets & served by ${process.pid}`)
         const tickets = await Ticket.find({})
         if (tickets.length<=0) {
             res.status(200).send(new ApiResponse(200,[],"Tickets Not Found"))
@@ -73,6 +76,7 @@ const getAllTickets = async (req,res,next)=>{
 }
 const deleteTicket = async(req,res,next)=>{
     try {
+      console.log("\x1b[33m%s\x1b[0m",`Api Hits for deleting tickets & served by ${process.pid}`)
         const {ticketId} = req.params
         if (!ticketId) {
             throw new ApiError(400,"Invalid ticket id provided")
@@ -88,6 +92,7 @@ const deleteTicket = async(req,res,next)=>{
 }
 const updateTicket = async(req,res,next)=>{
     try {
+      console.log("\x1b[33m%s\x1b[0m",`Api Hits for updating tickets & served by ${process.pid}`)
         const {ticketId} = req.params
         const {name,busNumber,seatNo,departureTime} = req.body
         if ([name,busNumber,seatNo,departureTime].some((field)=>field.trim()==="")) {
@@ -146,7 +151,8 @@ const updateTicket = async(req,res,next)=>{
 // }
 const getCurrentUserTickets = async (req, res, next) => {
     try {
-        console.log(`Api Hit for retrival of Trips`);
+        // console.log(`Api Hit for retrival of Trips`);
+        console.log("\x1b[33m%s\x1b[0m",`Api Hits for retrival of tickets & served by ${process.pid}`)
         
       const { userId } = req.params;
       

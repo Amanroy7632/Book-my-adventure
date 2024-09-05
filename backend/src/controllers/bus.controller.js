@@ -2,6 +2,7 @@ import { Bus } from "../models/index.js";
 import { ApiError, ApiResponse } from "../utils/index.js";
 
 const registerBus = async (req,res,next)=>{
+    console.log("\x1b[33m%s\x1b[0m",`Api Hits for register-BUS & served by ${process.pid}`)
   try {
     const {busname,busno,owner,busType,totalSeat,wifi,waterBottle,chargingPorts,movie,blanket} = req.body;
     let amenityArray=[]
@@ -44,6 +45,7 @@ const registerBus = async (req,res,next)=>{
   }
 }
 const getBus =async (req,res,next)=>{
+    console.log("\x1b[33m%s\x1b[0m",`Api Hits for retrival-BUS & served by ${process.pid}`)
     try {
         const {id} = req.params
         if (!id) {
@@ -59,6 +61,7 @@ const getBus =async (req,res,next)=>{
     }
 }
 const getBusId =async (req,res,next)=>{
+    console.log("\x1b[33m%s\x1b[0m",`Api Hits for retrival of BUS ID & served by ${process.pid}`)
     try {
         const bus = await Bus.find({}).select("-busType -owner -amenity -totalSeat -createdAt -updatedAt -__v")
         return res.status(200).send(new ApiResponse(200,bus,"Bus data fetched"))
@@ -67,6 +70,7 @@ const getBusId =async (req,res,next)=>{
     }
 }
 const getAllBus = async (req,res,next)=>{
+    console.log("\x1b[33m%s\x1b[0m",` Api Hits for getting all buses & served by ${process.pid}`)
     try {
         const buses = await Bus.find({}).select("-owner -createdAt -updatedAt -__v")
         console.log(buses.length);
