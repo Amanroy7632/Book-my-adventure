@@ -40,7 +40,7 @@ if (cluster.isMaster) {
         const port = process.env.PORT || 5000
         app.listen(port, () => {
             const workerId = cluster.worker.id;
-            const dbStatus = "Connected";
+            const dbStatus = connectionInstance?"Connected":"Disconnected";
             const dbHost = connectionInstance?.connection.host;
             const uptime = Math.floor(os.uptime()%60)         
             logWorkersTableDB(workerId, process.pid, port, dbStatus, dbHost,os.type(),`${uptime}s`,getCpuUsage(workerId),getMemoryUsage(workerId));
