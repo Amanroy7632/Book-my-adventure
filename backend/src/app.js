@@ -33,7 +33,16 @@ app.get("/", (req, res) => {
         }
     }, "Success"))
 })
-
+app.get("/heavy",(req,res)=>{
+    console.log("Heavy hitted"+process.pid);
+    
+    let str=''
+    for (let i = 0; i < 1e6; i++) {
+        str+=i
+        
+    }
+    res.send(str)
+})
 app.use("/api/v1/", requestLimiter)
 app.use("/api/v1/users", userRouter)
 app.use("/api/v1/bus", busRouter)

@@ -231,4 +231,21 @@ const getAllRoute = async(req,res,next)=>{
         next(error)
     }
 }
-export {registerRoute,getRoute,updateRoute,getAllRoute}
+const deleteRoute =async (req,res,next)=>{
+    try {
+        const {id} = req.params;
+        console.log(id);
+        
+        if (!id) {
+            return next(new ApiError(401,"Route id is required"))
+        }
+        const result = await Route.findByIdAndDelete(id);
+        if (!result) {
+            return next(new ApiError(404,"Route does not exist"));
+        }
+        return res.status(200).send(new ApiResponse(200,result,"route deleted successfully"));
+    } catch (error) {
+        next(error)
+    }
+}
+export {registerRoute,getRoute,updateRoute,getAllRoute,deleteRoute}
