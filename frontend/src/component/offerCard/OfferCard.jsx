@@ -1,4 +1,4 @@
-const OfferCard = ({ details}) => {
+const OfferCard = ({ details }) => {
   return (
     <div
       className={`h-36 w-64 rounded-xl flex p-3 cursor-pointer flex-shrink-0  ${details.className}`}
@@ -10,9 +10,7 @@ const OfferCard = ({ details}) => {
         <p className="text-xs px-1 py-[1px] bg-[#ffffff4c] rounded-full w-10 grid place-content-center">
           {details.vehicle}
         </p>
-        <h3 className="font-bold text-base leading-5">
-          {details.offer}
-        </h3>
+        <h3 className="font-bold text-base leading-5">{details.offer}</h3>
         <p className="text-xs">{details.validity}</p>
         <div className="flex gap-3 items-center">
           <p className="grid place-content-center bg-[#ffffff4c] h-6 font-semibold px-2 rounded-sm border border-dashed border-white text-xs">

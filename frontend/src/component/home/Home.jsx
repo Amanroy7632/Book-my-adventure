@@ -2,7 +2,13 @@ import React, { useEffect, useRef, useState } from "react";
 import OfferCard from "../offerCard/OfferCard";
 import { images } from "../../assets/index.js";
 import { useNavigate } from "react-router-dom";
-import { FaBus, FaWalking, FaCalendarDay, FaExchangeAlt } from "react-icons/fa";
+import {
+  FaBus,
+  FaWalking,
+  FaCalendarDay,
+  FaExchangeAlt,
+  FaQuestion,
+} from "react-icons/fa";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import CityModel from "./model/CityModel.jsx";
@@ -123,7 +129,6 @@ const Home = () => {
   const [fromLocation, setFromLocation] = useState("");
   const [toLocation, setToLocation] = useState("");
   const { isScrollTopVisible } = useCurrentUser();
-  // const [modelType,setmodelType] = useState<"from"|"to"|"">("")
   const [modelType, setModelType] = useState("from");
   const fromModalRef = useRef(null);
   const toModalRef = useRef(null);
@@ -133,37 +138,38 @@ const Home = () => {
   const { handleSubmit, register, reset } = useForm();
   const [routes, setRoutes] = useState([]);
   const [showRoute, setShowRoute] = useState(false);
+  const [openAskModal, setOpenAskModal] = useState(false);
+  const [showDoubtModal, setShowDoubtModal] = useState(false);
   const navigate = useNavigate();
   const removeDuplicateRoute = (routes) => {
     const uniqueRoutes = [];
     const routeMap = new Map();
-  
+
     routes.forEach((route) => {
       const routeKey = `${route.departureLocation}-${route.arrivalLocation}`;
-      
+
       if (routeMap.has(routeKey)) {
         routeMap.get(routeKey).count += 1;
       } else {
         routeMap.set(routeKey, { ...route, count: 1 });
       }
     });
-  
+
     routeMap.forEach((value) => uniqueRoutes.push(value));
-  
+
     console.log(uniqueRoutes);
     setRoutes(uniqueRoutes);
     return uniqueRoutes;
   };
-  
+
   const fetchAllRoutes = async () => {
     try {
       const response = await axios.get(`${BASE_URL}/routes/get-all-routes`);
       if (response.status === 200) {
         setRoutes(response.data?.data);
-        removeDuplicateRoute(response.data?.data)
+        removeDuplicateRoute(response.data?.data);
         // setRoutes(response.data?.data)
         console.log(response.data?.data);
-        
       }
       console.log(response.data?.data);
     } catch (error) {}
@@ -315,7 +321,6 @@ const Home = () => {
   }, []);
   return (
     <>
-  
       <section className="h-[32rem] bg-main-color bg-[url('assets/hero-img.png')] bg-center  bg-no-repeat bg-cover flex justify-center">
         <div className="flex flex-col items-center w-full max-w-[1400px]">
           <h1 className="text-2xl mx-4 md:text-[2rem] text-white font-bold mt-16 mb-4 text-center">
@@ -403,15 +408,16 @@ const Home = () => {
               </div> */}
               {
                 <Modal onClose={() => setShowRoute(false)} isOpen={showRoute}>
-                  
                   <div
                     onMouseLeave={() => setShowRoute(false)}
-                    className="custom-alert bg-white p-[20px] rounded-md "
+                    className="custom-alert bg-white p-[20px] rounded-md max-h-[80vh] overflow-y-scroll "
                   >
-                    <h2 className=" text-xl pb-1">Bus Rotes Available</h2>
-                    <table className="table-auto w-full border-collapse shadow-md">
+                    <h2 className=" sticky top-0 text-xl pb-1 bg-white z-20">
+                      Bus Rotes Available
+                    </h2>
+                    <table className="table-auto w-full border-collapse shadow-md mb-8">
                       <thead>
-                        <tr className="bg-gray-200">
+                        <tr className="bg-gray-200 sticky top-6 z-20">
                           <th className="border px-6 py-3">No.</th>
                           <th className="border px-6 py-3">From</th>
                           <th className="border px-6 py-3">To</th>
@@ -423,18 +429,20 @@ const Home = () => {
                           ? routes.map((route, index) => {
                               return (
                                 <tr className="bg-white">
-                                  <td className="border-b-2 px-6 py-3">
+                                  <td className="border-b-2 px-6 py-2">
                                     {index + 1}
                                   </td>
-                                  <td className="border-b-2 px-6 py-3">
+                                  <td className="border-b-2 px-6 py-2">
                                     {route?.departureLocation[0].toUpperCase() +
                                       route?.departureLocation.substring(1)}
                                   </td>
-                                  <td className="border-b-2 px-6 py-3">
+                                  <td className="border-b-2 px-6 py-2">
                                     {route?.arrivalLocation[0].toUpperCase() +
                                       route?.arrivalLocation.substring(1)}
                                   </td>
-                                  <td className="border-b-2 px-6 py-3">{route.count}</td>
+                                  <td className="border-b-2 px-6 py-2">
+                                    {route.count}
+                                  </td>
                                 </tr>
                               );
                             })
@@ -444,10 +452,11 @@ const Home = () => {
                     </table>
                     {/* <p className="mb-[20px]">{"jhvjg"}</p> */}
                     <form
-                      onSubmit={() => {
+                      onSubmit={(e) => {
+                        e.preventDefault();
                         setShowRoute(false);
                       }}
-                      className=" flex w-full"
+                      className=" flex w-full fixed bottom-0 "
                     >
                       <Button
                         type="submit"
@@ -457,7 +466,6 @@ const Home = () => {
                       </Button>
                     </form>
                   </div>
-                
                 </Modal>
               }
             </div>
@@ -658,8 +666,8 @@ const Home = () => {
           className="z-40"
         />
       </section>
-      <section className=" relative flex justify-center flex-col items-center border my-20">
-        <div className=" bg-gradient-to-r from-gray-800 to-gray-500 absolute flex flex-col justify-center lg:w-[70%] max-md:w-[90%] max-sm:mt-10 rounded-xl drop-shadow-md z-10 p-5">
+      <section className=" relative flex justify-center flex-col items-center border md:my-20">
+        <div className="hidden md:flex bg-gradient-to-r from-gray-800 to-gray-500 absolute flex-col justify-center lg:w-[70%] max-md:w-[90%] max-sm:mt-10 rounded-xl drop-shadow-md z-10 p-5">
           <h1 className=" text-2xl font-semibold text-white pl-4 m-auto">
             Ask a Question ?
           </h1>
@@ -685,10 +693,42 @@ const Home = () => {
             </Button>
           </form>
         </div>
+        {showDoubtModal&&<div className=" absolute right-1 top-[-60px] rounded bg-black text-white px-2 py-1">
+          Any Doubt ?
+        </div>}
+        <div onClick={()=>setOpenAskModal(!openAskModal)} onMouseEnter={()=>setShowDoubtModal(true)} onMouseLeave={()=>setShowDoubtModal(false)} className=" md:hidden absolute cursor-pointer right-5 border p-4 rounded-full rounded-bl-none bg-green-600 text-white">
+          <FaQuestion />
+        </div>
+        <Modal isOpen={openAskModal} onClose={()=>setOpenAskModal(false)}>
+          <h1 className=" text-2xl font-semibold  pl-4 m-auto">
+            Ask a Question ?
+          </h1>
+          <form
+            onSubmit={handleSubmit(handleQuestionSubmit)}
+            className=" lg:w-[70%] max-md:w-full p-4 flex max-sm:flex-col max-sm:gap-3 m-auto "
+          >
+            <Input
+              placeholder="Enter your Question .."
+              className=" lg:rounded-r-none max-sm:rounded-md"
+              {...register("question", {
+                required: true,
+                message: "Fill the field with your question",
+              })}
+              required
+            />
+            <Button
+              type="submit"
+              className=" lg:rounded-l-none bg-orange-500 font-semibold"
+              disabled={isSubmitting || !currentPage}
+            >
+              {isSubmitting ? "Submitting" : "Submit"}
+            </Button>
+          </form>
+        </Modal>
         {alertMessage.message && (
           <Alert message={alertMessage} onClose={onCloseHandler} />
         )}
-        {isScrollTopVisible && <ScrollToTop/>}
+        {isScrollTopVisible && <ScrollToTop />}
       </section>
     </>
   );
