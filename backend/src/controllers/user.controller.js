@@ -4,6 +4,7 @@ import { User } from "../models/index.js"
 import { generateOTP } from "../utils/generateOtp.js";
 import { ApiError, ApiResponse } from "../utils/index.js"
 import { deleteFromCloudinary, uploadOnCloudinary } from "../utils/uploadCloudinary.js";
+import jwt from "jsonwebtoken";
 const generateAccessTokenAndRefreshToken = async (userId) => {
     try {
         const user = await User.findById(userId);
@@ -19,7 +20,7 @@ const generateAccessTokenAndRefreshToken = async (userId) => {
     }
 }
 const getUserProfile = async (req, res, next) => {
-    console.log("\x1b[33m%s\x1b[0m",`Api Hits for retrival of Current user & served by ${process.pid}`)
+    console.log("\x1b[33m%s\x1b[0m", `Api Hits for retrival of Current user & served by ${process.pid}`)
     try {
         const user = req.user
         if (!user) {
@@ -36,8 +37,8 @@ const registerUser = async (req, res, next) => {
         if ([email, password, fullname, phone].some(field => field?.trim() === "")) {
             throw new ApiError(400, "All fields are required")
         }
-        if (phone?.length!==10) {
-            throw new ApiError(403,"Invalid phone number")
+        if (phone?.length !== 10) {
+            throw new ApiError(403, "Invalid phone number")
         }
         // check if user is already exist 
         const existingUser = await User.findOne({
@@ -67,7 +68,7 @@ const registerUser = async (req, res, next) => {
 const loginUser = async (req, res, next) => {
     try {
         const { email, password } = req.body
-        console.log("\x1b[33m%s\x1b[0m",`Api Hits for Sign in by ${email} & served by ${process.pid}`)
+        console.log("\x1b[33m%s\x1b[0m", `Api Hits for Sign in by ${email} & served by ${process.pid}`)
         if (!email) {
             throw new ApiError(400, "Invalid Email Address")
         }
@@ -100,6 +101,23 @@ const loginUser = async (req, res, next) => {
 
     } catch (error) {
         next(error)
+    }
+}
+const logoutUser = async (req, res, next) => {
+    try {
+        const user = req.user;
+        if (!user) {
+            return next(new ApiError(400, "User not logged in"));
+        }
+        await User.findByIdAndUpdate(user?._id, {
+            $set: {
+                refreshToken: undefined
+            }
+        }, { new: true });
+        const options = { httpOnly: true, secure: true }
+        return res.status(200).clearCookie("accessToken", options).clearCookie("refreshToken", options).json(new ApiResponse(200, {}, "user logged out"))
+    } catch (error) {
+        next(error);
     }
 }
 const forgetPasswordOtpGeneration = async (req, res, next) => {
@@ -154,68 +172,120 @@ const resetPassword = async (req, res, next) => {
         next(error)
     }
 }
-const uploadAvatar =async (req,res,next)=>{
+const uploadAvatar = async (req, res, next) => {
     try {
-        console.log("\x1b[33m%s\x1b[0m",`Api Hits for updating avtar & served by ${process.pid}`)
+        console.log("\x1b[33m%s\x1b[0m", `Api Hits for updating avtar & served by ${process.pid}`)
         const user = req.user
         if (!user) {
-            throw new ApiError(400,"Unauthorize access")
+            throw new ApiError(400, "Unauthorize access")
         }
         const avatarLocalPath = req.file?.path
         // console.log(avatarLocalPath);
-        
+
         if (!avatarLocalPath) {
-            throw new ApiError(401,"Invalid avatar path")
+            throw new ApiError(401, "Invalid avatar path")
         }
         const avatarResponse = await uploadOnCloudinary(avatarLocalPath)
         if (!avatarResponse) {
-            throw new ApiError(500,"Something went wrong while uploading avatar to cloudinary")
+            throw new ApiError(500, "Something went wrong while uploading avatar to cloudinary")
         }
-        user.avatar = avatarResponse?.url 
+        user.avatar = avatarResponse?.url
         await user.save()
-        return res.status(200).json(new ApiResponse(200,user,"Avatar updated successfully"))
+        return res.status(200).json(new ApiResponse(200, user, "Avatar updated successfully"))
     } catch (error) {
         next(error)
     }
 }
-const removeAvatar = async (req,res,next)=>{
+const removeAvatar = async (req, res, next) => {
     try {
-        console.log("\x1b[33m%s\x1b[0m",`Api Hits for removing avtar & served by ${process.pid}`)
-        const user =req.user
+        console.log("\x1b[33m%s\x1b[0m", `Api Hits for removing avtar & served by ${process.pid}`)
+        const user = req.user
         if (!user) {
-            throw new ApiError(401,"Unauthorized access")
+            throw new ApiError(401, "Unauthorized access")
         }
         const imgName = user?.avatar?.split("/")[7]?.split(".")[0]
         // console.log(imgName);
-        
+
         if (!imgName) {
-            throw new ApiError(400,"Image url is not found")
+            throw new ApiError(400, "Image url is not found")
         }
         const response = await deleteFromCloudinary(imgName)
         if (!response) {
-            throw new ApiError(500,"Something went wrong while removing the avatar from the cloudinary")
+            throw new ApiError(500, "Something went wrong while removing the avatar from the cloudinary")
         }
-        user.avatar="https://via.placeholder.com/150"
+        user.avatar = "https://via.placeholder.com/150"
         await user.save()
-        return res.status(200).send(new ApiResponse(200,{user,response},"Avtar removed successfully"))
+        return res.status(200).send(new ApiResponse(200, { user, response }, "Avtar removed successfully"))
     } catch (error) {
         next(error)
     }
 }
-const getAllUsers = async(req,res,next)=>{
+const getAllUsers = async (req, res, next) => {
     try {
-        console.log("\x1b[33m%s\x1b[0m",`Api Hits for retrival of all users & served by ${process.pid}`)
+        console.log("\x1b[33m%s\x1b[0m", `Api Hits for retrival of all users & served by ${process.pid}`)
         const users = await User.find({}).select("-password -verificationCode -forgetPasswordCode -lastOtpGenerationTime -refreshToken -__v")
-        return res.status(200).send(new ApiResponse(200,users,"All users data fetched successfully"))
+        return res.status(200).send(new ApiResponse(200, users, "All users data fetched successfully"))
     } catch (error) {
         next(error)
     }
 }
-export { registerUser, 
-         loginUser, 
-         getUserProfile, 
-         forgetPasswordOtpGeneration, 
-         resetPassword,
-         uploadAvatar,
-         removeAvatar,
-         getAllUsers }
+const refreshUser = async (req, res, next) => {
+    const refreshToken = req.cookies.refreshToken;
+    try {
+        if (!refreshToken) return res.sendStatus(401); // No refresh token in cookie
+
+        const user = await User.findOne({ refreshToken }).select("-createdAt -updatedAt -password -refreshToken -isActive -__v -businessName -state -city -isAdmin");
+        console.log(user);
+
+
+        if (!user) {
+            // console.log(process.env.NODE_ENV === 'production');
+            return res.sendStatus(403); // Refresh token is invalid
+        }
+        // const decryptedRefreshToken = decrypt(refreshToken);
+        // console.log(decryptedRefreshToken);
+
+        jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, async (err, user) => {
+            if (err) return res.sendStatus(403); // Invalid refresh token
+            // console.log(user);
+
+            // Generate a new access token
+            const newAccessToken = await jwt.sign(
+                {
+                    _id: user._id,
+                    email: user.email,
+                    phone: user.phone,
+                    name: user.name,
+                    usertype: user.usertype,
+                },
+                process.env.ACCESS_TOKEN_SECRET,
+                {
+                    expiresIn: process.env.ACCESS_TOKEN_EXPIRY
+                }
+            )
+
+            const cookieOptions = {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production', // Secure in production
+                sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Strict', // SameSite policy for production
+            };
+
+            return res.cookie("accessToken", newAccessToken, { ...cookieOptions, maxAge: 15 * 60 * 1000 }).json({ accessToken: newAccessToken });
+        });
+    } catch (error) {
+        next(error);
+    }
+
+}
+export {
+    registerUser,
+    loginUser,
+    logoutUser,
+    getUserProfile,
+    forgetPasswordOtpGeneration,
+    resetPassword,
+    uploadAvatar,
+    removeAvatar,
+    getAllUsers,
+    refreshUser
+}
