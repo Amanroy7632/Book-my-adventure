@@ -1,0 +1,15 @@
+/* Forbidden403.css */
+
+@keyframes slideInFromLeft {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+  
+  .text-center h1 {
+    animation: slideInFromLeft 1s ease-out;
+  }
+  

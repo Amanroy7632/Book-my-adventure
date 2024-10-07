@@ -10,6 +10,7 @@ export const useCurrentUser = () => {
 
 export const UserProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
+  const [isLoading,setIsLoading] = useState(true);
   const [isScrollTopVisible, setIsScrollTopVisible] = useState(false);
   const [alertMessage, setAlertMessage] = useState({
     message: "",
@@ -25,27 +26,47 @@ export const UserProvider = ({ children }) => {
     });
   };
 
-  const logoutCurrentUser = () => {
+  const logoutCurrentUser = async() => {
     if (!currentUser) {
       return;
     }
-    setCurrentUser(null);
-    Cookies.remove("accessToken");
-    Cookies.remove("refreshToken");
-    setAlertMessage({
-      message: "Logout Successfully",
-      type: "success",
-    });
+    try {
+      const response = await axiosInstance.get('/users/logout',{withCredentials:true});
+      console.log(response.data);
+      
+      if (response.status===200) {
+        
+        setCurrentUser(null);
+        Cookies.remove("accessToken");
+        Cookies.remove("refreshToken");
+        setAlertMessage({
+          message: "Logout Successfully",
+          type: "success",
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      
+      setAlertMessage({
+        message: "Logout Failed",
+        type: "error",
+      });
+    }
     // alert("Logout Successfully")
   };
 
   const fetchUserData = async () => {
     try {
       const response = await axiosInstance.get("/users/profile");
-      //   console.log(response.data);
-      setCurrentUser(response.data?.data);
+      if (response.status===200) {
+        
+        setCurrentUser(response.data?.data);
+      }
+        console.log(response.data);
     } catch (error) {
       console.error("Error fetching user data:", error);
+    }finally {
+      setIsLoading(false);
     }
   };
 
@@ -77,6 +98,7 @@ export const UserProvider = ({ children }) => {
         setAlertMessage,
         onCloseHandler,
         isScrollTopVisible,
+        isLoading
       }}
     >
       {children}

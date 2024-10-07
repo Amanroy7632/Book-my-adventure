@@ -1,12 +1,16 @@
 import React from 'react'
 import { useCurrentUser } from '../../context/userContext.jsx'
-import { Navigate } from 'react-router-dom'
+import { Navigate, Outlet } from 'react-router-dom'
+import Loader from '../loader/Loader.jsx';
 
-function ProtectedRoute({element}) {
-    const {currentUser} =useCurrentUser()
-    // if (!(currentUser && currentUser.fullname )) {
-    //     return <Navigate to={"/"} replace />
-    // }
-  return element
+function ProtectedRoute({children}) {
+    const {currentUser,isLoading} =useCurrentUser();
+    if (isLoading) {
+      return <Loader/>;
+    }
+    if (!currentUser) {
+      return <Navigate to={"/exception"}/>;
+    }
+  return children || <Outlet/>;
 }
 export default ProtectedRoute

@@ -65,7 +65,7 @@ const Modal = ({ children, isOpen, onClose }) => {
           ? " fade-in opacity-100"
           : " fade-out opacity-0 fade-out pointer-events-none"
       }`}
-      // onClick={onClose}
+      onClick={onClose}
     >
       <div
         className={`modal-content relative  bg-white  min-w-96 shadow-md rounded-md transform transition-transform duration-300 ease-out ${

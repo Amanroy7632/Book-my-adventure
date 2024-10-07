@@ -4,6 +4,7 @@ import Footer from "./component/footer/Footer";
 import { Outlet } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { Sparkles } from "./component/home/Animation/Sparkle";
+import ScrollToTop from "./component/scroll/ScrollToTop";
 
 
 
@@ -12,6 +13,7 @@ const Layout = () => {
   return (
     <>
       <Header />
+      <ScrollToTop/>
       {/* <Sparkles/> */}
       <Toaster position="bottom-right" reverseOrder={true} />
       <Outlet />

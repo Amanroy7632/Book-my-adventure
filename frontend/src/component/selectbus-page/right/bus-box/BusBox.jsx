@@ -92,7 +92,7 @@ const BusBox = ({ loading, data, errorMessage }) => {
     );
   }
   return (
-    <div className="bus-box w-full min-h-[180px] h-auto border border-[#ddd] mt-[20px] pl-[10px] text-[#4a4a4a] text-sm font-semibold p-[10px] ">
+    <div className="bus-box w-full min-h-[60vh] h-auto border border-[#ddd] mt-[20px] pl-[10px] text-[#4a4a4a] text-sm font-semibold p-[10px] ">
       {data?.data.length > 0 ? (
         data?.data.map((d, index) => {
           return (
