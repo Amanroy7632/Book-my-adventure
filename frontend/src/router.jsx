@@ -30,6 +30,7 @@ import Wallet from "./component/profile/Wallet.jsx";
 import CabRentalPage from "./pages/CabRentalPage.jsx";
 import Forbidden403 from "./pages/Exception/403Page.jsx";
 import ScrollExample from "./pages/ScrollPage.jsx";
+import SuccessPage from "./pages/Success/SuccessPage.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromChildren(
@@ -90,6 +91,7 @@ const router = createBrowserRouter(
       <Route path="/a" element={<Landing />} />
       <Route path="/receipt" element={<TicketReceiptPage />} />
       <Route path="/exception" element={<Forbidden403 />} />
+      <Route path="/success" element={<SuccessPage />} />
       <Route path="/scroll" element={<ScrollExample />} />
       <Route
         path="*"
