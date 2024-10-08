@@ -2,9 +2,9 @@ import express from "express"
 import cors from "cors"
 import cookieParser from "cookie-parser"
 import { ApiResponse, errorHandler } from "./utils/index.js"
-import { busRouter, userRouter, routeRouter, questionAnswerRouter, feedbackRouter, ticketRouter, contactRouter, adminRouter } from "./routes/index.js"
+import { busRouter, userRouter, routeRouter, questionAnswerRouter, feedbackRouter, ticketRouter, contactRouter, adminRouter,payemtRouter } from "./routes/index.js"
 import { requestLimiter, authLimit } from "./utils/RequestLimit.js"
-
+import RazorPay from "razorpay"
 
 const app = express()
 app.use(cors({
@@ -53,6 +53,10 @@ app.use("/api/v1/feedback", feedbackRouter)
 app.use("/api/v1/ticket", ticketRouter)
 app.use("/api/v1/cabs", contactRouter) //create a router for contact form 
 app.use("/api/v1/admin", adminRouter)
+app.use("/api/v1/payment",payemtRouter)
 app.use(errorHandler)
-
+export const instance = new RazorPay({
+    key_secret:process.env.RAZORPAY_SECRET_KEY,
+    key_id:process.env.RAZORPAY_KEY_ID
+})
 export { app }

@@ -6,6 +6,7 @@ import feedbackRouter from "./feedback.routes.js"
 import ticketRouter from "./ticket.routes.js"
 import contactRouter from "./contact.routes.js"
 import adminRouter from "./admin.routes.js"
+import payemtRouter from "./payment.routes.js"
 export {
     userRouter,
     busRouter,
@@ -14,5 +15,6 @@ export {
     feedbackRouter,
     ticketRouter,
     contactRouter,
-    adminRouter
+    adminRouter,
+    payemtRouter
 }
