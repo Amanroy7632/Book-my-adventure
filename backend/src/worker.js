@@ -24,6 +24,9 @@ if (cluster.isMaster) {
   // Workers can share the same TCP connection in this case (same HTTP server)
   http.createServer((req, res) => {
     res.writeHead(200);
+    if (!res.headersSent) {
+      return next(err);  // Delegate to default error handler if response already sent
+    }
     res.end(`Hello from Worker ${process.pid}\n`);
   }).listen(8000);
 

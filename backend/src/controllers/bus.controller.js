@@ -47,7 +47,7 @@ const registerBus = async (req,res,next)=>{
 const getBus =async (req,res,next)=>{
     console.log("\x1b[33m%s\x1b[0m",`Api Hits for retrival-BUS & served by ${process.pid}`)
     try {
-        const {id} = req.params
+        const {id} = req.params;
         if (!id) {
             throw new ApiError(400,"Bus number is required")
         }

@@ -5,7 +5,9 @@ const verifyToken = async (req,res,next)=>{
     try {
         const accessToken = req.cookies?.accessToken || req.header("Authorization")?.replace("Bearer ", "") || null;
         if (!accessToken) {
-            throw new ApiError(401,"Unauthorized access Access token expired.")
+            console.log(`Access Token: ${accessToken}`);
+            
+            throw new ApiError(401,"Access token expired.")
         }
         const decodedToken = jwt.verify(accessToken,process.env.ACCESS_TOKEN_SECRET)
         if (decodedToken?.exp) {
@@ -16,6 +18,8 @@ const verifyToken = async (req,res,next)=>{
         }
         // console.log(decodedToken?.exp);
         const user = await User.findById(decodedToken?._id).select("-password -refreshToken")
+        // console.log(user);
+        
         if (!user) {
             throw new ApiError(401,"Invalid access token or Expired access token")
         }

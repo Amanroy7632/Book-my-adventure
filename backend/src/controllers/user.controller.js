@@ -89,11 +89,10 @@ const loginUser = async (req, res, next) => {
         // console.log(accessToken, refreshToken);
 
         const loginUser = await User.findById(user._id).select("-password -refreshToken")
-        loginUser.refreshToken=refreshToken;
-        await loginUser.save();
         const cookieOptions = {
             httpOnly: true,
-            secure: true
+            secure: process.env.NODE_ENV === 'production', // Secure in production
+            sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Strict', // SameSite policy for production
         }
         res.cookie('accessToken', accessToken, { ...cookieOptions, maxAge: 3600000 }); // 1 hour expiration
         res.cookie('refreshToken', refreshToken, { ...cookieOptions, maxAge: 10 * 24 * 60 * 60 * 1000 }); // 7 days expiration
@@ -231,14 +230,15 @@ const getAllUsers = async (req, res, next) => {
     }
 }
 const refreshUser = async (req, res, next) => {
+    console.log("\x1b[33m%s\x1b[0m", `Api Hits for retrival of refreshing access token & served by ${process.pid}`)
     const refreshToken = req.cookies.refreshToken;
     try {
-        console.log(refreshToken);
+        // console.log(refreshToken);
         
         if (!refreshToken) return res.sendStatus(401).json(new ApiError(401, "Invalid refresh token")); // No refresh token in cookie
 
         const user = await User.findOne({ refreshToken }).select("-createdAt -updatedAt -password -refreshToken -isActive -__v -businessName -state -city -isAdmin");
-        // console.log(user);
+        console.log(user?.email);
 
 
         if (!user) {
