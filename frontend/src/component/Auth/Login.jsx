@@ -45,18 +45,18 @@ function Login() {
         userInfo
       );
       const { accessToken, refreshToken, user } = response.data.data;
-      Cookies.set(
-        "accessToken",
-        accessToken,
-        { expires: 7 },
-        { httpOnly: true, secure: true }
-      );
-      Cookies.set(
-        "refreshToken",
-        refreshToken,
-        { expires: 7 },
-        { httpOnly: true, secure: true }
-      );
+      // Cookies.set(
+      //   "accessToken",
+      //   accessToken,
+      //   { expires: 7 },
+      //   { httpOnly: true, secure: true }
+      // );
+      // Cookies.set(
+      //   "refreshToken",
+      //   refreshToken,
+      //   { expires: 7 },
+      //   { httpOnly: true, secure: true }
+      // );
       setCurrentUser(user);
       // console.log(user);
       setTimeout(() => {
