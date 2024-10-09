@@ -89,6 +89,8 @@ const loginUser = async (req, res, next) => {
         // console.log(accessToken, refreshToken);
 
         const loginUser = await User.findById(user._id).select("-password -refreshToken")
+        loginUser.refreshToken=refreshToken;
+        await loginUser.save();
         const cookieOptions = {
             httpOnly: true,
             secure: true
@@ -231,10 +233,12 @@ const getAllUsers = async (req, res, next) => {
 const refreshUser = async (req, res, next) => {
     const refreshToken = req.cookies.refreshToken;
     try {
+        console.log(refreshToken);
+        
         if (!refreshToken) return res.sendStatus(401).json(new ApiError(401, "Invalid refresh token")); // No refresh token in cookie
 
         const user = await User.findOne({ refreshToken }).select("-createdAt -updatedAt -password -refreshToken -isActive -__v -businessName -state -city -isAdmin");
-        console.log(user);
+        // console.log(user);
 
 
         if (!user) {
@@ -251,10 +255,10 @@ const refreshUser = async (req, res, next) => {
             // Generate a new access token
             const newAccessToken = await jwt.sign(
                 {
-                    _id: this._id,
-                    email: this.email,
-                    phone: this.phone,
-                    fullname: this.fullname
+                    _id: user._id,
+                    email: user.email,
+                    phone: user.phone,
+                    fullname: user.fullname
                 },
                 process.env.ACCESS_TOKEN_SECRET,
                 {
