@@ -89,14 +89,13 @@ const loginUser = async (req, res, next) => {
         // console.log(accessToken, refreshToken);
 
         const loginUser = await User.findById(user._id).select("-password -refreshToken")
-        const options = {
+        const cookieOptions = {
             httpOnly: true,
             secure: true
         }
-        return res.status(200)
-            .cookie("accessToken", accessToken, options)
-            .cookie("refreshToken", refreshToken, options)
-            .json(new ApiResponse(200, { user: loginUser, accessToken, refreshToken }, "User logged in succesfully"))
+        res.cookie('accessToken', accessToken, { ...cookieOptions, maxAge: 3600000 }); // 1 hour expiration
+        res.cookie('refreshToken', refreshToken, { ...cookieOptions, maxAge: 10 * 24 * 60 * 60 * 1000 }); // 7 days expiration
+        return res.status(200).json(new ApiResponse(200, { user: loginUser, accessToken, refreshToken }, "User logged in succesfully"))
 
 
     } catch (error) {
@@ -232,7 +231,7 @@ const getAllUsers = async (req, res, next) => {
 const refreshUser = async (req, res, next) => {
     const refreshToken = req.cookies.refreshToken;
     try {
-        if (!refreshToken) return res.sendStatus(401); // No refresh token in cookie
+        if (!refreshToken) return res.sendStatus(401).json(new ApiError(401,"Invalid refresh token")); // No refresh token in cookie
 
         const user = await User.findOne({ refreshToken }).select("-createdAt -updatedAt -password -refreshToken -isActive -__v -businessName -state -city -isAdmin");
         console.log(user);
