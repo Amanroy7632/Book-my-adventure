@@ -65,6 +65,7 @@ export const UserProvider = ({ children }) => {
         console.log(response.data);
     } catch (error) {
       console.error("Error fetching user data:", error);
+      setCurrentUser(null);
     }finally {
       setIsLoading(false);
     }
