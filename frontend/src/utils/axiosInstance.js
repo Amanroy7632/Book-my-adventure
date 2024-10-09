@@ -15,6 +15,8 @@ axiosInstance.interceptors.response.use((response)=>response,async(error)=>{
     originalRequest._retry = true;
     try {
       const {data} = await axios.post(`${BASE_URL}/users/refresh`,null,{withCredentials:true});
+      // console.log(`Data from refresh ${data}`);
+      
       const newAccessToken = data?.accessToken;
       originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
       return axios(originalRequest);
