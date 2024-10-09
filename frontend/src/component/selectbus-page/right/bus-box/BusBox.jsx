@@ -16,6 +16,7 @@ import axiosInstance from "../../../../utils/axiosInstance.js";
 import Loader from "../../../loader/Loader.jsx";
 import { useBusContext } from "../../../../context/busContext.jsx";
 import { BASE_URL } from "../../../../constraints.js";
+import axios from "axios";
 const amenities = ["Charging point", "Movies", "Lights", "Bus Stopage"];
 const BusBox = ({ loading, data, errorMessage }) => {
   const [popUpVisible, setPopUpVisible] = useState(null);
@@ -46,22 +47,17 @@ const BusBox = ({ loading, data, errorMessage }) => {
   
         try {
           // Fetch Bus Details
-          const busResponse = await fetch(
-            `${BASE_URL}/bus/${selectedBusData?.busId}`,
-            {
-              method: "GET",
-              headers: {
-                "Content-Type": "application/json",
-              },
-            }
-          );
-          const busResult = await busResponse.json();
-          // console.log(busResult?.data);
-          setBusDetails(busResult?.data);
+          const busResponse = await axios.get(`${BASE_URL}/bus/${selectedBusData?.busId}`);
+          if (busResponse.status===200) {
+            console.log(busResponse.data?.data);
+            setBusDetails(busResponse.data?.data);
+            
+          }
+          
   
           // Fetch Booked Tickets
           const ticketsResponse = await axiosInstance.get(`/ticket/?route=${selectedBusData?._id}&busNumber=${selectedBusData?.busDetails?.busno}`);
-          console.log(ticketsResponse);
+          // console.log(ticketsResponse);
           
           if (ticketsResponse.status === 200) {
             // console.log(ticketsResponse.data);
@@ -71,7 +67,7 @@ const BusBox = ({ loading, data, errorMessage }) => {
             setFilledSeats(bookedSeats);
   
             // Calculate total seats left after data is updated
-            const totalSeatsLeft = busResult?.data?.totalSeat - bookedSeats.length;
+            const totalSeatsLeft = busResponse.data?.totalSeat - bookedSeats.length;
             setTotalSeatLeft(totalSeatsLeft);
           }
         } catch (error) {

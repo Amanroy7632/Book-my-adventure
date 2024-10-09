@@ -81,7 +81,7 @@ const Header = () => {
             <p>Help</p>
         </Link>
         {
-          currentUser&& currentUser._id?<button onClick={setUserNavHandler} className=" flex flex-col justify-center items-center">
+          currentUser&& currentUser?._id?<button onClick={setUserNavHandler} className=" flex flex-col justify-center items-center">
           <FaUser className=" text-blue-950"/>
           <span className=" lg:hidden md:block">{currentUser?.fullname?.split(" ")[0]}</span>
           <p className="hidden lg:block">{currentUser?.fullname} </p>

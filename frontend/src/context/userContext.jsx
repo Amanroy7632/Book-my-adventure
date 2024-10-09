@@ -78,9 +78,12 @@ export const UserProvider = ({ children }) => {
       setIsScrollTopVisible(false);
     }
   };
-  
+
   useEffect(() => {
-    fetchUserData();
+    if (!currentUser) {
+      
+      fetchUserData();
+    }
 
     window.addEventListener("scroll", handleScroll);
     
