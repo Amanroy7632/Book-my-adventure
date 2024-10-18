@@ -1,11 +1,11 @@
 import axios from 'axios';
-// import Cookies from 'js-cookie';
 import { BASE_URL } from '../constraints';
 axios.defaults.withCredentials = true;
 const axiosInstance = axios.create({
   baseURL: BASE_URL, // Replace with your backend API base URL
   headers: {
     "Content-Type": "application/json",
+    // Content-Type: multipart/form-data
   },
 });
 

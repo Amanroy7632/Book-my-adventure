@@ -133,10 +133,11 @@ const Left = ({ className = "" }) => {
     //     </div>
     //   ))}
     // </div>
-    <div
-      className={` relative left p-[15px] lg:w-[20%] border-r-2 max-md:grid max-md:grid-cols-3 gap-3 max-md:text-sm max-sm:grid-cols-2 max-sm:p-[10px]`}
-    >
-      <p onClick={()=>setOpenLocModel(!openLocModel)} className="absolute  cursor-pointer top-0 right-0 bg-green-600 w-fit px-3 rounded-md py-1 text-white">
+    // <div
+    //   className={` relative left p-[15px] lg:w-[20%] border-r-2 max-md:grid max-md:grid-cols-3 gap-3 max-md:text-sm max-sm:grid-cols-2 max-sm:p-[10px]`}
+    // >
+      <div className="relative grid grid-cols-2 gap-2 items-center sm:flex  justify-between   border-b-2 py-1 ">
+      <p onClick={()=>setOpenLocModel(!openLocModel)} className="absolute  cursor-pointer top-[-35px] right-0 bg-green-600 w-fit px-3 rounded-md py-1 text-white">
         Filters
       </p>
       <Modal isOpen={openLocModel} onClose={()=>setOpenLocModel(!openLocModel)} >
@@ -181,7 +182,7 @@ const Left = ({ className = "" }) => {
       {filterBus.map((item) => (
         <div
           key={item.id}
-          className="left_filters mb-[20px] max-md:mb-[5px] max-sm:mb-[10px]"
+          className="left_filters  font-semibold m-auto mb-1 px-2 py-1  bg-[#BD3B4A] rounded"
         >
           <ul>
             <li>
@@ -189,8 +190,8 @@ const Left = ({ className = "" }) => {
                 className="cursor-pointer first-section flex items-center gap-2"
                 onClick={() => openFilterModal(item.id)}
               >
-                <span>{item.icon}</span>
-                <span className="text-sm max-sm:text-xs">
+                <span className="text-white">{item.icon}</span>
+                <span className="text-sm max-sm:text-xs text-white">
                   {item.filterBy.toUpperCase()}
                 </span>
               </div>

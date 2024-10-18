@@ -32,54 +32,68 @@ const BusBox = ({ loading, data, errorMessage }) => {
     setRouteDetails,
   } = useBusContext();
   useEffect(() => {
-    
     const debouncer = setTimeout(async () => {
       // console.log("Selected Bus: " + selectedbus);
-      
+
       if (selectedbus) {
         // Reset state before fetching new data
-        setFilledSeats([1,11,21,31]);
+        setFilledSeats([1, 11, 21, 31]);
         setSubmitedForm([]);
         setSelectedSeats([]);
-        
+
         const selectedBusData = data?.data[selectedbus - 1];
         setRouteDetails(selectedBusData);
-  
+
         try {
           // Fetch Bus Details
-          const busResponse = await axios.get(`${BASE_URL}/bus/${selectedBusData?.busId}`);
-          if (busResponse.status===200) {
+          const busResponse = await axios.get(
+            `${BASE_URL}/bus/${selectedBusData?.busId}`
+          );
+          if (busResponse.status === 200) {
             console.log(busResponse.data?.data);
             setBusDetails(busResponse.data?.data);
-            
           }
-          
-  
+
           // Fetch Booked Tickets
-          const ticketsResponse = await axiosInstance.get(`/ticket/?route=${selectedBusData?._id}&busNumber=${selectedBusData?.busDetails?.busno}`);
+          const ticketsResponse = await axiosInstance.get(
+            `/ticket/?route=${selectedBusData?._id}&busNumber=${selectedBusData?.busDetails?.busno}`
+          );
           // console.log(ticketsResponse);
-          
+
           if (ticketsResponse.status === 200) {
             // console.log(ticketsResponse.data);
             console.log(ticketsResponse.data?.data);
-            
-            const bookedSeats = ticketsResponse.data?.data?.map((ticket) => parseInt(ticket.seatNo));
+
+            const bookedSeats = ticketsResponse.data?.data?.map((ticket) =>
+              parseInt(ticket.seatNo)
+            );
             setFilledSeats(bookedSeats);
-  
+
             // Calculate total seats left after data is updated
-            const totalSeatsLeft = busResponse.data?.totalSeat - bookedSeats.length;
+            const totalSeatsLeft =
+              busResponse.data?.totalSeat - bookedSeats.length;
             setTotalSeatLeft(totalSeatsLeft);
           }
         } catch (error) {
-          alert("Something went wrong with the fetching data\n" + error.message);
+          alert(
+            "Something went wrong with the fetching data\n" + error.message
+          );
           console.error(error);
         }
       }
     }, 800);
-  
+
     return () => clearTimeout(debouncer);
-  }, [selectedbus, data, setBusDetails, setFilledSeats, setSubmitedForm, setSelectedSeats, setRouteDetails]);
-  
+  }, [
+    selectedbus,
+    data,
+    setBusDetails,
+    setFilledSeats,
+    setSubmitedForm,
+    setSelectedSeats,
+    setRouteDetails,
+  ]);
+
   if (loading) {
     return (
       <div className=" flex justify-center h-[30vh] items-center">
@@ -88,8 +102,102 @@ const BusBox = ({ loading, data, errorMessage }) => {
     );
   }
   return (
-    <div className="bus-box w-full min-h-[60vh] h-auto border border-[#ddd] mt-[20px] pl-[10px] text-[#4a4a4a] text-sm font-semibold p-[10px] ">
-      {data?.data.length > 0 ? (
+    <div className="bus-box w-full flex flex-col min-h-[60vh] h-auto  mt-[20px] pl-[10px] text-[#4a4a4a] text-sm font-semibold p-[10px] ">
+      <div className="rounded shadow-sm overflow-x-scroll ">
+        <table className="w-full  rounded">
+          <thead className=" rounded">
+            <tr className=" bg-[#333] text-white  text-nowrap">
+              <th className=" border-l py-1">BUSES LIST</th>
+              <th className=" border-l py-1">Departure</th>
+              <th className=" border-l py-1">Duration</th>
+              <th className=" border-l py-1">Arrivals</th>
+              <th className=" border-l py-1">Rating</th>
+              <th className=" border-l py-1">Fare</th>
+              <th className=" border-l py-1">Seatd Available</th>
+            </tr>
+          </thead>
+          <tbody className=" text-nowrap">
+            {data?.data.length > 0 ? (
+              data?.data.map((d, index) => (
+                <tr
+                  onClick={() => setSelectedBus(index + 1)}
+                  key={d._id}
+                  className={` ${
+                    selectedbus === index + 1
+                      ? "bg-[#ccd1d1] hover:bg-[#d3e0e0] drop-shadow-md"
+                      : "hover:bg-[#f2f4f4]"
+                  } rounded-sm p-1 cursor-pointer mb-[1%]  justify-around`}
+                >
+                  <td className=" px-2">
+                    <div>{d.operatorName}</div>
+                    <div>{d.busDetails?.busType}</div>
+                  </td>
+                  <td className=" px-2">
+                    <div>{d.departureTime}</div>
+                    <div>{d.departureLocation}</div>
+                  </td>
+
+                  <td className=" px-2 text-center">
+                    <div>
+                      {d.arrivalTime.substr(0, 2) -
+                        d.departureTime.substr(0, 1)}
+                      h
+                    </div>
+                  </td>
+                  <td className=" px-2">
+                    {" "}
+                    <div>{d.arrivalTime}</div>
+                    <div>{d.arrivalLocation}</div>
+                  </td>
+                  <td className=" px-2 text-center flex justify-center items-center flex-col">
+                    {" "}
+                    <div className=" bg-green-400 flex w-fit justify-center gap-1 items-center p-1 rounded-md">
+                      <BiSolidStar className=" text-white " />
+                      <div className="">
+                        <span className=" text-white text-sm">4.2</span>
+                      </div>
+                    </div>
+                    <div className=" flex gap-1 justify-center items-center">
+                      <BsPeopleFill /> 23
+                    </div>
+                  </td>
+                  <td className=" px-2 text-center">
+                    <div>
+                      <div>INR</div>
+                      <div>{d.fare}</div>
+                    </div>
+                    <div>
+                      
+                      <div className=" flex items-center justify-center gap-1"><MdLocalOffer className=" text-red-500" /> Deal Applied</div>
+                    </div>
+                  </td>
+                  <td className=" px-2 text-center">
+                    <div>
+                      {/* <div>{d.busDetails?.totalSeat - filledSeats.length}</div> */}
+                      <div className="">
+                        {d.busDetails?.totalSeat - d.bookedTicketsCount}
+                      </div>
+                      <div>Seats Available</div>
+                      {/* <div>20</div>
+                  <div>Window</div> */}
+                      {/* <div>{filledSeats.length}</div> */}
+                    </div>
+                    <div>
+                      {/* <div>20</div>
+              <div>Window</div> */}
+                    </div>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr className=" text-xl text-orange-500 text-center p-4 ">
+                <td className=" text-center col-span-6">Bus Information not found for this route ... {errorMessage}</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+      {/* {data?.data.length > 0 ? (
         data?.data.map((d, index) => {
           return (
             <div
@@ -142,16 +250,13 @@ const BusBox = ({ loading, data, errorMessage }) => {
               </div>
               <div className="busBoxSection17">
                 <div>
-                  {/* <div>{d.busDetails?.totalSeat - filledSeats.length}</div> */}
+                 
                   <div>{d.busDetails?.totalSeat - d.bookedTicketsCount}</div>
                   <div>Seats Available</div>
-                  {/* <div>20</div>
-                  <div>Window</div> */}
-                  {/* <div>{filledSeats.length}</div> */}
+                 
                 </div>
                 <div>
-                  {/* <div>20</div>
-              <div>Window</div> */}
+                  
                 </div>
               </div>
             </div>
@@ -161,7 +266,7 @@ const BusBox = ({ loading, data, errorMessage }) => {
         <div className=" text-xl text-orange-500 text-center p-4">
           Bus Information not found for this route ... {errorMessage}
         </div>
-      )}
+      )} */}
       <div className=" relative flex justify-between flex-wrap">
         <div className="   flex justify-between items-center gap-5 text-xl max-sm:mt-1">
           {amenities.map((item, index) => (

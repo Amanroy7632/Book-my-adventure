@@ -11,6 +11,9 @@ function PaymentPage() {
     return new URLSearchParams(useLocation().search);
   };
   const query = useQuery();
+  const payableAmnt = query.get("totalAmount");
+  console.log(parseFloat(payableAmnt).toFixed(2));
+  
   const { isScrollTopVisible, currentUser } = useCurrentUser();
   // console.log(currentUser);
   const navigate = useNavigate();
@@ -171,7 +174,7 @@ function PaymentPage() {
   const paymentHandler = async () => {
     try {
       const response = await axiosInstance.post("/payment/orders", {
-        amount: 6000,
+        amount: parseFloat(payableAmnt).toFixed(2),
         currenct: "INR",
       });
       if (response.status === 201) {
@@ -265,21 +268,22 @@ function PaymentPage() {
           <div className="payment__fullContainer_leftContainer_paymentInstrument shadow-md rounded-sm">
             {/* <!-- Credit Card --> */}
             <div className="payment__fullContainer_leftContainer_eachPaymentInstruments rounded-sm bg-white p-[1.3em] flex items-center border-b-2">
-              <input
+              {/* <input
                 className="radioButton"
                 type="radio"
                 name="creditCard"
                 id="creditCard"
-              />
-              <label
+              /> */}
+              <button
+              type="button"
                 onClick={paymentHandler}
-                htmlFor="creditCard"
-                className=" text-xl"
+              
+                className=" bg-blue-600 text-white px-3 py-1 shadow-sm rounded text-xl"
               >
-                Credit Card
-              </label>
+                Pay using RazorPay
+              </button>
               {/* <div className="radioButtonText">Credit Card</div> */}
-              <div className="paymentIconList">
+              {/* <div className="paymentIconList">
                 <img
                   className="payment_icon_img"
                   src="https://st.redbus.in/paas/images/mobile/v2/visa.png"
@@ -295,7 +299,7 @@ function PaymentPage() {
                   src="https://st.redbus.in/paas/images/web/v2/maestro.png"
                   alt=""
                 />
-              </div>
+              </div> */}
             </div>
             {/* <!-- Debit Card --> */}
             <div className="payment__fullContainer_leftContainer_eachPaymentInstruments rounded-sm bg-white p-[1.3em] flex items-center border-b-2">

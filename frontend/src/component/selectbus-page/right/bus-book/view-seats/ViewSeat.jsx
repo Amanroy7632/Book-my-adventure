@@ -14,7 +14,7 @@ import { Button, Input } from "../../../../commonUi/index.js";
 import MediumSizedForm from "../passenger-form/PassengerForm.jsx";
 import { useCurrentUser } from "../../../../../context/userContext.jsx";
 import { useForm } from "react-hook-form";
-import toast from "react-hot-toast";
+import {toast} from "react-hot-toast";
 import { useBusContext } from "../../../../../context/busContext.jsx";
 import axiosInstance from "../../../../../utils/axiosInstance.js";
 import TicketReceiptPage from "../bill/TicketRecipt.jsx";
@@ -170,6 +170,16 @@ function ViewSeat() {
   const scrollToSection = () => {
     sectionRef.current.scrollIntoView({ behavior: 'smooth', });
   };
+  const handleProceedToBook = ()=>{
+    if (!currentUser) {
+      // toast.info("Please Login to proceed next.");
+      toast.error("Please Login to proceed next.")
+      navigate("/login")
+      return;
+    }
+    setPassengerForm(!passengerForm)
+    scrollToSection();
+  }
   // useEffect(()=>{
   //   const getBookedTicket = async (route,busNumber) => {
   //     try {
@@ -301,9 +311,7 @@ function ViewSeat() {
           </div>
           <div className="mainContainer27 pt-5 ">
             <Button
-              onClick={() => {setPassengerForm(!passengerForm)
-                scrollToSection();
-              }}
+              onClick={handleProceedToBook}
               className=" w-full bg-orange-700 rounded-none "
               disabled={selectedSeats.length === 0}
             >
@@ -334,7 +342,7 @@ function ViewSeat() {
           </div>
         </div>
       </div>
-      {passengerForm &&selectedSeats.length===submittedForm.length&& (
+      {passengerForm &&selectedSeats.length===submittedForm.length&& selectedSeats.length!==0&&submittedForm.length!==0&&(
         <div  className=" flex w-full  items-center">
               <div className=" flex flex-col border sm:p-10 p-2 shadow-md">
                 <div className=" text-xl font-semibold flex items-center gap-4">

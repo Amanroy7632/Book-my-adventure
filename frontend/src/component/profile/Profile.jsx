@@ -6,6 +6,7 @@ import axiosInstance from "../../utils/axiosInstance.js";
 import Alert from "../CustomAlert/Alert.jsx";
 import Spinner from "../loader/Spinner.jsx";
 import { MdClose } from "react-icons/md";
+import axios from "axios";
 
 const Profile = () => {
   const [user, setUser] = useState({
@@ -33,16 +34,19 @@ const Profile = () => {
 
   const uploadAvatar = async (filePath) => {
     try {
+      console.log(filePath);
+
       setLoadinMessage("Uploading ...");
       setLoading(true);
-      const response = await axiosInstance.patch(
-        "/users/upload-avatar",
-        filePath
-      );
+      const response = await axiosInstance.patch("/users/upload-avatar", filePath, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
       if (response.status === 200) {
         setAlertMessage({
-          message:"Avtar uploaded successfully",
-          type:"success"
+          message: "Avtar uploaded successfully",
+          type: "success",
         });
         console.log(response.data);
         setCurrentUser(response.data?.data);
@@ -53,20 +57,21 @@ const Profile = () => {
       console.log(error);
       setLoading(false);
       // alertMessage("Error uploading avatar: " + error.message);
-      alertMessage({message:"Error uploading avatar",type:"error"});
+      setAlertMessage({ message: "Error uploading avatar", type: "error" });
     }
   };
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
-    // console.log(file);
+    console.log(file);
 
     if (file) {
       const formData = new FormData();
       formData.append("avatar", file);
+      console.log(formData);
 
       // Function to upload the avatar
-      uploadAvatar(formData);
+      uploadAvatar({ avatar: file });
 
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -121,9 +126,9 @@ const Profile = () => {
       if (!currentUser.avatar?.split("/")[7]?.split(".")[0]) {
         setLoading(false);
         setAlertMessage({
-          message:"Avtar is not uploaded",
-          type:"info",
-          title:"Wrong Url"
+          message: "Avtar is not uploaded",
+          type: "info",
+          title: "Wrong Url",
         });
         closeModal();
         return;
@@ -132,9 +137,9 @@ const Profile = () => {
       if (response.status === 200) {
         // console.log(response.data?.data);
         setAlertMessage({
-          message:"Avatar removed successfully",
-          title:"",
-          type:"success",
+          message: "Avatar removed successfully",
+          title: "",
+          type: "success",
         });
         setCurrentUser({
           ...currentUser,
@@ -158,10 +163,7 @@ const Profile = () => {
     <>
       {loading && <Spinner message={loadingMessage} />}
       {alertMessage.message && (
-        <Alert
-          message={alertMessage}
-          onClose={onCloseHandler}
-        />
+        <Alert message={alertMessage} onClose={onCloseHandler} />
       )}
       <div className="flex-1 bg-gray-800 text-white p-6">
         <div className="flex flex-col gap-4">
