@@ -177,10 +177,12 @@ const uploadAvatar = async (req, res, next) => {
         console.log("\x1b[33m%s\x1b[0m", `Api Hits for updating avtar & served by ${process.pid}`)
         const user = req.user
         if (!user) {
-            throw new ApiError(400, "Unauthorize access")
+            throw new ApiError(403, "Unauthorize access ")
         }
+        // console.log(req.files);
+        
         const avatarLocalPath = req.file?.path
-        // console.log(avatarLocalPath);
+        console.log(avatarLocalPath);
 
         if (!avatarLocalPath) {
             throw new ApiError(401, "Invalid avatar path")

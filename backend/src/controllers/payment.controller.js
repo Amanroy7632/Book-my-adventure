@@ -5,11 +5,19 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import crypto from "crypto";
 const createOrder = async (req, res, next) => {
     try {
-        const {amount,currency} = req.body;
+        let {amount,currency} = req.body;
+        if(!amount){
+            throw new ApiError(400,"Amount is required");
+        }
+        if (amount) {
+            amount = parseFloat(amount).toFixed(2);
+        }    
         const options = {
-            amount: amount*100,
+            amount: Math.ceil( amount*100),
             currency: currency||"INR"
         }
+        // console.log(amount,currency);
+        
         const order = await instance.orders.create(options);
         // console.log(order);
         return res.status(201).json(new ApiResponse(201, order, "Order created successfully"))
