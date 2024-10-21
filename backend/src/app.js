@@ -12,13 +12,13 @@ import http from "http";
 
 app.use(cors({
     // origin: process.env.CORS_ORIGIN || '*',
-    origin: ["http://localhost:5173", "http://localhost:5173", "https://book-my-adventure.vercel.app", '*'],
+    origin: ["http://localhost:5173", "http://localhost:5173", "https://book-my-adventure.vercel.app",'https://bma-admin.vercel.app', '*'],
     credentials: true
 }))
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: "http://localhost:5173", // Allow frontend to connect
+        origin: ["http://localhost:5173","https://book-my-adventure.vercel.app",'https://bma-admin.vercel.app'], // Allow frontend to connect
         methods: ["GET", "POST"]
     }
 });
