@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import axiosInstance from "../utils/axiosInstance.js";
-
+import { useAuth0 } from "@auth0/auth0-react";
 const UserContext = createContext();
 
 export const useCurrentUser = () => {
@@ -9,6 +9,7 @@ export const useCurrentUser = () => {
 };
 
 export const UserProvider = ({ children }) => {
+  const { loginWithRedirect,user,logout,isAuthenticated } = useAuth0();
   const [currentUser, setCurrentUser] = useState(null);
   const [isLoading,setIsLoading] = useState(true);
   const [isScrollTopVisible, setIsScrollTopVisible] = useState(false);
@@ -80,7 +81,10 @@ export const UserProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    if (!currentUser) {
+    if (isAuthenticated && user) {
+      setCurrentUser(user);
+    }
+    else if (!currentUser) {
       
       fetchUserData();
     }

@@ -16,6 +16,8 @@ import { MdClose, MdKey } from "react-icons/md";
 import Modal from "../modal/Modal.jsx";
 import ForgetPasswordForm from "./ForgetPasswordForm.jsx";
 import { BASE_URL } from "../../constraints.js";
+import { useAuth0 } from "@auth0/auth0-react";
+import { FaReddit } from "react-icons/fa";
 function Login() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const { handleSubmit, register, reset } = useForm();
@@ -35,6 +37,7 @@ function Login() {
     onCloseHandler,
     setAlertMessage,
   } = useCurrentUser();
+  const { loginWithRedirect,user,isAuthenticated,logout } = useAuth0();
   const navigate = useNavigate();
   const handleLogin = async (userInfo) => {
     try {
@@ -79,9 +82,13 @@ function Login() {
         });
       }
       if (error.response?.data?.statusCode === 404) {
-        setAlertMessage({message:"Invalid Username ! ",type:"warning",title:"Oops"});
+        setAlertMessage({
+          message: "Invalid Username ! ",
+          type: "warning",
+          title: "Oops",
+        });
       } else if (error.code === "ERR_BAD_REQUEST") {
-        setAlertMessage({message:"Invalid Password",type:"warning"});
+        setAlertMessage({ message: "Invalid Password", type: "warning" });
         setIsActiveForgotPassword(!isActiveForgotPassword);
       }
       setIsLoading(false);
@@ -129,8 +136,18 @@ function Login() {
       navigate("/");
     }
   }, [currentUser, navigate]);
+ 
+
+  const handleRedirectLogin = async ()=>{
+    if (isAuthenticated) {
+      logout()
+      return;
+    }
+    await loginWithRedirect();
+    console.log("Current user: " + user);
+  }
   return (
-    <div className=" flex items-center justify-center w-full  pt-[12vh]">
+    <div className=" flex items-center justify-center w-full  pt-[5vh]">
       <div
         className={`mx-auto w-full max-w-lg shadow-md rounded-xl p-10 border border-black/10 `}
       >
@@ -141,15 +158,7 @@ function Login() {
         <h2 className=" text-center text-2xl font-bold leading-tight">
           Sign in to your account
         </h2>
-        <p className=" mt-2 text-center text-base text-black/60">
-          Don&apos;t have any account?&nbsp;
-          <Link
-            to={"/register"}
-            className=" font-medium text-pretty transition-all duration-200 hover:underline "
-          >
-            Sign Up
-          </Link>
-        </p>
+
         {isLoading && <Spinner message="Logging in..." />}
         {/* {errorMessage && <p className=" text-red-600 mt-8 text-center" >{errorMessage}</p>} */}
         <form onSubmit={handleSubmit(handleLogin)} className=" mt-8 ">
@@ -202,10 +211,29 @@ function Login() {
             </Button>
           </div>
         </form>
+        <p className=" mt-2 text-center text-base text-black/60">
+          Don&apos;t have any account?&nbsp;
+          <Link
+            to={"/register"}
+            className=" font-medium text-pretty transition-all duration-200 hover:underline "
+          >
+            Sign Up
+          </Link>
+        </p>
+        <div className="w-full flex items-center justify-center mt-2">
+          <div className=" w-full h-[2px] bg-gray-600"></div>
+          <span className=" px-3">OR</span>
+          <div className=" w-full h-[2px] bg-gray-600"></div>
+        </div>
+        <div
+          className=" w-full p-3 gap-3 rounded border items-center flex justify-center hover:bg-gray-300 cursor-pointer mt-4"
+          onClick={()=>loginWithRedirect()}
+        >
+          <FaReddit className=" text-2xl " /> Continue with Auth0
+        </div>
       </div>
       {
-        <Modal onClose={handleForgotPasswordToggle} isOpen={openModal} >
-          
+        <Modal onClose={handleForgotPasswordToggle} isOpen={openModal}>
           <ForgetPasswordForm onClose={handleForgotPasswordToggle} />
         </Modal>
       }

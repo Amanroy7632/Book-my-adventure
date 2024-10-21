@@ -7,6 +7,7 @@ import Alert from "../CustomAlert/Alert.jsx";
 import Spinner from "../loader/Spinner.jsx";
 import { MdClose } from "react-icons/md";
 import axios from "axios";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const Profile = () => {
   const [user, setUser] = useState({
@@ -24,6 +25,7 @@ const Profile = () => {
     setAlertMessage,
     onCloseHandler,
   } = useCurrentUser();
+  const { logout, isAuthenticated } = useAuth0();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editableName, setEditableName] = useState(false);
   const [editableAbout, setEditableAbout] = useState(false);
@@ -38,11 +40,15 @@ const Profile = () => {
 
       setLoadinMessage("Uploading ...");
       setLoading(true);
-      const response = await axiosInstance.patch("/users/upload-avatar", filePath, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const response = await axiosInstance.patch(
+        "/users/upload-avatar",
+        filePath,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
       if (response.status === 200) {
         setAlertMessage({
           message: "Avtar uploaded successfully",
@@ -115,6 +121,11 @@ const Profile = () => {
   };
 
   const handleLogOut = () => {
+    if (isAuthenticated) {
+      logout();
+      navigate("/");
+      return;
+    }
     logoutCurrentUser();
     navigate("/");
   };

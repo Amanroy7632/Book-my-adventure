@@ -6,13 +6,18 @@ import { FaAngleDown,FaUser,FaHeadset  } from "react-icons/fa"
 import { useCurrentUser } from "../../context/userContext.jsx";
 import Logo from "../logo/Logo";
 import {GrLogin} from "react-icons/gr"
+import { useAuth0 } from "@auth0/auth0-react";
 const Header = () => {
   const navigate =useNavigate()
   const [userNav,setUserNav] =useState(false)
-  const {currentUser,logoutCurrentUser} =useCurrentUser()
+  const {user} = useAuth0();
+  const {currentUser,logoutCurrentUser,setCurrentUser} =useCurrentUser()
   const setUserNavHandler =()=>{
     // setUserNav(!userNav)
     navigate("/profile")
+  }
+  if (user) {
+    setCurrentUser(user);
   }
   return (
     <nav className="px-4 md:px-14 py-1 md:py-3 flex text-xs md:text-base font-normal items-center justify-between sticky top-0 bg-white z-50 drop-shadow-xl">
@@ -81,14 +86,14 @@ const Header = () => {
             <p>Help</p>
         </Link>
         {
-          currentUser&& currentUser?._id?<button onClick={setUserNavHandler} className=" flex flex-col justify-center items-center">
+          currentUser&& (currentUser?._id||currentUser?.email)?<button onClick={setUserNavHandler} className=" flex flex-col justify-center items-center">
           <FaUser className=" text-blue-950"/>
-          <span className=" lg:hidden md:block">{currentUser?.fullname?.split(" ")[0]}</span>
-          <p className="hidden lg:block">{currentUser?.fullname} </p>
+          <span className=" lg:hidden md:block">{currentUser?.fullname?.split(" ")[0] || currentUser?.name}</span>
+          <p className="hidden lg:block">{currentUser?.fullname||currentUser?.name} </p>
           <FaAngleDown/>
       </button>:<Link to={"/login"} className=" flex items-center gap-1 hover:bg-gray-200 rounded-md p-1"> <GrLogin /> Login</Link>
         }
-        {currentUser?.fullname&&userNav&&<div className=" flex px-3 gap-3 absolute flex-col  backdrop-blur-xl  right-1 cursor-pointer">
+        {(currentUser?.fullname || currentUser?.name)&&userNav&&<div className=" flex px-3 gap-3 absolute flex-col  backdrop-blur-xl  right-1 cursor-pointer">
             <button onClick={setUserNavHandler}>My Trips</button>
             <button onClick={setUserNavHandler}>Wallet/Cards</button>
             <Link to={"/profile"} onClick={setUserNavHandler} >My Profile</Link>
