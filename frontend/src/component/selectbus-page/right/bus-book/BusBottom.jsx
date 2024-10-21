@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect } from "react";
 import "./busbottom.css";
 import ViewSeat from "./view-seats/ViewSeat.jsx";
@@ -13,7 +11,9 @@ import {
   MdCheckCircleOutline,
 } from "react-icons/md";
 import { BiWater } from "react-icons/bi";
+import MapComponent from "../../../map/MapComponent.jsx";
 const displayText = [
+  "Live Location",
   "Amenities",
   "Boarding and Dropping Points",
   "Reviews",
@@ -25,7 +25,8 @@ const BusBottom = ({ filledSeats, setFilledSeats }) => {
   const [displayIndex, setDisplayIndex] = useState(null);
   const [isVisible, setIsVisible] = useState(false);
   const { busDetails } = useBusContext();
-
+ 
+  
   const displayClickHandler = (index) => {
     setDisplayIndex(index);
     console.log(`Visibility index: ${index}`);
@@ -75,7 +76,7 @@ const BusBottom = ({ filledSeats, setFilledSeats }) => {
               >
                 {text}
               </div>
-              {index < 4 && <div className=" max-sm:block">|</div>}
+              {index < 5 && <div className=" max-sm:block">|</div>}
             </React.Fragment>
           ))}
         </div>
@@ -85,11 +86,15 @@ const BusBottom = ({ filledSeats, setFilledSeats }) => {
           </h2>
         )}
       </div>
-
+      <div className={`displayArea ${
+          isVisible && displayIndex === 0 ? "displayArea-active" : ""
+        }`}>
+       <MapComponent/>
+      </div>
       {/* Amenities Section */}
       <div
         className={`displayArea ${
-          isVisible && displayIndex === 0 ? "displayArea-active" : ""
+          isVisible && displayIndex === 1 ? "displayArea-active" : ""
         }`}
       >
         <div>
@@ -123,7 +128,7 @@ const BusBottom = ({ filledSeats, setFilledSeats }) => {
       {/* Boarding and Dropping Points Section */}
       <div
         className={`displayArea ${
-          isVisible && displayIndex === 1 ? "displayArea-active" : ""
+          isVisible && displayIndex === 2 ? "displayArea-active" : ""
         }`}
       >
         Boarding points section
@@ -134,7 +139,7 @@ const BusBottom = ({ filledSeats, setFilledSeats }) => {
       {/* Reviews Section */}
       <div
         className={`displayArea ${
-          isVisible && displayIndex === 2 ? "displayArea-active" : ""
+          isVisible && displayIndex === 3 ? "displayArea-active" : ""
         }`}
       >
         <ReviewPage busDetails={busDetails} />
@@ -143,7 +148,7 @@ const BusBottom = ({ filledSeats, setFilledSeats }) => {
       {/* Booking Policies Section */}
       <div
         className={`displayArea ${
-          isVisible && displayIndex === 3 ? "displayArea-active" : ""
+          isVisible && displayIndex === 4 ? "displayArea-active" : ""
         }`}
       >
         <div className="mx-auto p-8 pl-2 pt-2 select-none">
@@ -212,7 +217,7 @@ const BusBottom = ({ filledSeats, setFilledSeats }) => {
       {/* View Seats Section */}
       <div
         className={`displayArea ${
-          isVisible && displayIndex === 4 ? "displayArea-active" : ""
+          isVisible && displayIndex === 5 ? "displayArea-active" : ""
         }`}
       >
         <ViewSeat

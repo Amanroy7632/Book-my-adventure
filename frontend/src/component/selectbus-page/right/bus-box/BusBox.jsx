@@ -17,12 +17,12 @@ import Loader from "../../../loader/Loader.jsx";
 import { useBusContext } from "../../../../context/busContext.jsx";
 import { BASE_URL } from "../../../../constraints.js";
 import axios from "axios";
-import MapComponent from "../../../map/MapComponent.jsx";
+
 const amenities = ["Charging point", "Movies", "Lights", "Bus Stopage"];
 const BusBox = ({ loading, data, errorMessage }) => {
   const [popUpVisible, setPopUpVisible] = useState(null);
   const [totalSeatLeft, setTotalSeatLeft] = useState(0);
-  const [isVisibleMap,setVisibleMap] = useState(false);
+
   const {
     filledSeats,
     setFilledSeats,
@@ -314,7 +314,7 @@ const BusBox = ({ loading, data, errorMessage }) => {
           ))}
         </div>
         <div className="busBoxSection22 flex justify-between max-sm:mt-2 ">
-          <div onClick={()=>setVisibleMap(!isVisibleMap)} className=" gap-1 w-full">
+          <div className=" gap-1 w-full">
             <MdGpsFixed className=" text-2xl" />
             <span>Live Tracking</span>
           </div>
@@ -324,9 +324,6 @@ const BusBox = ({ loading, data, errorMessage }) => {
           </div>
         </div>
       </div>
-      {
-        isVisibleMap&&<MapComponent/>
-      }
       <div className="busBoxSection3">
         {selectedbus && (
           <BusBottom
