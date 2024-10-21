@@ -248,4 +248,5 @@ const deleteRoute =async (req,res,next)=>{
         next(error)
     }
 }
+
 export {registerRoute,getRoute,updateRoute,getAllRoute,deleteRoute}
