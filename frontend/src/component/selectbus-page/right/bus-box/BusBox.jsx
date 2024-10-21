@@ -128,28 +128,48 @@ const BusBox = ({ loading, data, errorMessage }) => {
                     selectedbus === index + 1
                       ? "bg-[#ccd1d1] hover:bg-[#d3e0e0] drop-shadow-md"
                       : "hover:bg-[#f2f4f4]"
-                  } rounded-sm p-1 cursor-pointer mb-[1%]  justify-around`}
+                  } rounded-sm p-1 cursor-pointer mb-[1%]  justify-around border-b-2`}
                 >
                   <td className=" px-2">
                     <div>{d.operatorName}</div>
                     <div>{d.busDetails?.busType}</div>
                   </td>
                   <td className=" px-2">
-                    <div>{d.departureTime}</div>
-                    <div>{d.departureLocation}</div>
+                    <div className=" text-center">
+                      {d.departureTime?.split("T")[1].split(".")[0]}
+                    </div>
+                    <div className=" text-center">
+                      {d.departureLocation[0].toUpperCase() +
+                        d.departureLocation.substring(1)}
+                    </div>
                   </td>
 
                   <td className=" px-2 text-center">
                     <div>
-                      {d.arrivalTime.substr(0, 2) -
-                        d.departureTime.substr(0, 1)}
-                      h
+                      {Math.floor(
+                        (new Date(d.arrivalTime) - new Date(d.departureTime)) /
+                          (1000 * 60 * 60)
+                      )}
+                      hr&nbsp;
+                      {Math.floor(
+                        ((new Date(d.arrivalTime) - new Date(d.departureTime)) %
+                          (1000 * 60 * 60)) /
+                          (1000 * 60)
+                      )}
+                      {/* {d.arrivalTime.substr(0, 2) -
+                        d.departureTime.substr(0, 1)} */}
+                      min
                     </div>
                   </td>
                   <td className=" px-2">
                     {" "}
-                    <div>{d.arrivalTime}</div>
-                    <div>{d.arrivalLocation}</div>
+                    <div className=" text-center">
+                      {d.arrivalTime?.split("T")[1].split(".")[0]}
+                    </div>
+                    <div className=" text-center">
+                      {d.arrivalLocation[0].toUpperCase() +
+                        d.arrivalLocation.substring(1)}
+                    </div>
                   </td>
                   <td className=" px-2 text-center flex justify-center items-center flex-col">
                     {" "}
@@ -169,8 +189,9 @@ const BusBox = ({ loading, data, errorMessage }) => {
                       <div>{d.fare}</div>
                     </div>
                     <div>
-                      
-                      <div className=" flex items-center justify-center gap-1"><MdLocalOffer className=" text-red-500" /> Deal Applied</div>
+                      <div className=" flex items-center justify-center gap-1">
+                        <MdLocalOffer className=" text-red-500" /> Deal Applied
+                      </div>
                     </div>
                   </td>
                   <td className=" px-2 text-center">
@@ -193,7 +214,9 @@ const BusBox = ({ loading, data, errorMessage }) => {
               ))
             ) : (
               <tr className=" text-xl text-orange-500 text-center p-4 ">
-                <td className=" text-center col-span-6">Bus Information not found for this route ... {errorMessage}</td>
+                <td className=" text-center col-span-6">
+                  Bus Information not found for this route ... {errorMessage}
+                </td>
               </tr>
             )}
           </tbody>

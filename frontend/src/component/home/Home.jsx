@@ -230,7 +230,8 @@ const Home = () => {
     const day = String(startDate.getDate()).padStart(2, "0");
     const month = String(startDate.getMonth() + 1).padStart(2, "0");
     const year = startDate.getFullYear();
-    const date = `${day}-${month}-${year}`;
+    // const date = `${day}-${month}-${year}`;
+    const date = `${year}-${month}-${day}`;
     console.log(`From : ${fromLocation} To : ${toLocation} Date : ${date}`);
 
     navigate(
