@@ -1,4 +1,4 @@
-import { app } from "./app.js";
+import { app,server,io } from "./app.js";
 import dotenv from "dotenv";
 import connectDB from "./db/index.js";
 import os from "os";
@@ -56,8 +56,28 @@ if (cluster.isMaster) {
   );
 } else {
   if (connectionInstance) {
+    io.on('connection', (socket) => {
+      console.log('A user connected: ' + socket.id);
+    
+      // Listen for location updates from clients
+      socket.on('location', (locationData) => {
+        console.log('Location data received:', locationData);
+        
+        // Broadcast location data to all other connected clients
+        socket.broadcast.emit('locationUpdate', {
+          id: socket.id, // unique identifier (can be user id or session id)
+          latitude: locationData.latitude,
+          longitude: locationData.longitude
+        });
+      });
+    
+      // When a client disconnects
+      socket.on('disconnect', () => {
+        console.log('A user disconnected: ' + socket.id);
+      });
+    });
     const port = process.env.PORT || 5000;
-    app.listen(port, () => {
+    server.listen(port, () => {
       const workerId = cluster.worker.id;
       const dbStatus = connectionInstance ? "Connected" : "Disconnected";
       const dbHost = connectionInstance?.connection.host;
