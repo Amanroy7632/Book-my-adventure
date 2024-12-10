@@ -11,6 +11,7 @@ export const BusContextProvider = ({ children }) => {
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [submittedForm, setSubmitedForm] = useState([]);
   const [routeDetails,setRouteDetails] = useState({});
+  const [passengerData, setPassengerData] = useState([]);
   const [bookingDetails, setBookingDetails] = useState(null);
 //   useEffect(() => {
 //     const debouncer = setTimeout(()=>{
@@ -59,7 +60,9 @@ export const BusContextProvider = ({ children }) => {
         routeDetails,
         setRouteDetails,
         bookingDetails,
-        setBookingDetails
+        setBookingDetails,
+        passengerData,
+        setPassengerData
       }}
     >
       {children}

@@ -13,6 +13,7 @@
     "@auth0/auth0-react": "^2.2.4",
     "@mui/icons-material": "^5.16.5",
     "axios": "^1.7.3",
+    "html2pdf": "^0.0.11",
     "js-cookie": "^3.0.5",
     "jspdf": "^2.5.1",
     "react": "^18.3.1",

@@ -6,7 +6,10 @@ import ScrollToTop from "../component/commonUi/ScrollToTop";
 import axiosInstance from "../utils/axiosInstance";
 import toast from "react-hot-toast";
 import jsPDF from "jspdf";
+import { storeTickets } from "../component/selectbus-page/right/bus-book/view-seats/ViewSeat";
+import { useBusContext } from "../context/busContext";
 function PaymentPage() {
+  const {passengerData,busDetails,routeDetails,setPassengerData}    = useBusContext();
   const useQuery = () => {
     return new URLSearchParams(useLocation().search);
   };
@@ -95,82 +98,254 @@ function PaymentPage() {
 
   const downloadPDF = () => {
     const doc = new jsPDF();
-
-    tickets.forEach((ticket, index) => {
-      // Set document title
+    
+    passengerData.forEach((ticket, index) => {
+      // Set document title and header
       doc.setFontSize(22);
       doc.setTextColor(40);
       doc.text("Ticket Receipt", 105, 20, { align: "center" });
-
+  
       // Draw a line below the title
       doc.setLineWidth(0.5);
       doc.line(20, 25, 190, 25);
-
-      // Ticket Details Section
+  
+      // Passenger Information Section
       doc.setFontSize(12);
       doc.setTextColor(60);
-
-      // Booking ID and Passenger Info
-      doc.text("Booking ID:", 20, 40);
-      doc.text(ticket.bookingId, 60, 40);
-
-      doc.text("Passenger Name:", 20, 50);
-      doc.text(ticket.passengerName, 60, 50);
-      doc.text("Passenger Age:", 20, 50);
-      // doc.text(ticket., 60, 50);
-      doc.text("Passenger Gender:", 20, 50);
-      // doc.text(ticket. , 60, 50);
-
-      // Departure and Arrival Info
-      doc.text("From:", 20, 60);
-      doc.text(ticket.departureLocation, 60, 60);
-
-      doc.text("To:", 20, 70);
-      doc.text(ticket.arrivalLocation, 60, 70);
-
-      // Departure and Arrival Times
-      doc.text("Departure Time:", 20, 80);
-      doc.text(ticket.departureTime, 60, 80);
-
-      doc.text("Arrival Time:", 20, 90);
-      doc.text(ticket.arrivalTime, 60, 90);
-
-      // Seat and Fare Info
-      doc.text("Seat Number:", 20, 100);
-      doc.text(ticket.seatNumber, 60, 100);
-
-      doc.text("Fare:", 20, 110);
-      doc.text(ticket.fare, 60, 110);
-
-      // Operator and Bus Info
-      doc.text("Operator:", 20, 120);
-      doc.text(ticket.operatorName, 60, 120);
-
-      doc.text("Bus Number:", 20, 130);
-      doc.text(ticket.busNumber, 60, 130);
-
-      // Draw boxes around sections
-      doc.setDrawColor(0);
+      doc.text("Passenger Information", 20, 35);
       doc.setLineWidth(0.2);
-      doc.rect(15, 30, 180, 110); // Main container box
-      doc.line(15, 65, 195, 65); // Line separating Passenger and Journey Info
-
-      // Footer or additional information
+      doc.line(20, 37, 190, 37);
+  
+      doc.text("Booking ID:", 20, 45);
+      doc.text(ticket.bookingId || "N/A", 60, 45);
+  
+      doc.text("Name:", 20, 55);
+      doc.text(ticket.passengerName || "N/A", 60, 55);
+  
+      doc.text("Age:", 20, 65);
+      doc.text(ticket.passengerAge ? `${ticket.passengerAge}` : "N/A", 60, 65);
+  
+      doc.text("Gender:", 20, 75);
+      doc.text(ticket.passengerGender || "N/A", 60, 75);
+  
+      // Journey Details Section
+      doc.text("Journey Details", 20, 85);
+      doc.setLineWidth(0.2);
+      doc.line(20, 87, 190, 87);
+  
+      doc.text("From:", 20, 95);
+      doc.text(ticket.departureLocation || "N/A", 60, 95);
+  
+      doc.text("To:", 20, 105);
+      doc.text(ticket.arrivalLocation || "N/A", 60, 105);
+  
+      doc.text("Departure Time:", 20, 115);
+      doc.text(ticket.departureTime || "N/A", 60, 115);
+  
+      doc.text("Arrival Time:", 20, 125);
+      doc.text(ticket.arrivalTime || "N/A", 60, 125);
+  
+      doc.text("Seat Number:", 20, 135);
+      doc.text(ticket.seatNumber || "N/A", 60, 135);
+  
+      doc.text("Fare:", 20, 145);
+      doc.text(ticket.fare ? `$${ticket.fare.toFixed(2)}` : "N/A", 60, 145);
+  
+      // Bus and Operator Details Section
+      doc.text("Bus and Operator Details", 20, 155);
+      doc.setLineWidth(0.2);
+      doc.line(20, 157, 190, 157);
+  
+      doc.text("Operator:", 20, 165);
+      doc.text(ticket.operatorName || "N/A", 60, 165);
+  
+      doc.text("Bus Number:", 20, 175);
+      doc.text(ticket.busNumber || "N/A", 60, 175);
+  
+      doc.text("Route:", 20, 185);
+      doc.text(ticket.route || "N/A", 60, 185);
+  
+      // Footer Section
       doc.setFontSize(10);
       doc.setTextColor(100);
-      doc.text("Thank you for choosing SuperBus!", 105, 150, {
+      doc.text("Thank you for choosing SuperBus! Have a safe journey.", 105, 200, {
         align: "center",
       });
-
-      // If it's not the last ticket, add a new page
+  
+      // Visual enhancements: Draw containers
+      doc.setDrawColor(0);
+      doc.setLineWidth(0.2);
+      doc.rect(15, 30, 180, 180); // Main container box
+  
+      // Add a new page if there are more tickets
       if (index < tickets.length - 1) {
         doc.addPage();
       }
     });
-
+  
     // Save the PDF
     doc.save("tickets_receipt.pdf");
   };
+  // const handlePrintTicket = () => {
+  //   // console.log(businessData);
+    
+  //   if (!passengerData ) {
+  //     toast.info("Please fill the passenger details");
+  //     // navigate("business/business");
+  //     return;
+  //   }
+  //   const printWindow = window.open("", "", "height=1223,width=800");
+  //   console.log(printWindow);
+    
+  //   printWindow.document.open();
+  //   printWindow.document.write(generateTicketContent());
+  //   printWindow.document.close();
+  //   printWindow.focus();
+  //   printWindow.print();
+  // };
+  const handlePrintTicket = () => {
+    if (!passengerData) {
+      toast.info("Please fill the passenger details");
+      return;
+    }
+  
+    const printWindow = window.open("", "", "height=1223,width=800");
+    if (!printWindow) {
+      alert("Popup blocked. Please allow popups for this site.");
+      return;
+    }
+  
+    const ticketContent = generateTicketContent();
+    if (!ticketContent) {
+      console.error("No ticket content generated.");
+      return;
+    }
+  
+    printWindow.document.open();
+    printWindow.document.write(ticketContent);
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
+  };
+  console.log(routeDetails);
+  
+  function  generateTicketContent (){
+    return `<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bus Ticket</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      /* background-color: #f4f4f4; */
+    }
+    .ticket {
+      width: 700px;
+      margin: 50px auto;
+      background: white;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      overflow: hidden;
+      display: flex;
+    }
+    .left-section {
+      width: 70%;
+      padding: 20px;
+      background-color: #fff;
+      position: relative;
+    }
+    .left-section h1 {
+      font-size: 24px;
+      margin: 0 0 10px;
+      color: #ff2d55;
+    }
+    .info {
+      margin-bottom: 20px;
+    }
+    .info p {
+      margin: 5px 0;
+      font-size: 14px;
+    }
+    .highlight {
+      font-weight: bold;
+      font-size: 16px;
+    }
+    .right-section {
+      width: 30%;
+      background: #ff2d55;
+      color: white;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .right-section h2 {
+      font-size: 18px;
+      margin: 0 0 20px;
+      text-align: center;
+    }
+    .barcode {
+      height: 50px;
+      width: 100%;
+      background: white;
+      margin-top: 20px;
+      text-align: center;
+      padding: 10px 0;
+    }
+    .barcode span {
+      font-size: 12px;
+      color: #333;
+    }
+    .logo {
+      width: 50px;
+      height: 50px;
+      background: white;
+      border-radius: 50%;
+      margin: 10px auto;
+      text-align: center;
+      line-height: 50px;
+      font-weight: bold;
+      color: #ff2d55;
+    }
+    .seat {
+      text-align: center;
+      font-size: 18px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  ${passengerData?.map((pdata,index)=>{
+    return `<div key="${index}" class="ticket">
+    <div class="left-section">
+      <h1>Bus Ticket</h1>
+      <div class="info">
+        <p><span class="highlight">From:</span>${routeDetails?.departureLocation}</p>
+        <p><span class="highlight">To:</span> ${routeDetails?.arrivalLocation}</p>
+        <p><span class="highlight">Date:</span> ${new Date(routeDetails?.arrivalTime).toDateString()}</p>
+        <p><span class="highlight">Time:</span> ${new Date(routeDetails?.arrivalTime).toTimeString()}</p>
+        <p><span class="highlight">Class:</span> Standard</p>
+        <p><span class="highlight">Seat:</span> ${pdata?.seatNo}</p>
+        <p><span class="highlight">Price:</span> INR ${pdata?.price}</p>
+      </div>
+    </div>
+    <div class="right-section">
+      <h2>Boarding Pass</h2>
+      <div class="logo">BUS</div>
+      <p class="seat">Seat ${pdata?.seatNo}</p>
+      <div class="barcode">
+        <span>AA00123456 897 ${pdata?.seatNo}</span>
+      </div>
+    </div>
+  </div>`;
+  })}
+  
+</body>
+</html>`;
+  }
   const paymentHandler = async () => {
     try {
       const response = await axiosInstance.post("/payment/orders", {
@@ -190,8 +365,10 @@ function PaymentPage() {
           order_id: response.data?.data?.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
           // callback_url: "http://localhost:5173/success",
           handler: function (response) {
+            storeTickets({ ticketData: passengerData });
+            handlePrintTicket();
             navigate("/success");
-            downloadPDF();
+            // setPassengerData([])
             // alert(response.razorpay_payment_id);
             // alert(response.razorpay_order_id);
             // alert(response.razorpay_signature);

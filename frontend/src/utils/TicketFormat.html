@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bus Ticket</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      /* background-color: #f4f4f4; */
+    }
+    .ticket {
+      width: 700px;
+      margin: 50px auto;
+      background: white;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      overflow: hidden;
+      display: flex;
+    }
+    .left-section {
+      width: 70%;
+      padding: 20px;
+      background-color: #fff;
+      position: relative;
+    }
+    .left-section h1 {
+      font-size: 24px;
+      margin: 0 0 10px;
+      color: #ff2d55;
+    }
+    .info {
+      margin-bottom: 20px;
+    }
+    .info p {
+      margin: 5px 0;
+      font-size: 14px;
+    }
+    .highlight {
+      font-weight: bold;
+      font-size: 16px;
+    }
+    .right-section {
+      width: 30%;
+      background: #ff2d55;
+      color: white;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .right-section h2 {
+      font-size: 18px;
+      margin: 0 0 20px;
+      text-align: center;
+    }
+    .barcode {
+      height: 50px;
+      width: 100%;
+      background: white;
+      margin-top: 20px;
+      text-align: center;
+      padding: 10px 0;
+    }
+    .barcode span {
+      font-size: 12px;
+      color: #333;
+    }
+    .logo {
+      width: 50px;
+      height: 50px;
+      background: white;
+      border-radius: 50%;
+      margin: 10px auto;
+      text-align: center;
+      line-height: 50px;
+      font-weight: bold;
+      color: #ff2d55;
+    }
+    .seat {
+      text-align: center;
+      font-size: 18px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="ticket">
+    
+    <div class="left-section">
+      <h1>Bus Ticket</h1>
+      <div class="info">
+        <p><span class="highlight">From:</span> Dolor City</p>
+        <p><span class="highlight">To:</span> Consectetur</p>
+        <p><span class="highlight">Date:</span> 23.03.2017</p>
+        <p><span class="highlight">Time:</span> 17:20</p>
+        <p><span class="highlight">Class:</span> Standard</p>
+        <p><span class="highlight">Seat:</span> 4A</p>
+        <p><span class="highlight">Price:</span> $125.27</p>
+      </div>
+    </div>
+    <div class="right-section">
+      <h2>Boarding Pass</h2>
+      <div class="logo">BUS</div>
+      <p class="seat">Seat 4A</p>
+      <div class="barcode">
+        <span>AA00123456 897 37</span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -19,6 +19,7 @@ const SelectBus = () => {
   const { isScrollTopVisible } = useCurrentUser();
   const [isLoading,setIsLoading] = useState(true);
   const [routeData,setRouteData] = useState(null)
+  const [filteredData,setFilteredData] = useState([]);
   const [errorMessage,setErrorMessage] = useState('');
   const query = useQuery();
   const fetchRouteData = async () => {
@@ -32,6 +33,7 @@ const SelectBus = () => {
       if (response.status === 200) {
         console.log(response.data);
         setRouteData(response.data)
+        setFilteredData(response.data?.data);
       }
     } catch (error) {
       setErrorMessage(error.message);
@@ -55,7 +57,10 @@ const SelectBus = () => {
   useEffect(()=>{
     fetchRouteData();
   },[])
-  const onFilterChange = (filter, value) => {};
+  const onFilterChange = (filter, value) => {
+    console.log(filter);
+    
+  };
   return (
     <div className="selectbus">
       <SelectHeader
@@ -66,7 +71,7 @@ const SelectBus = () => {
       <div className=" md:flex gap-2 max-md:flex max-md:flex-col ">
         <Right className="">
           {/* <div className=" w-full"> */}
-          <Left className="" onFilterChange={onFilterChange} />
+          <Left className="" onFilterChange={setFilteredData} data={routeData?.data} />
           {/* <SortingBar /> */}
           <BusBox loading={isLoading} data={routeData} errorMessage={errorMessage} />
           {/* </div> */}

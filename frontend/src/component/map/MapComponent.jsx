@@ -382,7 +382,7 @@ const MapComponent = () => {
       socket.off("locationUpdate");
       socket.off("userDisconnected");
     };
-  }, [busData.busId]);
+  }, [busData?.busId]);
 
   // Get the user's current location and emit it to the server
   useEffect(() => {

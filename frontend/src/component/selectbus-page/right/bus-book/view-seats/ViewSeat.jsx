@@ -39,11 +39,11 @@ const checkTheCurrentSeat = (
     }
   }
 };
-const storeTickets = async (ticketData) => {
+export const storeTickets = async (ticketData) => {
   try {
     const response = await axiosInstance.post("/ticket/register", ticketData);
     if (response.status === 201) {
-      alert("Tickets booked successfully");
+      // alert("Tickets booked successfully");
       // toast.success("Tickets booked successfully")
       toast.success(
         "Ticked Booked successfully.\nCheck your mobile phone for tickets."
@@ -66,6 +66,8 @@ function ViewSeat() {
     busDetails,
     filledSeats,
     setFilledSeats,
+    passengerData, 
+    setPassengerData
   } = useBusContext();
   let passengerNo = filledSeats.length > 0 ? filledSeats.length : 1;
   const useQuery = () => {
@@ -77,7 +79,7 @@ function ViewSeat() {
   const [boardAndDrop, setBoardAndDrop] = useState(false);
   const [visibleSeatNo, setVisibleSeatNo] = useState(null);
   const [passengerForm, setPassengerForm] = useState(false);
-  const [passengerData, setPassengerData] = useState([]);
+  // const [passengerData, setPassengerData] = useState([]);
   const [ticketData, setTicketData] = useState([]);
   const [isModelopen, setIsModelOpen] = useState(false);
   // const [submittedForm, setSubmitedForm] = useState([]);
@@ -111,6 +113,7 @@ function ViewSeat() {
   };
   const handleFinalSubmit = (data) => {
     // return;
+    console.log(data);
     Object.keys(data).forEach((key) => {});
     if (!data.email) {
       toast.error("Email is required");
@@ -127,17 +130,19 @@ function ViewSeat() {
     passengerData.forEach((seat) => {
       setFilledSeats((prev) => [...prev, parseInt(seat.seatNo)]);
     });
+    // console.log(submittedForm);
+    
     setSelectedSeats([]);
     setSubmitedForm([]);
-    // storeTickets({ ticketData: passengerData });
-    console.log(passengerData);
+    
+    // console.log(passengerData);
     setIsModelOpen(true);
     let totalAmount = 0;
     passengerData.forEach((passData) => {
       totalAmount += parseFloat(passData.price);
     });
     // const totalAmount = passengerData.reduce((acc,next)=>acc.price+next.price)
-    console.log(totalAmount);
+    // console.log(totalAmount);
 
     navigate(
       `/payment?operatorName=${routeDetails?.operatorName}&customerName=${
@@ -148,6 +153,7 @@ function ViewSeat() {
         routeDetails?.departureTime
       }&arrivalTime=${routeDetails?.arrivalTime}&totalAmount=${totalAmount}`
     );
+    // storeTickets({ ticketData: passengerData });
     // setPassengerData([])
     // console.log(x);
 

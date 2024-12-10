@@ -206,21 +206,21 @@ const Home = () => {
     setToLocation(fromLocation);
   }
   async function handleSearchRequest() {
-    if (!fromLocation || !toLocation) {
+    if (!fromLocation?.trim() || !toLocation?.trim()) {
       await fetchAllRoutes();
       setShowRoute(true);
       // alert("Please select from location and to location");
       return;
     }
-    if (fromLocation === toLocation) {
+    if (fromLocation?.trim() === toLocation?.trim()) {
       await fetchAllRoutes();
       setShowRoute(true);
       // alert("Please select a different location");
       return;
     }
     if (
-      !from.includes(fromLocation.toLowerCase()) ||
-      !to.includes(toLocation.toLowerCase())
+      !from.includes(fromLocation.toLowerCase().trim()) ||
+      !to.includes(toLocation.toLowerCase().trim())
     ) {
       await fetchAllRoutes();
       setShowRoute(true);
@@ -235,7 +235,7 @@ const Home = () => {
     console.log(`From : ${fromLocation} To : ${toLocation} Date : ${date}`);
 
     navigate(
-      `/select-bus?departure=${fromLocation}&arrival=${toLocation}&date=${date}`
+      `/select-bus?departure=${fromLocation?.trim()}&arrival=${toLocation?.trim()}&date=${date}`
     );
     setFromLocation("");
     setToLocation("");
